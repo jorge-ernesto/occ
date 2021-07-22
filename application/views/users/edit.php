@@ -28,12 +28,6 @@
                                         </div>
                                     </div>                                                                                                              
                                     <div class="row form-group">
-                                        <label for="descripcion" class="col-form-label col-md-2">Contraseña:</label>
-                                        <div class="col-md-5">
-                                            <input type="password" name="password" value="<?php echo $user[0]->password; ?>" id="password" class="form-control" required> <!-- required -->
-                                        </div>
-                                    </div>
-                                    <div class="row form-group">
                                         <label for="tipoDocumento" class="col-form-label col-md-2">Admin:</label>
                                         <div class="col-md-5">                                            
                                             <select name="isadmin" id="isadmin" class="form-control">
@@ -60,14 +54,6 @@
                                                 <?php } ?>                                                                                                                                             
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="row form-group">                                        
-                                        <div class="col-md-7">
-                                            <div class="custom-control custom-checkbox mr-sm-2">
-                                                <input type="checkbox" name="check_actualizar" class="custom-control-input" id="customControlAutosizing">
-                                                <label class="custom-control-label" for="customControlAutosizing">Actualizar contraseña</label>
-                                            </div>
-                                        </div>                                        
                                     </div>
                                     <h4>
                                         <input type="submit" name="submit" value="Editar Usuario" class="btn btn-primary"></input>

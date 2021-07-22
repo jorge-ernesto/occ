@@ -116,12 +116,7 @@ class ADUser_model extends CI_Model {
 	/**
 	 * Actualizar usuarios
 	 */
-	public function updateUser($id_usuario,$name=NULL,$email=NULL,$isadmin=NULL,$isactive=NULL,$password=NULL,$check_actualizar=NULL){
-		$actualizar_password="";
-		if(isset($check_actualizar) && $check_actualizar == "on"){
-			$actualizar_password = ",password='$password'";
-		}
-
+	public function updateUser($id_usuario,$name=NULL,$email=NULL,$isadmin=NULL,$isactive=NULL){
 		$consulta=$this->db->query("
 				UPDATE 
 					sec_user 
@@ -130,7 +125,26 @@ class ADUser_model extends CI_Model {
 					,email='$email' 								
 					,isadmin='$isadmin'
 					,isactive='$isactive'					
-					$actualizar_password
+				WHERE 
+					sec_user_id=$id_usuario;
+		");
+		if($consulta==true){
+				return true;
+		}else{
+				$this->session->set_flashdata('database_error', $this->db->error());						
+				return false;
+		}		
+  	}
+
+	/**
+	 * Actualizar contraseña de usuarios
+	 */
+	public function updatePassword($id_usuario,$password){
+		$consulta=$this->db->query("
+				UPDATE 
+					sec_user
+				SET 
+					password='$password'
 				WHERE 
 					sec_user_id=$id_usuario;
 		");

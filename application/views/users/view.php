@@ -38,7 +38,7 @@
                                                 <th>Email</th>                                                
                                                 <th>Admin</th>
                                                 <th>Activo</th>
-                                                <th>Editar</th>                                                
+                                                <th>Opciones</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>

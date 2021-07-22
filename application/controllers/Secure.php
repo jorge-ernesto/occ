@@ -44,7 +44,7 @@ class Secure extends CI_Controller {
 			$this->load->model('ADUser_model');
 			$data = array(
 				'loginname' => $this->input->post('username'),
-				'password' => $this->input->post('password')
+				'password' => hash("SHA256", $this->input->post('password'))
 			);
 			$return['check_user'] = $this->ADUser_model->checkUser($data);
 			if(count($return['check_user'])) {
