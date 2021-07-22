@@ -65,7 +65,7 @@
 
                                 <hr>
                                 <h4>
-                                    <a id="wea" class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/users/create">Agregar RUC</a>
+                                    <a class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/rucs/create/<?php echo $user[0]->sec_user_id ?>">Agregar RUC</a>
                                 </h4>
                                 <div class="table-responsive">
                                     <table id="table_rucs" class="table table-bordered table-striped"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
