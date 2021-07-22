@@ -45,7 +45,9 @@ class Rucs extends CI_Controller {
 						"0" => $ruc->cnf_client_id,
 						"1" => $ruc->ruc,
 						"2" => $ruc->razon_social,
-						"3" => '<button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal_delete_'.$ruc->cnf_client_id.'">Eliminar</button>
+						"3" => '<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_delete_'.$ruc->cnf_client_id.'" style="background-color: #e74a3b;!important">
+										<i class="far fa-trash-alt"></i>
+									</button>
 									
 									<!-- Modal -->
 									<div class="modal fade animated fadeIn" id="modal_delete_'.$ruc->cnf_client_id.'">
