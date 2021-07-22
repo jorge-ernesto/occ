@@ -22,7 +22,7 @@
                         <input type="email" name="email" value="" id="email" class="form-control" required> <!-- required -->
                     </div>
                     <div class="col-lg-12 form-group">
-                        <label>Contraseña:</label>                        
+                        <label>Contrase&ntilde;a:</label>                        
                         <input type="password" name="password" value="" id="password" class="form-control" required> <!-- required -->                        
                     </div>
                     <div class="col-lg-12 form-group">
@@ -41,7 +41,7 @@
                     </div>                                        
                     <!-- <div class="col-lg-12 form-group"> -->
                         <input type="submit" name="submit" value="Crear Usuario" class="btn btn-primary" style="width:49%;"></input>&nbsp;
-                        <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view" style="width:49%;">Atras</a>
+                        <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view" style="width:49%;">Atr&aacute;s</a>
                     <!-- </div> -->
                 </form>
                 <div class="row">&nbsp;</div>

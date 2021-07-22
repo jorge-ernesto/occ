@@ -16,6 +16,7 @@
             </div>
          </div>
       </li>
+      <?php if($_SESSION['isadmin'] == 1) { ?>
       <li class="nav-item">
          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSeguridad" aria-expanded="true"
             aria-controls="collapseSeguridad"><i class="fas fa-fw fa-file-invoice ocsicon"></i><span>Seguridad</span></a>
@@ -25,6 +26,7 @@
             </div>
          </div>
       </li>
+      <?php } ?>
       <hr class="sidebar-divider d-none d-md-block" />
       <span class="mb-3"></span>
       <!-- <li class="nav-item">
