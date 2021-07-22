@@ -13,7 +13,7 @@
 
 							<form method="post" id="formularioLogin"> <!-- novalidate -->
 									<div class="form-group col-sm-6">
-										<input type="text" name="username" value="" id="username" class="form-control" placeholder="Usuario" autofocus required> <!-- required -->
+										<input type="email" name="username" value="" id="username" class="form-control" placeholder="Email" autofocus required> <!-- required -->
 									</div>
 									<div class="form-group col-sm-6">
 										<input type="password" name="password" value="" id="password" class="form-control" placeholder="Contraseña" required> <!-- required -->

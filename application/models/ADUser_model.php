@@ -20,13 +20,14 @@ class ADUser_model extends CI_Model {
 	{
 		$sql = "
 		SELECT
-			ad_user_id,
+			sec_user_id,
 			name,
-			loginname
+			email,
+			isadmin			
 		FROM
-			ad_user
+			sec_user
 		WHERE
-			loginname = ?
+			email = ?
 		AND password = ?
 		AND isactive = 1;";
 		$query = $this->db->query($sql, $params);
@@ -42,13 +43,16 @@ class ADUser_model extends CI_Model {
 	{
 		$sql = "
 		SELECT
-			ad_user_id,
+			sec_user_id,
 			name,
-			loginname
+			email,
+			password,
+			isadmin,
+			isactive
 		FROM
-			ad_user
+			sec_user
 		WHERE
-			loginname = '".$params['loginname']."'
+			email = '".$params['loginname']."'
 		AND isactive = 1;";
 
 		//$query = $this->db->query($sql, $params);

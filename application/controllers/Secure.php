@@ -52,9 +52,10 @@ class Secure extends CI_Controller {
 				if(count($return['result_ad_user']) == 1) {
 					$return['status'] = 1;
 					//data session
-					$_SESSION['user_id'] = $return['result_ad_user'][0]->ad_user_id;
-					$_SESSION['loginname'] = $return['result_ad_user'][0]->loginname;
+					$_SESSION['user_id'] = $return['result_ad_user'][0]->sec_user_id;					
 					$_SESSION['name'] = $return['result_ad_user'][0]->name;
+					$_SESSION['loginname'] = $return['result_ad_user'][0]->email;
+					$_SESSION['isadmin'] = $return['result_ad_user'][0]->isadmin;
 				} else {
 					$return['status'] = 2;
 					$return['message'] = 'Contraseña incorrecta.';
