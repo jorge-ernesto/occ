@@ -59,7 +59,7 @@ class Users extends CI_Controller {
 				redirect('secure/login', 'location');
 			}else{
 				$users = $this->ADUser_model->listUser();
-				error_log(json_encode($users));		
+				// error_log(json_encode($users));		
 				
 				foreach ($users as $key => $user) {
 					$listJson[] = array(
@@ -72,7 +72,7 @@ class Users extends CI_Controller {
 						"4" => ($user->isactive == 1) ?
 								'<h6><span class="badge badge-primary">Si</span></h6>' :
 								'<h6><span class="badge badge-danger">No</span></h6>',
-						"5" => '<a class="btn btn-sm btn-primary" href="javascript:buscar(' . $user->sec_user_id . ')">Editar</a>',		
+						"5" => '<a class="btn btn-sm btn-primary" href="'.base_url().'index.php/users/edit/'.$user->sec_user_id.'">Editar</a>',		
 					);
 				}
 				// error_log(json_encode($listJson));		
@@ -130,14 +130,14 @@ class Users extends CI_Controller {
 			//Compruebo si se a enviado submit
 			if($this->input->post("submit")){
 				
-				//Llamo al metodo add
-				$add=$this->ADUser_model->storeUser(
-								$this->input->post("name"),
-								$this->input->post("email"),
-								$this->input->post("password"),
-								$this->input->post("isadmin"),
-								$this->input->post("isactive")
-				);
+					//Llamo al metodo add
+					$add=$this->ADUser_model->storeUser(
+									$this->input->post("name"),
+									$this->input->post("email"),
+									$this->input->post("password"),
+									$this->input->post("isadmin"),
+									$this->input->post("isactive")
+					);
 			}
 			if($add==true){
 				//Sesion de una sola ejecución
@@ -156,5 +156,110 @@ class Users extends CI_Controller {
 			$data['typeStation'] = 0;
 			$this->load->view('users/view',$data);		
 		}		
+	}
+
+	public function edit($id_usuario){
+		// echo "Metodo edit";
+		// echo $user_id;
+		// return;
+
+		$edit=false;
+		if(!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			if(!$_SESSION['isadmin']) {
+				redirect('secure/login', 'location');								
+			}else{
+					$edit=true;						
+			}				
+		}
+
+		if($edit==true){
+			if(is_numeric($id_usuario)){
+				//Validamos que exista el usuario
+				$data['user'] = $this->ADUser_model->findUser($id_usuario);
+				
+				if(!$data['user']){
+					redirect('secure/login', 'location');
+				}
+				
+				//Redirecciono la pagina a la url por defecto
+				$data['title'] = 'Seguridad > Usuarios';			
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
+
+				$data['typeStation'] = 0;
+				$this->load->view('users/edit',$data);		
+			}else{
+				redirect('secure/login', 'location');
+			}  
+		}
+	}
+
+	public function update(){
+		// echo "Metodo update";
+		// echo "<pre>";
+		// print_r($this->input->post());
+		// echo "</pre>";
+		// return;
+
+		$update=false;
+		if(!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			if(!$_SESSION['isadmin']) {
+				redirect('secure/login', 'location');								
+			}else{
+					$update=true;						
+			}				
+		}		
+
+		//Obtenemos id del usuario
+		$id_usuario = $this->input->post("sec_user_id");
+
+		if($update==true){
+			if(is_numeric($id_usuario)){
+				//Validamos que exista el usuario
+				$data['user'] = $this->ADUser_model->findUser($id_usuario);
+
+				if(!$data['user']){
+					redirect('secure/login', 'location');
+				}
+				
+				//Compruebo si se a enviado submit
+				if($this->input->post("submit")){
+
+						$mod=$this->ADUser_model->updateUser(
+										$id_usuario,
+										$this->input->post("name"),
+										$this->input->post("email"),
+										$this->input->post("isadmin"),
+										$this->input->post("isactive"),
+										$this->input->post("password"),
+										$this->input->post("check_actualizar")
+						);											
+				}
+				if($mod==true){
+					//Sesion de una sola ejecución
+					$this->session->set_flashdata('correcto', 'Usuario modificado correctamente');
+				}else{
+					$this->session->set_flashdata('incorrecto', 'Usuario no se pudo modificar');
+				}	
+
+				//Redirecciono la pagina a la url por defecto
+				$data['title'] = 'Seguridad > Usuarios';			
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
+
+				$data['typeStation'] = 0;
+				$this->load->view('users/view',$data);
+			}else{
+				redirect(base_url());
+			}  
+		}
 	}
 }

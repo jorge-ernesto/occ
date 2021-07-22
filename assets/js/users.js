@@ -49,7 +49,13 @@ function listar() {
        dom: 'Bfrtip', // Blfrtip
        buttons: [
            'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
-       ]
+       ],
+    //    "columnDefs": [
+    //         {
+    //             "targets": [ 0 ],
+    //             "visible": false,                
+    //         }
+    //     ]
    });
    
    var div = $('<div class="row">\n\

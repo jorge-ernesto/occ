@@ -14,31 +14,36 @@
                             <div class="card-header">Usuarios</div>
                             <div class="card-body text-primary">
 
-                                <form method="post" action="<?php echo base_url() ?>index.php/users/store"> <!-- novalidate -->
+                                <form method="post" action="<?php echo base_url() ?>index.php/users/update"> <!-- novalidate -->
                                     <div class="row form-group">
                                         <label for="nombre" class="col-form-label col-md-2">Nombre:</label> <!-- col-md-4 -->
                                         <div class="col-md-5"> <!-- col-md-8 -->
-                                            <input type="text" name="name" value="" id="name" class="form-control" required> <!-- required -->
+                                            <input type="text" name="name" value="<?php echo $user[0]->name; ?>" id="name" class="form-control" required> <!-- required -->
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <label for="descripcion" class="col-form-label col-md-2">Email:</label>
                                         <div class="col-md-5">
-                                            <input type="email" name="email" value="" id="email" class="form-control" required> <!-- required -->
+                                            <input type="email" name="email" value="<?php echo $user[0]->email; ?>" id="email" class="form-control" required> <!-- required -->
                                         </div>
-                                    </div>
+                                    </div>                                                                                                              
                                     <div class="row form-group">
                                         <label for="descripcion" class="col-form-label col-md-2">Contraseña:</label>
                                         <div class="col-md-5">
-                                            <input type="password" name="password" value="" id="password" class="form-control" required> <!-- required -->
+                                            <input type="password" name="password" value="<?php echo $user[0]->password; ?>" id="password" class="form-control" required> <!-- required -->
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <label for="tipoDocumento" class="col-form-label col-md-2">Admin:</label>
                                         <div class="col-md-5">                                            
                                             <select name="isadmin" id="isadmin" class="form-control">
-                                                <option value="0" selected>NO</option> 
-                                                <option value="1">SI</option> 
+                                                <?php if($user[0]->isadmin == 0) { ?>
+                                                    <option value="0" selected>NO</option> 
+                                                    <option value="1">SI</option> 
+                                                <?php } else { ?>
+                                                    <option value="0">NO</option> 
+                                                    <option value="1" selected>SI</option> 
+                                                <?php } ?>                                                
                                             </select>
                                         </div>
                                     </div>
@@ -46,17 +51,30 @@
                                         <label for="tipoDocumento" class="col-form-label col-md-2">Activo:</label>
                                         <div class="col-md-5">
                                             <select name="isactive" id="isactive" class="form-control">
-                                                <option value="0">NO</option>  
-                                                <option value="1" selected>SI</option>                                                                                                                                              
+                                                <?php if($user[0]->isactive == 0) { ?>
+                                                    <option value="0" selected>NO</option> 
+                                                    <option value="1">SI</option> 
+                                                <?php } else { ?>
+                                                    <option value="0">NO</option> 
+                                                    <option value="1" selected>SI</option> 
+                                                <?php } ?>                                                                                                                                             
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="row form-group">                                        
+                                        <div class="col-md-7">
+                                            <div class="custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" name="check_actualizar" class="custom-control-input" id="customControlAutosizing">
+                                                <label class="custom-control-label" for="customControlAutosizing">Actualizar contraseña</label>
+                                            </div>
+                                        </div>                                        
+                                    </div>
                                     <h4>
-                                        <input type="submit" name="submit" value="Crear Usuario" class="btn btn-primary"></input>
+                                        <input type="submit" name="submit" value="Editar Usuario" class="btn btn-primary"></input>
                                         <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view">Atras</a>
                                     </h4>
 
-                                    <!-- <input type="hidden" name="sec_user_id" value="" id="id" class="form-control"> -->
+                                    <input type="hidden" name="sec_user_id" value="<?= $user[0]->sec_user_id ?>" id="id" class="form-control">
                                 </form>
 
                             </div>
