@@ -7,6 +7,19 @@
         <div class="row justify-content-center mt-3 pt-2"> <!-- mt-5 pt5 -->
             <div class="col-md-12 disabled-padding"> <!-- col-md-7 -->            
 
+                <?php
+                //Si existen las sesiones flasdata que se muestren
+                if($this->session->flashdata('correcto')){
+                    echo "<div class='alert alert-success' role='alert'>{$this->session->flashdata('correcto')}</div>";
+                }                    
+                
+                if($this->session->flashdata('incorrecto')){
+                    echo "<div class='alert alert-danger' role='alert'>{$this->session->flashdata('incorrecto')}</div>";
+                    $errors = $this->session->flashdata('database_error');
+                    echo "<div class='alert alert-danger' role='alert'>{$errors['message']}</div>";
+                }                                        
+                ?>
+
                 <div id="listadoRegistros">
                         <h3 class="text-primary"><?php echo $title; ?></h3>
 

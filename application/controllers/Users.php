@@ -75,7 +75,7 @@ class Users extends CI_Controller {
 						"5" => '<a class="btn btn-sm btn-primary" href="javascript:buscar(' . $user->sec_user_id . ')">Editar</a>',		
 					);
 				}
-				error_log(json_encode($listJson));		
+				// error_log(json_encode($listJson));		
 
 				$json = array(
 					"draw"            => 1,
@@ -109,6 +109,52 @@ class Users extends CI_Controller {
 	}
 
 	public function store(){
-		echo "Metodo store";
+		// echo "Metodo store";
+		// echo "<pre>";
+		// print_r($this->input->post());
+		// echo "</pre>";
+		// return;
+		
+		$store=false;
+		if(!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			if(!$_SESSION['isadmin']) {
+				redirect('secure/login', 'location');								
+			}else{
+					$store=true;
+			}
+		}
+
+		if($store==true){
+			//Compruebo si se a enviado submit
+			if($this->input->post("submit")){
+				
+				//Llamo al metodo add
+				$add=$this->ADUser_model->storeUser(
+								$this->input->post("name"),
+								$this->input->post("email"),
+								$this->input->post("password"),
+								$this->input->post("isadmin"),
+								$this->input->post("isactive")
+				);
+			}
+			if($add==true){
+				//Sesion de una sola ejecución
+				$this->session->set_flashdata('correcto', 'Usuario añadido correctamente');
+			}else{
+				$this->session->set_flashdata('incorrecto', 'Usuario no se pudo añadir');
+			}
+				
+			//Redirecciono la pagina a la url por defecto
+			$data['title'] = 'Seguridad > Usuarios';			
+			// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+
+			$this->load->helper('functions');
+			$data['default_start_date'] = getDateDefault('d/m/Y');
+
+			$data['typeStation'] = 0;
+			$this->load->view('users/view',$data);		
+		}		
 	}
 }

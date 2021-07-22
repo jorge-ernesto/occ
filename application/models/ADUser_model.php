@@ -5,6 +5,7 @@ class ADUser_model extends CI_Model {
 		// Call the CI_Model constructor
 		parent::__construct();
 		$this->load->database();
+		$this->load->library('session');
 
 		/**
 		 * Usar pg_escape_string para parametros en querys fuera de CI
@@ -78,5 +79,29 @@ class ADUser_model extends CI_Model {
 
 		$query = $this->db->query($sql);
 		return $query->result();
+	}
+
+	/**
+	 * Guardamos usuarios
+	 */
+	public function storeUser($name,$email,$password,$isadmin,$isactive){		
+		//Verificamos que email no este registrado
+		$consulta=$this->db->query("SELECT email FROM sec_user WHERE email LIKE '$email'");
+
+		//Guardaremos si no existe email
+		// if($consulta->num_rows()==0){
+			$consulta=$this->db->query("INSERT INTO sec_user VALUES(nextval('seq_sec_user_id'::regclass),'$name','$email','$password','$isadmin','$isactive');");			
+			// error_log("INSERT INTO sec_user VALUES(nextval('seq_sec_user_id'::regclass),'$name','$email','$password','$isadmin','$isactive');");						
+			if($consulta==true){
+				return true;
+			}else{
+					$this->session->set_flashdata('database_error', $this->db->error());			
+					// error_log(json_encode($this->db->error()));								
+					return false;
+			}
+		// }else{
+		// 	return false;
+		// }
+
 	}
 }
