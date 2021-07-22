@@ -228,9 +228,7 @@ class Users extends CI_Controller {
 										$this->input->post("name"),
 										$this->input->post("email"),
 										$this->input->post("isadmin"),
-										$this->input->post("isactive"),
-										$this->input->post("password"),
-										$this->input->post("check_actualizar")
+										$this->input->post("isactive")
 						);											
 				}
 				if($mod==true){
@@ -334,9 +332,9 @@ class Users extends CI_Controller {
 				}
 				if($mod==true){
 					//Sesion de una sola ejecución
-					$this->session->set_flashdata('correcto', 'Usuario modificado correctamente');
+					$this->session->set_flashdata('correcto', 'Contraseña modificada correctamente');
 				}else{
-					$this->session->set_flashdata('incorrecto', 'Usuario no se pudo modificar');
+					$this->session->set_flashdata('incorrecto', 'Contraseña no se pudo modificar');
 				}	
 
 				//Redirecciono la pagina a la url por defecto

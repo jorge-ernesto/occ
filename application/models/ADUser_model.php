@@ -139,7 +139,7 @@ class ADUser_model extends CI_Model {
 	/**
 	 * Actualizar contraseña de usuarios
 	 */
-	public function updatePassword($id_usuario,$password){
+	public function updatePassword($id_usuario,$password=NULL){
 		$consulta=$this->db->query("
 				UPDATE 
 					sec_user
