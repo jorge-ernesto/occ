@@ -26,7 +26,7 @@ date_default_timezone_set('America/Lima');
 |
 */
 //$config['base_url'] = 'http://172.18.5.6/ocsmanager/';
-$config['base_url'] = '/ocsmanager';
+$config['base_url'] = '/webflotas';
 
 /*
 |--------------------------------------------------------------------------
