@@ -85,6 +85,11 @@ class CI_Config {
 	{
 		$this->config =& get_config();
 
+		// error_log(json_encode($this->config['base_url']));
+		// error_log(json_encode($_SERVER['SERVER_ADDR']));
+		// error_log(json_encode($_SERVER['HTTP_HOST']));
+		// error_log(json_encode($base_url));
+
 		// Set the base_url automatically if none was provided
 		if (empty($this->config['base_url']))
 		{
@@ -102,6 +107,12 @@ class CI_Config {
 				$base_url = (is_https() ? 'https' : 'http').'://'.$server_addr
 					.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
 			}
+			/*if(isset($_SERVER['SERVER_ADDR']))
+			{
+				$server_addr = $_SERVER['HTTP_HOST'];
+				$base_url = (is_https() ? 'https' : 'http').'://'.$server_addr
+					.substr($_SERVER['SCRIPT_NAME'], 0, strpos($_SERVER['SCRIPT_NAME'], basename($_SERVER['SCRIPT_FILENAME'])));
+			}*/
 			else
 			{
 				$base_url = 'http://localhost/';
@@ -109,6 +120,8 @@ class CI_Config {
 
 			$this->set_item('base_url', $base_url);
 		}
+
+		// error_log(json_encode($base_url));
 
 		log_message('info', 'Config Class Initialized');
 	}

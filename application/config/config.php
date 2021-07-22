@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+date_default_timezone_set('America/Lima');
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -23,7 +25,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+//$config['base_url'] = 'http://172.18.5.6/ocsmanager/';
+$config['base_url'] = '/ocsmanager';
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +39,7 @@ $config['base_url'] = '';
 |
 */
 $config['index_page'] = 'index.php';
+//$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -76,7 +80,7 @@ $config['url_suffix'] = '';
 | than english.
 |
 */
-$config['language']	= 'english';
+$config['language']	= 'spanish';
 
 /*
 |--------------------------------------------------------------------------
@@ -370,10 +374,13 @@ $config['encryption_key'] = '';
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = NULL;
+//$config['sess_save_path'] = NULL;
+$config['sess_save_path'] = FCPATH . 'application/cache/sessions/';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
+
+//http://stackoverflow.com/questions/34281557/codeigniter-sessions-do-not-work-on-live-server
 
 /*
 |--------------------------------------------------------------------------
@@ -422,7 +429,7 @@ $config['standardize_newlines'] = FALSE;
 |          for backwards compatibility purposes!
 |
 */
-$config['global_xss_filtering'] = FALSE;
+$config['global_xss_filtering'] = FALSE;//revisar
 
 /*
 |--------------------------------------------------------------------------
@@ -511,3 +518,5 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+// error_log(json_encode($config));

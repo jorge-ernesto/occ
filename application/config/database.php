@@ -72,8 +72,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
+$active_record = TRUE;
 
-$db['default'] = array(
+/*$db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => '',
@@ -93,4 +94,92 @@ $db['default'] = array(
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE
+);*/
+
+$db['default'] = array(
+	'hostname' => 'localhost',
+	'username' => 'postgres',
+	'password' => 'conejitalinda777',
+	'database' => 'opensoft_test',
+	'dbdriver' => 'postgre',
+	'port'     => 5432, # Add 
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
 );
+
+/**
+ * Conexión a integrado
+ */
+$db['int'] = array(
+	'hostname' => 'localhost',
+	'username' => 'postgres',
+	'password' => 'postgres',
+	'database' => 'integrado',
+	'dbdriver' => 'postgre',
+	'port'     => 5432, # Add 
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);
+
+
+/*
+SELECT
+	art.art_codigo as art_codigo,
+	trim(art.art_descripcion) as art_descripcion,
+	CASE WHEN tab.tab_elemento IS NULL THEN '--- SIN LINEA ---' ELSE trim(tab.tab_descripcion) END AS art_linea,
+	art.art_tipo,
+	art.art_unidad,
+	art.art_cod_ubicac,
+	art.art_cod_sku,
+	art.art_estado,
+	inv_saldoalma.stk_stock09
+FROM
+	int_articulos art
+	LEFT JOIN Int_tabla_General tab ON (tab.tab_tabla = '20' AND tab.tab_elemento = art.art_linea)
+	LEFT JOIN inv_saldoalma ON (art.art_codigo=inv_saldoalma.art_codigo AND inv_saldoalma.stk_periodo='2017' AND inv_saldoalma.stk_almacen='029')
+ORDER BY
+	art.art_codigo;
+
+
+SELECT
+	art.art_codigo as art_codigo,
+	trim(art.art_descripcion) as art_descripcion,
+	CASE WHEN tab.tab_elemento IS NULL THEN '--- SIN LINEA ---' ELSE trim(tab.tab_descripcion) END AS art_linea,
+	art.art_tipo,
+	art.art_unidad,
+	art.art_cod_ubicac,
+	art.art_cod_sku,
+	art.art_estado,
+	inv_saldoalma.stk_stock09
+FROM
+	int_articulos art
+	LEFT JOIN Int_tabla_General tab ON (tab.tab_tabla = '20' AND tab.tab_elemento = art.art_linea)
+	LEFT JOIN inv_saldoalma ON (art.art_codigo=inv_saldoalma.art_codigo AND inv_saldoalma.stk_periodo='2017' --AND inv_saldoalma.stk_almacen='029'
+)
+ORDER BY
+	art.art_codigo;
+
+
+*/

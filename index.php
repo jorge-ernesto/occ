@@ -53,7 +53,10 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');//development default
+	// print_r(ENVIRONMENT); //JEL	
+	// print_r(PHP_VERSION); //JEL	
+	// die(); //JEL
 
 /*
  *---------------------------------------------------------------
@@ -305,6 +308,14 @@ switch (ENVIRONMENT)
 
 	define('VIEWPATH', $view_folder.DIRECTORY_SEPARATOR);
 
+	error_log(json_encode(SELF));
+	error_log(json_encode(BASEPATH));
+	error_log(json_encode(FCPATH));
+	error_log(json_encode(SYSDIR));
+	error_log(json_encode(APPPATH));
+	error_log(json_encode(VIEWPATH));
+	error_log(json_encode($system_path));	
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
@@ -313,3 +324,9 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+
+/**
+ * OCSManager
+ * Version 0.17022500
+ *
+ */
