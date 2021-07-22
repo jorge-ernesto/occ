@@ -39,11 +39,11 @@ class CRuc_model extends CI_Model {
 	/**
 	 * Guardar RUCs
 	 */
-	public function storeRUC($sec_user_id,$name,$razon_social){		
+	public function storeRUC($sec_user_id,$ruc,$razon_social){		
 		
 		//Guardamos RUCs
-		$consulta=$this->db->query("INSERT INTO cnf_client VALUES(nextval('seq_cnf_client_id'::regclass),'$name','$razon_social');");
-		// error_log("INSERT INTO cnf_client VALUES(nextval('seq_cnf_client_id'::regclass),'$name','$razon_social');");						
+		$consulta=$this->db->query("INSERT INTO cnf_client VALUES(nextval('seq_cnf_client_id'::regclass),'$razon_social','$ruc');");
+		// error_log("INSERT INTO cnf_client VALUES(nextval('seq_cnf_client_id'::regclass),'$razon_social','$ruc');");						
 
 		//Solo si guarda el RUC en cnf_client
 		if($consulta==true){

@@ -155,7 +155,7 @@ class Rucs extends CI_Controller {
 					//Llamo al metodo add
 					$add=$this->CRuc_model->storeRUC(
 									$this->input->post("sec_user_id"),
-									$this->input->post("ruc"),
+									TRIM($this->input->post("ruc")),
 									$this->input->post("razon_social")
 					);
 			}
