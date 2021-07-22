@@ -41,10 +41,10 @@ function login() {
 			window.location = url;
 		} else if(data.status == 2) {
 			$('.msg-login').html(_alert('warning', data.message));
-			$('#password').focus();
+			// $('#password').focus();
 		} else if(data.status == 3) {
 			$('.msg-login').html(_alert('warning', data.message));
-			$('#username').focus();
+			// $('#username').focus();
 		} else if(data.status == 100) {
 			$('.msg-login').html(_alert('warning', data.message));
 		}

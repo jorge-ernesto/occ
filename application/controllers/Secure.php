@@ -58,11 +58,11 @@ class Secure extends CI_Controller {
 					$_SESSION['isadmin'] = $return['result_ad_user'][0]->isadmin;
 				} else {
 					$return['status'] = 2;
-					$return['message'] = 'Contraseña incorrecta.';
+					$return['message'] = 'El usuario y/o contraseña no es válido';
 				}
 			} else {
 				$return['status'] = 3;
-				$return['message'] = 'Error, el usuario ingresado no existe';
+				$return['message'] = 'El usuario y/o contraseña no es válido';
 			}
 		} else {
 			$return['status'] = 100;
