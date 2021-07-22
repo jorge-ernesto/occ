@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-expand-lg navbar-dark bd-navbar">
   <div class="container-fluid">
     <div class="navbar-header">
       <?php if(checkSession()) { ?>

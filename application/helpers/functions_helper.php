@@ -31,7 +31,7 @@ function checkSession() {
 }
 
 function appName() {
-	return 'OCS Manager';
+	return 'Web Flotas';
 }
 
 /**
