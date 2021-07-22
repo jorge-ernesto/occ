@@ -71,7 +71,7 @@
                                                 <th>ID</th>                                                
                                                 <th>Razon Social</th>                                                
                                                 <th>RUC</th>                                                 
-                                                <th>Opciones</th>                                                 
+                                                <th class="noExport">Opciones</th>                                                 
                                             </tr>
                                         </thead>
                                         <tbody>
