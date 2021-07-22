@@ -24,7 +24,8 @@ class ADUser_model extends CI_Model {
 			sec_user_id,
 			name,
 			email,
-			isadmin			
+			isadmin,
+			isactive
 		FROM
 			sec_user
 		WHERE

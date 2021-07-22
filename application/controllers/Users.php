@@ -146,15 +146,8 @@ class Users extends CI_Controller {
 				$this->session->set_flashdata('incorrecto', 'Usuario no se pudo añadir');
 			}
 				
-			//Redirecciono la pagina a la url por defecto
-			$data['title'] = 'Seguridad > Usuarios';			
-			// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
-
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
-
-			$data['typeStation'] = 0;
-			$this->load->view('users/view',$data);		
+			//Redirecciono la pagina a la url por defecto	
+			redirect('users/view', 'location');		
 		}		
 	}
 
@@ -249,14 +242,7 @@ class Users extends CI_Controller {
 				}	
 
 				//Redirecciono la pagina a la url por defecto
-				$data['title'] = 'Seguridad > Usuarios';			
-				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
-
-				$this->load->helper('functions');
-				$data['default_start_date'] = getDateDefault('d/m/Y');
-
-				$data['typeStation'] = 0;
-				$this->load->view('users/view',$data);
+				redirect('users/view', 'location');		
 			}else{
 				redirect(base_url());
 			}  
