@@ -1,3 +1,10 @@
 .bd-navbar{
    background-color: #7952b3;
 }
+
+@media (min-width: 600px) {
+   .disabled-padding{
+      padding-left: 0px;
+      padding-right: 0px;
+   }
+}

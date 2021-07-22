@@ -1,5 +1,7 @@
 <footer>
     <br>
+    <br>
+    <br>
     <hr>
     <img src="<?php echo base_url() ?>/assets/images/logo_nuevo_ocs.png" width="220" alt="angular">
     

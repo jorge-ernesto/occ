@@ -12,7 +12,7 @@
               Consultar
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-              <li><a class="dropdown-item" href="#">Cliente Credito</a></li>
+              <li><a class="dropdown-item" href="<?php echo base_url() ?>index.php/flotas/clientes_credito">Cliente Credito</a></li>
               <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/resumen">               Resumen</a></li>
               <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/estadistica">           Estadística</a></li>
               <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/combustibles">          Combustible</a></li>
@@ -28,8 +28,8 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
               Seguridad
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-              <li><a class="dropdown-item" href="#">       Usuarios</a></li>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">              
+              <li><a class="dropdown-item" href="<?php echo base_url() ?>index.php/users/view">Usuarios</a></li>
               <li><a class="d-none dropdown-item" href="#">Another action</a></li>
               <li><hr class="d-none dropdown-divider"></li>
               <li><a class="d-none dropdown-item" href="#">Something else here</a></li>

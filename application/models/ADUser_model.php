@@ -46,7 +46,6 @@ class ADUser_model extends CI_Model {
 			sec_user_id,
 			name,
 			email,
-			password,
 			isadmin,
 			isactive
 		FROM
@@ -56,6 +55,27 @@ class ADUser_model extends CI_Model {
 		AND isactive = 1;";
 
 		//$query = $this->db->query($sql, $params);
+		$query = $this->db->query($sql);
+		return $query->result();
+	}
+
+	/**
+	 * Listar todos los usuarios
+	 */
+	public function listUser(){
+		$sql = "
+			SELECT	
+				sec_user_id,			
+				name,
+				email,				
+				isadmin,
+				isactive
+			FROM
+				sec_user
+			ORDER BY 
+				1;
+		";
+
 		$query = $this->db->query($sql);
 		return $query->result();
 	}
