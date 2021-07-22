@@ -85,4 +85,22 @@ class CRuc_model extends CI_Model {
 				return false;
 		}
 	}
+
+	/**
+	 * Obtener RUCs por usuario logueado
+	 */
+	public function getRucByClient($user_id){
+		$sql = "
+			SELECT 
+				* 
+			FROM 
+				sec_user_client secuser
+				INNER JOIN cnf_client cnfcli ON (secuser.cnf_client_id = cnfcli.cnf_client_id)
+			WHERE
+				secuser.sec_user_id = '$user_id';
+		";
+
+		$query = $this->db->query($sql);
+		return $query->result();		
+	}
 }

@@ -12,7 +12,8 @@
             aria-controls="collapseConsultas"><i class="fas fa-fw fa-file-invoice ocsicon"></i><span>Consultas</span></a>
          <div id="collapseConsultas" class="collapse" aria-labelledby="headingEbi" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-               <a class="collapse-item" href="<?php echo base_url() ?>index.php/flotas/clientes_credito">Cliente Credito</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/flotas/despachos">Despachos</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/flotas/comprobantes_cobranza">Comprobantes cobranza</a>
             </div>
          </div>
       </li>

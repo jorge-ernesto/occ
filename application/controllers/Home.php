@@ -21,14 +21,14 @@ class Home extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Consultas > Cliente Credito';
+			$data['title'] = 'Consultas > Despachos';
 			$data['result_c_org'] = $this->COrg_model->getAllCOrg();
 
 			$this->load->helper('functions');
 			$data['default_start_date'] = getDateDefault('d/m/Y');
 
 			$data['typeStation'] = 0;
-			$this->load->view('flotas/clientes_credito',$data);
+			$this->load->view('flotas/despachos',$data);
 		}
 	}
 

@@ -16,16 +16,24 @@
                 <div class="row">&nbsp;</div>
 
                 <hr>
-                <div class="table-responsive">
+                <div class="result-search">
+                </div>
+                <div class="table-responsive d-none">
                     <table id="table_id" class="table table-striped table-bordered table-hover dataTable" cellspacing="0" style="width: 100%;" role="grid"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
                         <thead>
                             <tr>
-                                <th>ID</th>                                                
-                                <th>Nombre</th>
-                                <th>Email</th>                                                
-                                <th>Admin</th>
-                                <th>Activo</th>
-                                <th style="width: 0%;" class="noExport"></th>                                                
+                                <th>Correlativo</th>
+                                <th>Comprobante</th>                                                
+                                <th>RUC</th>
+                                <th>Fecha</th> 
+                                <th>EDS</th>                                 
+                                <th>Dias</th>
+                                <th>Vencimiento</th>
+                                <th>Moneda</th>
+                                <th>Importe</th>
+                                <th>Pagos</th>                                
+                                <th>Saldo</th>
+                                <th>Fecha Saldo</th>                                
                             </tr>
                         </thead>
                         <tbody>
@@ -36,10 +44,17 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <div class="row">&nbsp;</div>
                 
             </div>
         </div>
@@ -65,6 +80,5 @@
 
     <?php $this->load->view('template/footer.php'); ?>
     <?php $this->load->view('template/scripts.php'); ?>
-    <script src="<?php echo base_url() ?>assets/js/users.js"></script>
 </body>
 </html>

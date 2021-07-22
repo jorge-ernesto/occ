@@ -14,10 +14,38 @@ class COrg_model extends CI_Model {
 	public function getAllCOrg()
 	{
 		$query = $this->db->query("SELECT
-	cnf_org_id as c_org_id,
-	name as name,
-	ipaddress as ip
+	cnf_org_id AS c_org_id,
+	name AS name,
+	ipaddress AS ip
 FROM 
+	cnf_org
+ORDER BY
+	1;");
+		return $query->result();
+	}
+
+	public function getOrgByTypeAndId($id){
+		$query = $this->db->query("SELECT
+	cnf_org_id AS c_org_id,	
+	name AS name,	
+	ipaddress AS ip,
+	value AS almacen_id
+FROM
+	cnf_org
+WHERE
+	cnf_org_id = '$id'
+ORDER BY
+	1;");
+		return $query->result();
+	}
+
+	public function getCOrgByType(){
+		$query = $this->db->query("SELECT
+	cnf_org_id AS c_org_id,	
+	name AS name,	
+	ipaddress AS ip,
+	value AS almacen_id
+FROM
 	cnf_org
 ORDER BY
 	1;");
