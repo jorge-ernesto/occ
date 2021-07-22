@@ -24,4 +24,8 @@
 	<script src="https://cdn.opensysperu.com/js/raphael.min.js"></script>
 	<script src="https://cdn.opensysperu.com/js/morris.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>	
+
+	<!-- extends -->
+	<script src="<?php echo base_url() ?>assets/js/application.js"></script>
+	<script src="<?php echo base_url() ?>assets/js/functions.js"></script>
 </head>

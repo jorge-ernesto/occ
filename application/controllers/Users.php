@@ -68,13 +68,23 @@ class Users extends CI_Controller {
 						"1" => $user->name,
 						"2" => $user->email,
 						"3" => ($user->isadmin == 1) ?
-								'<h6><span class="badge badge-primary">Si</span></h6>' :
-								'<h6><span class="badge badge-danger">No</span></h6>',
+								'<h6><span class="badge bg-primary text-white rounded-pill">Si</span></h6>' :
+								'<h6><span class="badge bg-danger text-white rounded-pill">No</span></h6>',
 						"4" => ($user->isactive == 1) ?
-								'<h6><span class="badge badge-primary">Si</span></h6>' :
-								'<h6><span class="badge badge-danger">No</span></h6>',
-						"5" => '<a class="btn btn-sm btn-primary" href="'.base_url().'index.php/users/edit/'.$user->sec_user_id.'">Editar</a>
-								  <a class="btn btn-sm btn-primary" href="'.base_url().'index.php/users/editpass/'.$user->sec_user_id.'">Cambiar contraseña</a>',
+								'<h6><span class="badge bg-primary text-white rounded-pill">Si</span></h6>' :
+								'<h6><span class="badge bg-danger text-white rounded-pill">No</span></h6>',
+						"5" => '<div class="d-flex">
+										<div class="dropdown mr-1">
+											<button type="button" class="btn btn-secondary" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
+												<i class="fas fa-cog"></i>
+											</button>
+											<div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+												<a class="dropdown-item" href="'.base_url().'index.php/users/edit/'.$user->sec_user_id.'">Editar</a>
+												<a class="dropdown-item" href="'.base_url().'index.php/users/editpass/'.$user->sec_user_id.'">Cambiar contraseña</a>												
+											</div>
+										</div>
+									</div>
+								  ',
 					);
 				}
 				// error_log(json_encode($listJson));		

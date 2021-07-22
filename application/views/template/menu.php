@@ -1,57 +1,27 @@
-<nav class="navbar navbar-expand-lg navbar-dark bd-navbar">
-    <a class="navbar-brand" href="<?php echo base_url() ?>"><?php echo appName() ?></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<div id="content-wrapper" class="d-flex flex-column">
+   <div id="content">
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+         <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"><i class="fa fa-bars">
+            </i></button>
+         <ul class="navbar-nav ml-auto">
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false"><i class="fas fa-fw fa-user"></i></a>
+               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                  aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="#"><i
+                        class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Mi cuenta</a>
+                  <!-- <a class="dropdown-item" href="/cpl.changepass.page"><i
+                        class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Cambiar Contrase&ntilde;a</a> -->
+                  <!-- <a class="dropdown-item" href="/cpl.config.page"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Configuraci&oacute;n</a>-->                                    
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="<?php echo base_url() ?>index.php/secure/logout"><i
+                        class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Cerrar Sesi&oacute;n</a>
+               </div>
+            </li>
+         </ul>
+      </nav>      
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <?php if(checkSession()) { ?>
-        <ul class="navbar-nav mr-auto">      
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-              Consultar
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-              <li><a class="dropdown-item" href="<?php echo base_url() ?>index.php/flotas/clientes_credito">Cliente Credito</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/resumen">               Resumen</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/estadistica">           Estadística</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/combustibles">          Combustible</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/market">                Market Tienda</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/market_productos_linea">Productos por Línea (MT)</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/market_playa">          Market Playa</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/ventas_horas">          Ventas por Horas</a></li>
-              <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/liquidacion_diaria">    Liquidacion diaria</a></li>              
-            </ul>
-          </li>
-          <?php if($_SESSION['isadmin'] == 1) { ?>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-              Seguridad
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">              
-              <li><a class="dropdown-item" href="<?php echo base_url() ?>index.php/users/view">Usuarios</a></li>
-              <li><a class="d-none dropdown-item" href="#">Another action</a></li>
-              <li><hr class="d-none dropdown-divider"></li>
-              <li><a class="d-none dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </li>
-          <?php } ?>
-        </ul>      
-      <?php } ?>
-
-      <ul class="navbar-nav navbar-right">                
-        <?php if(checkSession()) { ?>
-          <li class="dropdown">            
-            <a id="dropdownMenuLink" class="btn btn-outline-primary dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <?php echo $_SESSION['loginname']; ?>
-            </a>            
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#"><span class="glyphicon glyphicon-user"></span> Mi cuenta</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="<?php echo base_url() ?>index.php/secure/logout"><span class="glyphicon glyphicon-log-out"></span> Cerrar Sesión</a></li>
-            </ul>        
-          </li>
-        <?php } ?>
-      </ul>
-    </div>
-</nav>
+      <!-- Container -->
+      <!-- <div class="container-fluid"> -->

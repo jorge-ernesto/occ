@@ -45,7 +45,7 @@ function listar() {
             }
         },
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-        "pageLength": 5,
+        "pageLength": 10,
         dom: 'Bfrtip', // Blfrtip
         // buttons: [
         //     'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
