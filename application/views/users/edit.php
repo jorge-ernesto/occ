@@ -60,29 +60,33 @@
                                         <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view">Atras</a>
                                     </h4>
 
-                                    <input type="hidden" name="sec_user_id" value="<?php echo $user[0]->sec_user_id; ?>" id="id" class="form-control">
+                                    <input type="hidden" name="sec_user_id" value="<?php echo $user[0]->sec_user_id; ?>" class="form-control">
                                 </form>
 
                                 <hr>
-                                <h4>
-                                    <a class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/rucs/create/<?php echo $user[0]->sec_user_id ?>">Agregar RUC</a>
-                                </h4>
                                 <div class="table-responsive">
-                                    <table id="table_rucs" class="table table-bordered table-striped"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
+                                    <table id="table_id" class="table table-bordered table-striped"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
                                         <thead> <!-- class="thead-dark" -->
                                             <tr>
+                                                <th>ID</th>                                                
                                                 <th>Razon Social</th>                                                
                                                 <th>RUC</th>                                                 
+                                                <th>Opciones</th>                                                 
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>                                                
+                                                <th></th>                                                
+                                                <td></td>
                                                 <td></td>
                                                 <td></td>                                               
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
+                                <h4>
+                                    <a id="wea" class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/rucs/create/<?php echo $user[0]->sec_user_id ?>">Agregar RUC</a>
+                                </h4>
 
                             </div>
                         </div>
@@ -95,4 +99,4 @@
     </div><!-- .container -->
 
 <?php $this->load->view('template/scripts.php'); ?>
-<script src="<?php echo base_url() ?>assets/js/users.js"></script>
+<script src="<?php echo base_url() ?>assets/js/rucs.js"></script>

@@ -16,9 +16,9 @@
 
                                 <form method="post" action="<?php echo base_url() ?>index.php/rucs/store"> <!-- novalidate -->
                                     <div class="row form-group">
-                                        <label for="nombre" class="col-form-label col-md-2">Nombre:</label> <!-- col-md-4 -->
+                                        <label for="nombre" class="col-form-label col-md-2">RUC:</label> <!-- col-md-4 -->
                                         <div class="col-md-5"> <!-- col-md-8 -->
-                                            <input type="text" name="name" value="" id="name" class="form-control" required> <!-- required -->
+                                            <input type="text" name="ruc" value="" id="ruc" class="form-control" required> <!-- required -->
                                         </div>
                                     </div>
                                     <div class="row form-group">

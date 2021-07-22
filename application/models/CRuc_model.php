@@ -13,6 +13,30 @@ class CRuc_model extends CI_Model {
 	}
 
 	/**
+	 * Listar RUCs por usuario
+	 */
+	public function listRUC($id_usuario){
+		$sql = "
+			SELECT	
+				cli.cnf_client_id,
+				cli.name as razon_social,
+				cli.value as ruc,
+				secuser.sec_user_id
+			FROM
+				cnf_client                 cli
+				INNER JOIN sec_user_client usercli ON (cli.cnf_client_id   = usercli.cnf_client_id)
+				INNER JOIN sec_user        secuser ON (secuser.sec_user_id = usercli.sec_user_id)
+			WHERE
+				secuser.sec_user_id = '$id_usuario'
+			ORDER BY
+				cli.cnf_client_id;
+		";
+
+		$query = $this->db->query($sql);
+		return $query->result();
+	}
+
+	/**
 	 * Guardar RUCs
 	 */
 	public function storeRUC($sec_user_id,$name,$razon_social){		
@@ -32,6 +56,29 @@ class CRuc_model extends CI_Model {
 
 		if($consulta==true && $consulta_==true){
 				return true;
+		}else{
+				$this->session->set_flashdata('database_error', $this->db->error());			
+				// error_log(json_encode($this->db->error()));								
+				return false;
+		}
+	}
+
+	/**
+	 * Eliminar RUCs
+	 */
+	public function destroyRUC($sec_user_id,$cnf_client_id){
+		//Eliminamos RUCs
+		$consulta=$this->db->query("DELETE FROM sec_user_client WHERE sec_user_id = '$sec_user_id' AND cnf_client_id = '$cnf_client_id';");
+		error_log("DELETE FROM sec_user_client WHERE sec_user_id = '$sec_user_id' AND cnf_client_id = '$cnf_client_id';");
+
+		//Solo si elimino de sec_user_client
+		if($consulta){
+			$consulta_=$this->db->query("DELETE FROM cnf_client WHERE cnf_client_id = '$cnf_client_id';");
+			error_log("DELETE FROM cnf_client WHERE cnf_client_id = '$cnf_client_id';");
+		}
+
+		if($consulta==true && $consulta_==true){
+			return true;
 		}else{
 				$this->session->set_flashdata('database_error', $this->db->error());			
 				// error_log(json_encode($this->db->error()));								

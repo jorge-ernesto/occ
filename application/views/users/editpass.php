@@ -32,7 +32,7 @@
                                         <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view">Atras</a>
                                     </h4>
 
-                                    <input type="hidden" name="sec_user_id" value="<?php echo $user[0]->sec_user_id; ?>" id="id" class="form-control">
+                                    <input type="hidden" name="sec_user_id" value="<?php echo $user[0]->sec_user_id; ?>" class="form-control">
                                 </form>
 
                             </div>

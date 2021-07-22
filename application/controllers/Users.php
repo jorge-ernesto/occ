@@ -61,6 +61,7 @@ class Users extends CI_Controller {
 				$users = $this->ADUser_model->listUser();
 				// error_log(json_encode($users));		
 				
+				$listJson = array();
 				foreach ($users as $key => $user) {
 					$listJson[] = array(
 						"0" => $user->sec_user_id,
