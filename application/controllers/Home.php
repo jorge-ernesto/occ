@@ -21,8 +21,8 @@ class Home extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Consultar > Cliente Credito';
-			// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+			$data['title'] = 'Consultas > Cliente Credito';
+			$data['result_c_org'] = $this->COrg_model->getAllCOrg();
 
 			$this->load->helper('functions');
 			$data['default_start_date'] = getDateDefault('d/m/Y');
