@@ -74,12 +74,33 @@
                                         <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view">Atras</a>
                                     </h4>
 
-                                    <input type="hidden" name="sec_user_id" value="<?= $user[0]->sec_user_id ?>" id="id" class="form-control">
+                                    <input type="hidden" name="sec_user_id" value="<?php echo $user[0]->sec_user_id; ?>" id="id" class="form-control">
                                 </form>
+
+                                <hr>
+                                <h4>
+                                    <a id="wea" class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/users/create">Agregar RUC</a>
+                                </h4>
+                                <div class="table-responsive">
+                                    <table id="table_rucs" class="table table-bordered table-striped"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
+                                        <thead> <!-- class="thead-dark" -->
+                                            <tr>
+                                                <th>Razon Social</th>                                                
+                                                <th>RUC</th>                                                 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>                                                
+                                                <td></td>
+                                                <td></td>                                               
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
                             </div>
                         </div>
-                </div>    
+                </div>                                                                                
 
             <?php $this->load->view('template/footer.php'); ?>
 
