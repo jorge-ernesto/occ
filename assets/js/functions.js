@@ -1,4 +1,4 @@
-var url = '/ocsmanager/index.php/';
+var url = '/webflotas/index.php/';
 //var url = 'http://192.168.0.191/ocsmanager/index.php/';
 
 var stations = [], stationsDesc = [], stationsPor = [], stationsTotal = [];
