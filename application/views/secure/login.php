@@ -12,14 +12,15 @@
 								<h1 class="h4 text-gray-900 mb-4">&Aacute;rea de Cliente</h1>
 							</div>							
 							
-							<form method="post" id="formularioLogin" class="user"> <!-- novalidate -->
+							<form class="user">
 								<div class="form-group">
-									<input type="email" name="username" id="username" class="form-control form-control-user" placeholder="Email" autofocus required />
+									<input type="email" name="username" id="username" class="form-control form-control-user keypress" placeholder="Usuario" autofocus required />
 								</div>
 								<div class="form-group">
-									<input type="password" name="password" id="password" class="form-control form-control-user" placeholder="Contrase&ntilde;a" required />
+									<input type="password" name="password" id="password" class="form-control form-control-user keypress" placeholder="Contrase&ntilde;a" required />
 								</div>
-								<input type="submit" id="signIn" class="btn btn-primary btn-user btn-block btn-login" value="Iniciar sesi&oacute;n" />
+								<div class="msg-login"></div>
+								<button type="button" class="btn btn-primary btn-user btn-block btn-login">Iniciar sesi&oacute;n</button>
 							</form>
 							
 							<hr>
