@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Flotas extends CI_Controller {
 
 	public function __construct()
 	{
@@ -13,7 +13,7 @@ class Home extends CI_Controller {
 		$this->load->helper('functions');
 	}
 
-	public function index()
+	public function clientes_credito()
 	{
 		/*echo '<pre>';
 		var_dump($this->COrg_model->usuariosIntegrado());
@@ -29,21 +29,6 @@ class Home extends CI_Controller {
 
 			$data['typeStation'] = 0;
 			$this->load->view('flotas/clientes_credito',$data);
-		}
-	}
-
-	function centralizations() {
-		if(!checkSession()) {
-			redirect('secure/login', 'location');
-		} else {
-			$data['title'] = 'Home > Centralizaciones';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
-
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
-
-			$data['typeStation'] = 0;
-			$this->load->view('ventas/combustibles',$data);
 		}
 	}
 }
