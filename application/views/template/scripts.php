@@ -8,11 +8,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.29.0/dist/sweetalert2.all.min.js"></script> <!-- CDN de SweetAlert2 -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script> <!-- CDN de Bootstrap Select -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script> --> <!-- CDN de Bootstrap Select -->
 
-<script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script> <!-- CDN de JsBarcode -->
+<!-- <script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script> --> <!-- CDN de JsBarcode -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PrintArea/2.4.1/jquery.PrintArea.min.js"></script> <!-- CDN de PrintArea -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PrintArea/2.4.1/jquery.PrintArea.min.js"></script> --> <!-- CDN de PrintArea -->
 
 <!-- Latest compiled and minified CSS -->	
 <script src="<?php echo base_url() ?>assets/js/application.js"></script>
