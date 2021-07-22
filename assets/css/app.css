@@ -1,0 +1,251 @@
+/* Menu Nav Bar App */
+.navbar-default {
+  border-radius: 0;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  /*0px 6px 6px 0px*/
+  -webkit-border-radius: 0 6px 6px 6px;
+  -moz-border-radius: 0 6px 6px;
+  border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu .open  > .dropdown-menu {
+    display: block;
+}
+.dropdown-submenu > a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #ccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+
+.dropdown-submenu .open  > a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  -webkit-border-radius: 6px 0 6px 6px;
+  -moz-border-radius: 6px 0 6px 6px;
+  border-radius: 6px 0 6px 6px;
+}
+
+
+
+/* others */
+.none {
+  display: none;
+}
+
+.a-menu-accordion {
+  text-decoration: none !important; /* no underline */
+  cursor: pointer;
+}
+
+.detail-station {
+  cursor: pointer;
+}
+
+/*loading css*/
+.spinner {
+  margin: 10px auto 0;
+  margin-bottom: 10px;
+  width: 70px;
+  text-align: center;
+}
+.spinner > div {
+  width: 18px;
+  height: 18px;
+  background-color: #245580;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% { 
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+html { height:100%; }
+body {
+  min-height:100%; padding:0; margin:0; position:relative;
+  background-color: #FAFAFA;
+}
+
+body::after { content:''; display:block; height:100px; }
+
+footer {
+  position:absolute; 
+  bottom:0; 
+  width:100%; 
+  height:120px;
+  background-color: #E8EEEB;
+  color: #525252;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  margin-top: 40px;
+  font-size: 18px;
+}
+
+.container-ss-station {
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.panel-group-station {
+  background-color: #337ab7;
+  border-color: #337ab7;
+  color: #ffffff;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  padding: 1px 15px;
+}
+
+.panel-default {
+  border-color: #BBBBBB;
+}
+
+.mid {
+  width: 50%; float: left;
+}
+
+.all-result-sales-comb {
+  cursor: pointer;
+}
+
+.panel-body-tank {
+  padding: 12px 6px;
+}
+
+.detail-tank {
+  padding-left: 34px;
+}
+
+.label-detail-comb {
+  margin-bottom: 2px;
+}
+
+.panel-body-tank {
+  height: 134px;
+}
+
+.name-tank {
+  text-align: left;
+  padding-left: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .msg-tank-mobile {
+    text-align: center;
+  }
+  .detail-tank {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  .name-tank {
+    text-align: center;
+  }
+  .panel-body-tank {
+    height: auto;
+  }
+
+  .in-credentials {
+    margin-top: 0px;
+    margin-bottom: 80px;
+    /*text-align: center;
+    background-color: red;*/
+  }
+}
+
+/*Login design*/
+/*.bg-login {
+  background-color: #374070;
+  color: #fff;
+}
+.container-desc {
+  background-color: #fff;
+  color: #111;
+}*/
+.in-credentials {
+  margin-top: 40px;
+}
+
+.in-warning {
+  color: #8a6d3b;
+  border-color: #8a6d3b;
+}
+.in-error {
+  color: #a94442;
+  border-color: #a94442;
+}
+.in-success {
+  color: #3c763d;
+  border-color: #3c763d;
+}
+
+.header-table-sumary {
+  background-color: #337ab7;
+  color: #fff;
+}
+
+.col-dif {
+  background-color: #EEF2F4;
+}
+
+.search-detail-products-line {
+  cursor: pointer;
+}
+
+@media (min-width: 600px) {
+  .tab-responsive {
+    font-size: 1.3em;
+  }
+}
+
+@media (max-width: 600px) {
+  .tab-responsive {
+    font-size: 1em;
+  }
+}
