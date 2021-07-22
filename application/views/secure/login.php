@@ -9,7 +9,7 @@
 						<div class="p-5">
 							<div class="text-center">
 								<h1 class="h4 text-gray-900 mb-4"><img src="https://cdn.opensysperu.com/img/logocu.png" style="max-width: 100%; max-height: 100%;" /></h1>
-								<h1 class="h4 text-gray-900 mb-4">Web Flotas</h1>
+								<h1 class="h4 text-gray-900 mb-4">Opensoft Cloud Companion</h1>
 							</div>							
 							
 							<form class="user">

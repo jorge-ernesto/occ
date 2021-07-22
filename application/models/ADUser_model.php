@@ -13,6 +13,32 @@ class ADUser_model extends CI_Model {
 	}
 
 	/**
+	 * Buscar permisos: Superuser, Admin, OrgReports, FleetReports
+	 */
+	public function searchPrivilege($sec_user_id, $sec_privilege_id)
+	{
+		$sql = "
+		SELECT
+			1 as privilege
+		FROM
+			sec_user su
+			LEFT JOIN sec_user_privilege sup ON (su.sec_user_id = sup.sec_user_id)
+			LEFT JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
+		WHERE
+			su.sec_user_id = $sec_user_id
+			AND sp.sec_privilege_id = $sec_privilege_id
+		LIMIT 1;";
+		$query = $this->db->query($sql);
+
+		$result = $query->result();
+		if ($result[0]->privilege == 1){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
+
+	/**
 	 * Buscar usuario por user y password
 	 * @param string $params['loginname'], string $param['password']
 	 * @return array (result query)
@@ -23,15 +49,12 @@ class ADUser_model extends CI_Model {
 		SELECT
 			sec_user_id,
 			name,
-			email,
-			isadmin,
-			isactive
+			email
 		FROM
 			sec_user
 		WHERE
 			email = ?
-		AND password = ?
-		AND isactive = 1;";
+		AND password = ?";
 		$query = $this->db->query($sql, $params);
 		return $query->result();
 	}
@@ -47,14 +70,11 @@ class ADUser_model extends CI_Model {
 		SELECT
 			sec_user_id,
 			name,
-			email,
-			isadmin,
-			isactive
+			email
 		FROM
 			sec_user
 		WHERE
-			email = '".$params['loginname']."'
-		AND isactive = 1;";
+			email = '".$params['loginname']."';";
 
 		//$query = $this->db->query($sql, $params);
 		$query = $this->db->query($sql);
