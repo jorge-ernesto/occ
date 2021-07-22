@@ -1,12 +1,27 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-	<title><?php echo isset($title) ? $title : 'Page' ?> - <?php echo appName() ?></title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<!-- base_url() -->
-	<link rel="stylesheet" href="<?php echo base_url() ?>assets/plugins/bootstrap/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/plugins/datatables/datatables.min.css"/> <!-- CDN de DataTables -->
-	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css"> --> <!-- CDN de Bootstrap Select -->
-	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/PrintArea/2.4.1/PrintArea.min.css"> --> <!-- CDN de PrintArea -->
-	<link rel="stylesheet" href="<?php echo base_url() ?>assets/css/estilos.css">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title><?php echo isset($title) ? $title : 'Page' ?> - <?php echo appName() ?></title>
+	<link href="https://cdn.opensysperu.com/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.opensysperu.com/css/jquery-ui.min.css" rel="stylesheet">
+	<link href="https://cdn.opensysperu.com/css/datatables.min.css" rel="stylesheet">
+	<link href="https://cdn.opensysperu.com/css/clientes.css" rel="stylesheet">
+	<link href="https://cdn.opensysperu.com/css/fontawesome-free-all.min.css" rel="stylesheet" type="text/css">
+	<link href="https://cdn.opensysperu.com/css/nunito-all.css" rel="stylesheet">
+	<link href="https://cdn.opensysperu.com/css/jquery-ui-theme-base.min.css" rel="stylesheet">
+	<link href="https://cdn.opensysperu.com/css/morris.css" rel="stylesheet">
+
+	<script src="https://cdn.opensysperu.com/js/jquery.min.js"></script>
+	<script src="https://cdn.opensysperu.com/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.opensysperu.com/js/jquery-ui.min.js"></script>
+	<script src="https://cdn.opensysperu.com/js/datatables.min.js"></script>
+	<script src="https://cdn.opensysperu.com/js/jquery.ui.datepicker-es.js"></script>
+	<script src="https://cdn.opensysperu.com/js/raphael.min.js"></script>
+	<script src="https://cdn.opensysperu.com/js/morris.min.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>	
+</head>
