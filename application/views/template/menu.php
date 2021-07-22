@@ -23,6 +23,7 @@
               <li><a class="d-none dropdown-item" href="<?php echo base_url() ?>index.php/ventas/liquidacion_diaria">    Liquidacion diaria</a></li>              
             </ul>
           </li>
+          <?php if($_SESSION['isadmin'] == 1) { ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
               Seguridad
@@ -34,6 +35,7 @@
               <li><a class="d-none dropdown-item" href="#">Something else here</a></li>
             </ul>
           </li>
+          <?php } ?>
         </ul>      
       <?php } ?>
 
