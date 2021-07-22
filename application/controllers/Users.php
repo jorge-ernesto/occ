@@ -36,7 +36,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Seguridad > Usuarios';			
@@ -55,7 +56,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');
 			}else{
 				$users = $this->ADUser_model->listUser();
@@ -105,7 +107,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Seguridad > Usuarios';			
@@ -131,7 +134,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 					$store=true;
@@ -172,7 +176,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 					$edit=true;						
@@ -213,7 +218,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 					$update=true;						
@@ -266,7 +272,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 					$edit=true;						
@@ -307,7 +314,8 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			if(!$_SESSION['isadmin']) {
+			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
 					$update=true;						
