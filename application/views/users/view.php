@@ -5,7 +5,7 @@
 
     <!-- Container -->
     <div class="container-fluid">
-        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div class="d-sm-flex align-items-center justify-content-between mb-3"> <!-- mb-4 -->
             <h1 class="h3 mb-0 text-gray-800"><?php echo $title; ?></h1>
         </div>       
 
@@ -30,7 +30,7 @@
                 
         <div class="table-responsive">
             <table id="table_id" class="table table-striped table-bordered table-hover dataTable" cellspacing="0" style="width: 100%;" role="grid"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
-                <thead> <!-- class="thead-dark" -->
+                <thead>
                     <tr>
                         <th>ID</th>                                                
                         <th>Nombre</th>
@@ -56,6 +56,7 @@
             <a id="wea" class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/users/create">Crear Usuario</a>
         </h4>        
     </div>
+    <!-- Cerrar Container --> 
 
     <?php $this->load->view('template/footer.php'); ?>
     <?php $this->load->view('template/scripts.php'); ?>

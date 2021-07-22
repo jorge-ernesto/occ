@@ -93,7 +93,7 @@ function listar() {
         // ]
     });
     
-    var div = $('<div class="row">\n\
+    var div = $('<div class="row mb-3">\n\
                     <div id="div" class="col-sm-12 col-md-7">\n\
                     </div>\n\
                     <div id="div2" class="col-sm-12 col-md-5">\n\
