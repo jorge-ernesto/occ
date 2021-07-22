@@ -68,10 +68,10 @@
                                     <table id="table_id" class="table table-bordered table-striped"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
                                         <thead> <!-- class="thead-dark" -->
                                             <tr>
-                                                <th>ID</th>                                                
-                                                <th>Razon Social</th>                                                
-                                                <th>RUC</th>                                                 
-                                                <th class="noExport">Opciones</th>                                                 
+                                                <th>ID</th>
+                                                <th>RUC</th>
+                                                <th>Razon Social</th>
+                                                <th class="noExport">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -49,40 +49,43 @@ function listar() {
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
         "pageLength": 5,
         dom: 'Bfrtip', // Blfrtip
+        // buttons: [
+        //     'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+        // ],
         buttons: [
-        {
-            extend: 'copy',    
-            exportOptions: {
-                columns: [1, 2] //Es lo mismo que thead th:not(.noExport)
+            {
+                extend: 'copy',    
+                exportOptions: {
+                    columns: [1, 2] //Es lo mismo que thead th:not(.noExport)
+                }
+            },
+            {
+                extend: 'csv',    
+                exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+            {
+                extend: 'excel',            
+                exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+            {
+                extend: 'pdf',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)"
+                }
+            },
+            {
+                extend: 'pageLength',        
             }
-        },
-        {
-            extend: 'csv',    
-            exportOptions: {
-                columns: "thead th:not(.noExport)"
-            }
-        },
-        {
-            extend: 'excel',            
-            exportOptions: {
-                columns: "thead th:not(.noExport)"
-            }
-        },
-        {
-            extend: 'pdf',
-            exportOptions: {
-                columns: "thead th:not(.noExport)"
-            }
-        },
-        {
-            extend: 'print',
-            exportOptions: {
-                columns: "thead th:not(.noExport)"
-            }
-        },
-        {
-            extend: 'pageLength',        
-        }
         ],
         "columnDefs": [
             {

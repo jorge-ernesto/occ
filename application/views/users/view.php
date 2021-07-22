@@ -38,7 +38,7 @@
                                                 <th>Email</th>                                                
                                                 <th>Admin</th>
                                                 <th>Activo</th>
-                                                <th>Opciones</th>                                                
+                                                <th class="noExport">Opciones</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>

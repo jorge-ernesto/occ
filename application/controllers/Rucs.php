@@ -43,9 +43,9 @@ class Rucs extends CI_Controller {
 				foreach ($rucs as $key => $ruc) {
 					$listJson[] = array(
 						"0" => $ruc->cnf_client_id,
-						"1" => $ruc->razon_social,
-						"2" => $ruc->ruc,
-						"3" => '<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal_delete_'.$ruc->cnf_client_id.'">Eliminar</button>
+						"1" => $ruc->ruc,
+						"2" => $ruc->razon_social,
+						"3" => '<button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal_delete_'.$ruc->cnf_client_id.'">Eliminar</button>
 									
 									<!-- Modal -->
 									<div class="modal fade animated fadeIn" id="modal_delete_'.$ruc->cnf_client_id.'">
