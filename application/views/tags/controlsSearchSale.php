@@ -33,7 +33,6 @@ if ($typeStation == 0) {
                         ?>
                     </select>
                 </div>
-                <!-- <br> -->
 
                 <?php if($typeStation == 4) { ?>
                 <label for="">Periodo Anterior:</label>

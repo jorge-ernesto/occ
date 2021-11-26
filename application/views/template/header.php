@@ -31,7 +31,6 @@
 
 	<!-- extends -->
 	<link href="<?php echo base_url() ?>assets/css/app.css" rel="stylesheet">
-	<!-- <link href="<?php //echo base_url() ?>assets/css/estilos.css" rel="stylesheet"> -->
 	<script src="<?php echo base_url() ?>assets/js/application.js"></script>
 	<script src="<?php echo base_url() ?>assets/js/functions.js"></script>
 </head>

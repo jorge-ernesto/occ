@@ -1792,11 +1792,11 @@ class Reports extends CI_Controller {
 					if($isAllStations) {
 						if(is_object($dataStation)){
 							$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php';
-							$curl = $curl . '?mod='.$mod.'&from='.$formatDateEnd.'&to='.$formatDateBegin.'&warehouse_id='.$dataStation->almacen_id.'&days=7&isvaliddiffmonths=si&unserialize=1';
+							$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation->almacen_id.'&days=7&isvaliddiffmonths=si&unserialize=1';
 							$name = $dataStation->name;
 						}else if(is_array($dataStations)){
 							$curl = 'http://'.$dataStation['ip'].'/sistemaweb/centralizer_.php';
-							$curl = $curl . '?mod='.$mod.'&from='.$formatDateEnd.'&to='.$formatDateBegin.'&warehouse_id='.$dataStation['almacen_id'].'&days=7&isvaliddiffmonths=si&unserialize=1';
+							$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation['almacen_id'].'&days=7&isvaliddiffmonths=si&unserialize=1';
 							$name = $dataStation['name'];
 						}
 						

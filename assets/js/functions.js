@@ -3464,7 +3464,7 @@ function templateStock(data,type,chart) {
 		html += '<div class="panel-body detail" data-station="'+detail[i].id+'"'
 		+'data-begindate="'+data.beginDate+'" data-enddate="'+data.endDate+'" data-typestation="'+data.typeStation+'"'
 		+'><span class="glyphicon glyphicon-stop" style="color: '+color_id+'"></span> '+num+'. '+detail[i].name
-		+'<br><table class="table table-bordered table-striped none">'
+		+'<br><table class="table table-bordered table-striped d-none">'
 		+'<thead> <tr> <th>Prod.</th> <th align="right">Cap.</th> <th align="right">% Disp.</th> <th align="right">Días Aprox.</th> </tr> </thead>'
 		+'<tbody> ';
 		html += templateTableDetailStock(detail[i].data,detail[i].id);
@@ -3726,22 +3726,24 @@ function searchSumarySales(t) {
 		dataSumarySale = data;
 		console.log('requests/getSumarySale');
 		console.log(data);
-		var html = `<ul class="nav nav-tabs">'
-						<li class="active">
-							<a href="#quantity" data-toggle="tab">Galones</a>
-							<li><a href="#money" data-toggle="tab">Soles</a></li>
-						</li>
+		var html = `<ul class="nav nav-tabs">
+							<li class="nav-item">
+								<button class="nav-link active" href="#quantity" data-toggle="tab">Galones</button>														
+							</li>
+							<li class="nav-item">
+								<button class="nav-link" href="#money" data-toggle="tab">Soles</button>
+							</li>
 					</ul>`;
 		html += `<div class="tab-content clearfix">
-					<div class="tab-pane active" id="quantity">
-						<div class="quantity-include"></div>
-						<div class="quantity-exclude none"></div>
+						<div class="tab-pane fade show active" id="quantity">
+							<div class="quantity-include"></div>
+							<div class="quantity-exclude d-none"></div>
+						</div>
+						<div class="tab-pane fade" id="money">
+							<div class="money-include"></div>
+							<div class="money-exclude d-none"></div>
+						</div>
 					</div>
-					<div class="tab-pane" id="money">
-						<div class="money-include"></div>
-						<div class="money-exclude none"></div>
-					</div>
-				</div>
 				<div class="graphics"></div>`;
 
 
@@ -3877,16 +3879,16 @@ function templateTableSumarySales(data, type) {
 	*/
 
 	//var _type = type == 'money-include' || 'money-exclude' ? 'money' : 'quantity';
-	var html = '<br><div>Excluir consumo <span class="glyphicon glyphicon-info-sign" title="Consumo interno de la empresa"></span>: '
-	+'<div class="btn-group" aria-label="Default button group" role="group"><div class="btn-'+type+' true btn btn-default" data-action="true">Si</div><div class="btn-'+type+' false btn btn-success" data-action="false">No</div></div>'
+	var html = '<br><div>Excluir consumo <i class="fas fa-info-circle" title="Consumo interno de la empresa"></i>: '
+	+'<div class="btn-group" aria-label="Default button group" role="group"><div class="btn-'+type+' true btn btn-default" data-action="true">Si</div><div class="btn-'+type+' false btn btn-primary" data-action="false">No</div></div>'
 	+'</div>'
 	+'<div class="table-responsive" style="background-color: #fff; border-radius: 4px; padding: 5px;">';
 	html += '<table class="table table-striped">'
 	+'<thead>'
-	+'<tr class="header-table-sumary">'
+	+'<tr class="bg-primary text-white">'
 	+'<th colspan="9" style="text-align: center">Resumen de venta por estación y producto</th>'
 	+'</tr>'
-	+'<tr class="header-table-sumary">'
+	+'<tr class="bg-primary text-white">'
 	+'<th>Estación</th>'
 	+'<th style="text-align: right;">84</th>'
 	+'<th style="text-align: right;">90</th>'
@@ -4088,7 +4090,7 @@ function templateTableSumarySales(data, type) {
 	}
 	html += '</tbody>';
 	html += '<tfoot>';
-	html += '<tr class="header-table-sumary" style="font-weight: bold;">';
+	html += '<tr class="bg-primary text-white" style="font-weight: bold;">';
 	html += '<td>Total</td>';
 	html += '<td align="right">'+numeral(total[0]).format('0,0')+'</td>';
 	html += '<td align="right">'+numeral(total[1]).format('0,0')+'</td>';
@@ -4194,7 +4196,7 @@ function renderGraphicResume(type, paramsRequest) {
 			]
 		}
 	});
-	$('.btn-download-'+type).append('<button class="btn btn-success btn-block btn-lg download-sumary download-sumary-'+type+'" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>');
+	$('.btn-download-'+type).append('<button class="btn btn-primary btn-block btn-lg download-sumary download-sumary-'+type+'" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>');
 	$('.download-sumary-'+type).attr('data-typestation',paramsRequest.typeStation).attr('data-enddate',paramsRequest.dateEnd).attr('data-begindate',paramsRequest.dateBegin).attr('data-station',paramsRequest.id).attr('data-typecost',paramsRequest.typeCost).attr('data-qtysale',paramsRequest.qtySale).attr('data-include',par);
 }
 
@@ -4230,7 +4232,7 @@ function searchStatisticsSales(t) {
 		console.log('requests/getStatisticsSale');
 		console.log(data);
 
-		var html = '<div class="money-include"></div><div class="money-exclude none"></div>';
+		var html = '<div class="money-include"></div><div class="money-exclude d-none"></div>';
 
 		$('.result-search').html(html);
 
@@ -4247,8 +4249,8 @@ function searchStatisticsSales(t) {
 }
 
 function templateTableStatistics(data, pr, type) {
-	var html = '<br><div>Excluir consumo <span class="glyphicon glyphicon-info-sign" title="Consumo interno de la empresa"></span>: '
-	+'<div class="btn-group" aria-label="Default button group" role="group"><div class="btn-'+type+' true btn btn-default" data-action="true">Si</div><div class="btn-'+type+' false btn btn-success" data-action="false">No</div></div>'
+	var html = '<br><div>Excluir consumo <i class="fas fa-info-circle" title="Consumo interno de la empresa"></i>: '
+	+'<div class="btn-group" aria-label="Default button group" role="group"><div class="btn-'+type+' true btn btn-default" data-action="true">Si</div><div class="btn-'+type+' false btn btn-primary" data-action="false">No</div></div>'
 	+'</div>';
 	html += '<div class="table-responsive" style="background-color: #fff; border-radius: 4px; padding: 5px;">';
 	html += '<table class="table">'
@@ -4669,7 +4671,7 @@ function renderGraphicStatistics(type, paramsRequest) {
 		par = 1;
 	}
 
-	$('.btn-download-'+type).append('<button class="btn btn-success btn-block btn-lg download-statistics download-statistics-'+type+'" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>');
+	$('.btn-download-'+type).append('<button class="btn btn-primary btn-block btn-lg download-statistics download-statistics-'+type+'" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>');
 	$('.download-statistics-'+type).attr('data-typestation',paramsRequest.typeStation).attr('data-enddate2',paramsRequest.dateEnd).attr('data-begindate2',paramsRequest.dateBegin).attr('data-enddate1',paramsRequest._dateEnd).attr('data-begindate1',paramsRequest._dateBegin).attr('data-station',paramsRequest.id).attr('data-typecost',paramsRequest.typeCost).attr('data-qtysale',paramsRequest.qtySale).attr('data-include',par);
 }
 
@@ -4829,7 +4831,7 @@ function searchDetailProductsLine(t) {
 
 		setContendModal('#normal-modal', '.modal-title', params.lineName, true);
 		setContendModal('#normal-modal', '.modal-body', html, true);
-		//var btn = '<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>';
+		//var btn = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>';
 		var btn = '';
 		btn += '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>';
 		setContendModal('#normal-modal', '.modal-footer', btn, true);
@@ -5271,8 +5273,8 @@ function actionExclude(t, type) {
 			$('.money-include').addClass('d-none');
 			$('.money-exclude').removeClass('d-none');
 
-			$('.btn-money-exclude').removeClass('btn-default').removeClass('btn-success');
-			$('.btn-money-exclude.true').addClass('btn-success');
+			$('.btn-money-exclude').removeClass('btn-default').removeClass('btn-primary');
+			$('.btn-money-exclude.true').addClass('btn-primary');
 			$('.btn-money-exclude.false').addClass('btn-default');
 		} else {
 			//$('.download-sumary').attr('data-include',3);
@@ -5280,12 +5282,12 @@ function actionExclude(t, type) {
 			$('.money-exclude').addClass('d-none');
 			$('.money-include').removeClass('d-none');
 
-			$('.btn-money-include').removeClass('btn-default').removeClass('btn-success');
-			$('.btn-money-include.false').addClass('btn-success');
+			$('.btn-money-include').removeClass('btn-default').removeClass('btn-primary');
+			$('.btn-money-include.false').addClass('btn-primary');
 			$('.btn-money-include.true').addClass('btn-default');
 		}
 
-		/*$('.btn-money-exclude').removeClass('btn-success');
+		/*$('.btn-money-exclude').removeClass('btn-primary');
 		$('.btn-money-include').addClass('btn-default');*/
 	} else {
 		if (t.attr('data-action') == 'true') {
@@ -5294,8 +5296,8 @@ function actionExclude(t, type) {
 			$('.quantity-include').addClass('d-none');
 			$('.quantity-exclude').removeClass('d-none');
 
-			$('.btn-quantity-exclude').removeClass('btn-default').removeClass('btn-success');
-			$('.btn-quantity-exclude.true').addClass('btn-success');
+			$('.btn-quantity-exclude').removeClass('btn-default').removeClass('btn-primary');
+			$('.btn-quantity-exclude.true').addClass('btn-primary');
 			$('.btn-quantity-exclude.false').addClass('btn-default');
 		} else {
 			//$('.download-sumary').attr('data-include',0);
@@ -5303,16 +5305,16 @@ function actionExclude(t, type) {
 			$('.quantity-exclude').addClass('d-none');
 			$('.quantity-include').removeClass('d-none');
 
-			$('.btn-quantity-include').removeClass('btn-default').removeClass('btn-success');
-			$('.btn-quantity-include.false').addClass('btn-success');
+			$('.btn-quantity-include').removeClass('btn-default').removeClass('btn-primary');
+			$('.btn-quantity-include.false').addClass('btn-primary');
 			$('.btn-quantity-include.true').addClass('btn-default');
 		}
 
-		/*$('.btn-quantity-exclude').removeClass('btn-success');
+		/*$('.btn-quantity-exclude').removeClass('btn-primary');
 		$('.btn-quantity-include').addClass('btn-default');*/
 	}
 	/*t.removeClass('btn-default');
-	t.addClass('btn-success');*/
+	t.addClass('btn-primary');*/
 }
 
 function  amountPercentage(data) {
