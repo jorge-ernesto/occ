@@ -196,11 +196,11 @@ $( document ).ready(function() {
 	$(document).on('change', 'input[name=local]', function() {		
 		var local = $(this).val();
 		if(local == "COMBUSTIBLE"){			
-			$('#productos').removeClass('none');			
-			$('#unidadmedida').removeClass('none');			
+			$('#productos').removeClass('d-none');			
+			$('#unidadmedida').removeClass('d-none');			
 		}else if(local == "MARKET"){			
-			$('#productos').addClass('none');
-			$('#unidadmedida').addClass('none');
+			$('#productos').addClass('d-none');
+			$('#unidadmedida').addClass('d-none');
 		}
 	});	
 

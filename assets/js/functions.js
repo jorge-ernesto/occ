@@ -60,9 +60,9 @@ function login() {
 function searchSale() {
 	console.log('function searchSale');
 	clearStations();
-	$('.container-chart-station').addClass('none');
-	$('.container-ss-station').addClass('none');
-	$('.result-search').html('<br><br>'+loading());
+	$('.container-chart-station').addClass('d-none');
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
 	var valStartDate = checkDate($('#start-date-request').val(),'/');
 	var valEndDate = checkDate($('#end-date-request').val(),'/');
 
@@ -247,7 +247,7 @@ function templateStationsSearch(data,t,cm) {
 
 	storageStations();
 	if(count > 1) {
-		$('.container-chart-station').removeClass('none');
+		$('.container-chart-station').removeClass('d-none');
 			
 		if(cm == 0) {
 			viewChartBarStation();
@@ -257,7 +257,7 @@ function templateStationsSearch(data,t,cm) {
 			viewChartStation();
 		}
 	}
-	$('.container-ss-station').removeClass('none');
+	$('.container-ss-station').removeClass('d-none');
 
 	setDataResultRequest('.download-comb-sales',data);
 
@@ -631,7 +631,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 
 	storageStations();
 	// if(count > 1) {
-	// 	$('.container-chart-station').removeClass('none');
+	// 	$('.container-chart-station').removeClass('d-none');
 			
 	// 	if(cm == 0) {
 	// 		viewChartBarStation();
@@ -641,7 +641,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	// 		viewChartStation();
 	// 	}
 	// }
-	$('.container-ss-station').removeClass('none');
+	$('.container-ss-station').removeClass('d-none');
 
 	setDataResultRequest2('.download-sales-for-hours',data);
 
@@ -1385,7 +1385,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 
 	storageStations();
 
-	$('.container-ss-station').removeClass('none');
+	$('.container-ss-station').removeClass('d-none');
 
 	setDataResultRequest2('.download-liquidacion-diaria',data);
 
@@ -2443,7 +2443,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 
 	storageStations();
 
-	$('.container-ss-station').removeClass('none');
+	$('.container-ss-station').removeClass('d-none');
 
 	setDataResultRequest2('.download-liquidacion-diaria',data);
 
@@ -3371,8 +3371,8 @@ function detailAllResult(t) {
  * Buscar stock de Combustible y Market TP
  */
 function searchStock() {
-	$('.container-ss-station').addClass('none');
-	$('.result-search').html('<br><br>'+loading());
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
 	var valStartDate = checkDate($('#start-date-request').val(),'/');
 
 	if(valStartDate == 0) {
@@ -3538,7 +3538,7 @@ function templateTankSimulation(data) {
 		}
 	}
 	if(count > 0) {
-		$('.container-ss-station').removeClass('none');
+		$('.container-ss-station').removeClass('d-none');
 	}
 }
 
@@ -3674,8 +3674,8 @@ function downloadCombStock(t) {
  * @param obj - element t
  */
 function searchSumarySales(t) {
-	$('.container-ss-station').addClass('none');
-	$('.result-search').html('<br><br>'+loading());
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
 	var paramsRequest = {
 		id: $('#select-station').val(),
 		dateBegin: $('#start-date-request').val(),
@@ -3743,9 +3743,9 @@ function searchSumarySales(t) {
 }
 
 function searchSalesForHours(t) {
-	$('.container-chart-station').addClass('none');
-	$('.container-ss-station').addClass('none');
-	$('.result-search').html('<br><br>'+loading());
+	$('.container-chart-station').addClass('d-none');
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
 	var paramsRequest = {
 		id: $('#select-station').val(),
 		dateBegin: $('#start-date-request').val(),
@@ -3791,9 +3791,9 @@ function searchSalesForHours(t) {
 }
 
 function searchLiquidacionDiaria(t){ //ACA
-	$('.container-chart-station').addClass('none');
-	$('.container-ss-station').addClass('none');
-	$('.result-search').html('<br><br>'+loading());
+	$('.container-chart-station').addClass('d-none');
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
 	var paramsRequest = {
 		id: $('#select-station').val(),
 		dateBegin: $('#start-date-request').val(),
@@ -4181,7 +4181,7 @@ function generateCaclSumary() {
 }
 
 function searchStatisticsSales(t) {
-	$('.result-search').html('<br><br>'+loading());
+	$('.result-search').html(loading_bootstrap4());
 	var paramsRequest = {
 		id: $('#select-station').val(),
 		dateBegin: $('#start-date-request').val(),
@@ -4717,7 +4717,7 @@ function searchLineProduct() {
 			$('.result-search').html(html);
 		}
 		$('.btn-search-sale').prop('disabled', false);
-		//$('.container-ss-station').removeClass('none');
+		//$('.container-ss-station').removeClass('d-none');
 	}, 'json');
 }
 
@@ -4902,7 +4902,7 @@ function sumRowTableProductLine(data) {
 
 
 function searchMerchandise(_this, isQty) {
-	$('.result-search').html('<br><br>'+loading());
+	$('.result-search').html(loading_bootstrap4());
 	console.log(_this);
 	var th1 = '';
 	var th2 = '';
@@ -5241,8 +5241,8 @@ function actionExclude(t, type) {
 		if (t.attr('data-action') == 'true') {
 			//$('.download-sumary').attr('data-include',2);
 			console.log('excluir si 0');
-			$('.money-include').addClass('none');
-			$('.money-exclude').removeClass('none');
+			$('.money-include').addClass('d-none');
+			$('.money-exclude').removeClass('d-none');
 
 			$('.btn-money-exclude').removeClass('btn-default').removeClass('btn-success');
 			$('.btn-money-exclude.true').addClass('btn-success');
@@ -5250,8 +5250,8 @@ function actionExclude(t, type) {
 		} else {
 			//$('.download-sumary').attr('data-include',3);
 			console.log('excluir no 0');
-			$('.money-exclude').addClass('none');
-			$('.money-include').removeClass('none');
+			$('.money-exclude').addClass('d-none');
+			$('.money-include').removeClass('d-none');
 
 			$('.btn-money-include').removeClass('btn-default').removeClass('btn-success');
 			$('.btn-money-include.false').addClass('btn-success');
@@ -5264,8 +5264,8 @@ function actionExclude(t, type) {
 		if (t.attr('data-action') == 'true') {
 			//$('.download-sumary').attr('data-include',1);
 			console.log('excluir si 1');
-			$('.quantity-include').addClass('none');
-			$('.quantity-exclude').removeClass('none');
+			$('.quantity-include').addClass('d-none');
+			$('.quantity-exclude').removeClass('d-none');
 
 			$('.btn-quantity-exclude').removeClass('btn-default').removeClass('btn-success');
 			$('.btn-quantity-exclude.true').addClass('btn-success');
@@ -5273,8 +5273,8 @@ function actionExclude(t, type) {
 		} else {
 			//$('.download-sumary').attr('data-include',0);
 			console.log('excluir no 1');
-			$('.quantity-exclude').addClass('none');
-			$('.quantity-include').removeClass('none');
+			$('.quantity-exclude').addClass('d-none');
+			$('.quantity-include').removeClass('d-none');
 
 			$('.btn-quantity-include').removeClass('btn-default').removeClass('btn-success');
 			$('.btn-quantity-include.false').addClass('btn-success');
