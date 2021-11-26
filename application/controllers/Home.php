@@ -26,12 +26,12 @@ class Home extends CI_Controller {
 				redirect('secure/login', 'location');								
 			}else{
 				//AQUI TAMBIEN PODRIA IR UNA VISTA HOME DE BIENVENIDA, LO DEJAMOS PENDIENTE		
-				if($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) {
-
-					redirect('flotas/despachos', 'location');
-				}else if($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) {
+				if($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) {
 
 					redirect('ventas/combustibles', 'location');
+				}else if($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) {
+
+					redirect('flotas/despachos', 'location');
 				}
 			}
 		}

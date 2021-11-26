@@ -23,7 +23,7 @@ class Ventas extends CI_Controller {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Ventas > Combustibles';
-				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto debe estar descomentado, debemos arreglar las queries de COrg_model copiadas de OCS Manager
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto debe estar descomentado, debemos arreglar las queries de COrg_model copiadas de OCS Manager
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');

@@ -127,7 +127,7 @@ class Privileges extends CI_Controller {
 				//Redirecciono la pagina a la url por defecto
 				$data['title'] = 'Seguridad > Usuarios';			
 				$data['privileges'] = $this->CPrivilege_model->getPrivileges();
-				$data['result_c_org'] = $this->COrg_model->getAllCOrgFlotas();
+				$data['result_c_org'] = $this->COrg_model->getAllCOrgFleets();
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');

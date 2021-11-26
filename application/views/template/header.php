@@ -25,7 +25,12 @@
 	<script src="https://cdn.opensysperu.com/js/morris.min.js"></script>
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>	
 
+	<!-- Dependencias JS que usa los reportes de OCS Manager -->
+	<script src="<?php echo base_url() ?>assets/plugins/chart/Chart.min.js"></script>
+	<script src="<?php echo base_url() ?>assets/plugins/numeral/numeral.min.js"></script>
+
 	<!-- extends -->
+	<link href="<?php echo base_url() ?>assets/css/app.css" rel="stylesheet">
 	<!-- <link href="<?php //echo base_url() ?>assets/css/estilos.css" rel="stylesheet"> -->
 	<script src="<?php echo base_url() ?>assets/js/application.js"></script>
 	<script src="<?php echo base_url() ?>assets/js/functions.js"></script>

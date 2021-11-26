@@ -15,7 +15,7 @@ class COrg_model extends CI_Model {
 	 * CONSULTAS FLOTAS - WEB FLOTAS
 	 */
 
-	public function getAllCOrgFlotas()
+	public function getAllCOrgFleets()
 	{
 		$query = $this->db->query("SELECT
 	cnf_org_id AS c_org_id,
@@ -29,7 +29,7 @@ ORDER BY
 		return $query->result();
 	}
 
-	public function getOrgByTypeAndIdFlotas($type, $id){
+	public function getOrgByTypeAndIdFleets($type, $id){
 		$query = $this->db->query("SELECT
 	cnf_org_id AS c_org_id,	
 	name AS name,	
@@ -45,7 +45,7 @@ ORDER BY
 		return $query->result();
 	}
 
-	public function getCOrgByTypeFlotas($type){
+	public function getCOrgByTypeFleets($type){
 		$query = $this->db->query("SELECT
 	cnf_org_id AS c_org_id,	
 	name AS name,	
@@ -66,143 +66,100 @@ ORDER BY
 
 	public function getAllCOrg($type)
 	{
+		$type = ($type == 'C') ? '1' : '0';
+
 		$query = $this->db->query("SELECT
-	org.c_org_id,
-	org.name,
-	remote.ip
+	co.cnf_org_id as c_org_id,
+	co.name,
+	co.ipaddress as ip
 FROM
-	c_org org
-JOIN mig_cowmap cowmap ON (
-	org.c_org_id = cowmap.c_org_id
-)
-JOIN mig_remote remote ON (
-	cowmap.id_remote = mig_remote_id
-)
+	cnf_org co
 WHERE
-	org.description = ? AND remote.view = 1;", array($type));
+	co.orgtype = ?
+ORDER BY co.cnf_org_id ASC;", array($type));
 		return $query->result();
 	}
 
 	public function getOrgByTypeAndId($type,$id)
 	{
+		$type = ($type == 'C') ? '1' : '0';
+
 		$query = $this->db->query("SELECT
-	client.name AS client_name,
-	client.taxid,
-	org.c_org_id,
-	org.name,
-	org.initials,
-	org.value,
-	remote.ip, --'172.18.8.12' AS ip,
-	warehouse.description AS almacen_id --'003' AS almacen_id
+	cc.name AS client_name,
+	cc.taxid,
+	co.cnf_org_id as c_org_id,
+	co.name,
+	co.abbreviation as initials,
+	'' as value,
+	co.ipaddress as ip,
+	co.value as almacen_id
 FROM
-	c_org org
-JOIN mig_cowmap cowmap ON (
-	org.c_org_id = cowmap.c_org_id
-)
-JOIN c_client client ON (
-	org.c_client_id = client.c_client_id
-)
-JOIN mig_remote remote ON (
-	cowmap.id_remote = mig_remote_id
-)
-JOIN i_warehouse warehouse ON (
-	org.c_org_id = warehouse.c_org_id
-)
+	cnf_org co
+	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
-	org.description = '$type'
-AND org.c_org_id = ? AND remote.view = 1
-ORDER BY client.c_client_id ASC;", array($id));
+	co.orgtype = '$type'
+	AND co.cnf_org_id = ?
+ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;", array($id));
 		
 error_log("Query getOrgByTypeAndId");
 error_log("
 	SELECT
-		client.name AS client_name,
-		client.taxid,
-		org.c_org_id,
-		org.name,
-		org.initials,
-		org.value,
-		remote.ip,
-		warehouse.description AS almacen_id
-	FROM
-		c_org org
-	JOIN mig_cowmap cowmap ON (
-		org.c_org_id = cowmap.c_org_id
-	)
-	JOIN c_client client ON (
-		org.c_client_id = client.c_client_id
-	)
-	JOIN mig_remote remote ON (
-		cowmap.id_remote = mig_remote_id
-	)
-	JOIN i_warehouse warehouse ON (
-		org.c_org_id = warehouse.c_org_id
-	)
-	WHERE
-		org.description = '$type'
-	AND org.c_org_id = '$id' AND remote.view = 1
-	ORDER BY client.c_client_id ASC;
+	cc.name AS client_name,
+	cc.taxid,
+	co.cnf_org_id as c_org_id,
+	co.name,
+	co.abbreviation as initials,
+	'' as value,
+	co.ipaddress as ip,
+	co.value as almacen_id
+FROM
+	cnf_org co
+	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
+WHERE
+	co.orgtype = '$type'
+	AND co.cnf_org_id = '$id'
+ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
 ");
 
 		return $query->result();
 	}
 
 	public function getCOrgByType($type) {
+		$type = ($type == 'C') ? '1' : '0';
+
 		$query = $this->db->query("SELECT
-	client.name AS client_name,
-	client.taxid,
-	org.c_org_id,
-	org.name,
-	org.initials,
-	org.value,
-	remote.ip, --'172.18.8.12' AS ip,
-	warehouse.description AS almacen_id --'003' AS almacen_id
+	cc.name AS client_name,
+	cc.taxid,
+	co.cnf_org_id as c_org_id,
+	co.name,
+	co.abbreviation as initials,
+	'' as value,
+	co.ipaddress as ip,
+	co.value as almacen_id
 FROM
-	c_org org
-JOIN mig_cowmap cowmap ON (
-	org.c_org_id = cowmap.c_org_id
-)
-JOIN c_client client ON (
-	org.c_client_id = client.c_client_id
-)
-JOIN mig_remote remote ON (
-	cowmap.id_remote = mig_remote_id
-)
-JOIN i_warehouse warehouse ON (
-	org.c_org_id = warehouse.c_org_id
-)
+	cnf_org co
+	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
-	org.description = ? AND remote.view = 1
-ORDER BY client.c_client_id ASC;", array($type));
+	co.orgtype = ?
+ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;", array($type));
 
 error_log("Query getCOrgByType");
 error_log("
 SELECT
-	client.name AS client_name,
-	client.taxid,
-	org.c_org_id,
-	org.name,
-	org.initials,
-	org.value,
-	remote.ip,
-	warehouse.description AS almacen_id
+	cc.name AS client_name,
+	cc.taxid,
+	co.cnf_org_id as c_org_id,
+	co.name,
+	co.abbreviation as initials,
+	'' as value,
+	co.ipaddress as ip,
+	co.value as almacen_id
 FROM
-	c_org org
-JOIN mig_cowmap cowmap ON (
-	org.c_org_id = cowmap.c_org_id
-)
-JOIN c_client client ON (
-	org.c_client_id = client.c_client_id
-)
-JOIN mig_remote remote ON (
-	cowmap.id_remote = mig_remote_id
-)
-JOIN i_warehouse warehouse ON (
-	org.c_org_id = warehouse.c_org_id
-)
+	cnf_org co
+	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
-	org.description = '$type' AND remote.view = 1
-ORDER BY client.c_client_id ASC;
+	co.orgtype = '$type'
+ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
 ");
 
 		return $query->result();

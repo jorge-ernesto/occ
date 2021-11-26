@@ -177,32 +177,50 @@ function templateStationsSearch(data,t,cm) {
 		color_id = getRandomColor();
 		if(taxid != detail[i].group.taxid) {
 			html += (i != 0 ? '<hr>' : '');
-			html += '<div class="panel-group-station"><h5 title="RUC: '+detail[i].group.taxid+'">'+detail[i].group.name+'</h5></div>';
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
 			taxid = detail[i].group.taxid;
 		}
 		if(!detail[i].isConnection) {
-			html += '<div class="container-station"><div class="panel panel-danger">'
-			+'<div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong></div>';
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
 		} else {
-			html += '<div class="container-station"><div class="panel panel-default">';
+			html += `<div class="">
+							<div class="card shadow mb-4">`;
 		}
-		html += '<div class="panel-body detail-station" data-station="'+detail[i].id+'"'
-		+'data-begindate="'+data.beginDate+'" data-enddate="'+data.endDate+'" data-typestation="'+data.typeStation+'"'
-		+'data-typecost="'+data.typeCost+'" title="Ver detalle de '+detail[i].name+'"'
-		+'><span class="glyphicon glyphicon-stop" style="color: '+color_id+'"></span> '+num+'. '+detail[i].name+'</div>'
-		+'<div class="panel-footer">'
-		+'<div class="row">'
-		+'<div class="col-md-6">'
-		+'<div class="mid"><b>Venta: S/ '+numeral(detail[i].total_venta).format('0,0')+'</b></div>'
-		+' <div class="mid"><b>'+numeral(detail[i].total_cantidad).format('0,0')+' '+unit+'</b></div>'
-		+'</div>'
-		+'<div class="col-md-6">'
-		+' <div class="mid"><b>Costo: S/ '+numeral(detail[i].total_costo).format('0,0')+'</b></div>'
-		+' <div class="mid"><b>Margen: S/ '+numeral(detail[i].total_utilidad).format('0,0')+'</b></div>'
-		+'</div>'
+					html += `<div class="card-body detail-station" data-station="${detail[i].id}"
+									data-begindate="${data.beginDate}" data-enddate="${data.endDate}" data-typestation="${data.typeStation}"
+									data-typecost="${data.typeCost}" title="Ver detalle de ${detail[i].name}"
+									>
+										<span class="glyphicon glyphicon-stop" style="color: ${color_id}">
+										</span> ${num}. ${detail[i].name}
+								</div>
+									
+								<div class="card-footer bg-gray text-dark">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="mid">
+												<b>Venta: S/ ${numeral(detail[i].total_venta).format('0,0')}</b>
+											</div>
+											<div class="mid">
+												<b>${numeral(detail[i].total_cantidad).format('0,0')} ${unit}</b>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="mid"><b>Costo: S/ ${numeral(detail[i].total_costo).format('0,0')}</b></div>
+											<div class="mid"><b>Margen: S/ ${numeral(detail[i].total_utilidad).format('0,0')}</b></div>
+										</div>
+									</div>
+								</div>
 
-		+'</div>'
-		+'</div></div>';
+							</div>
+						</div>`;
 
 		console.log('> gran_util: '+gran_util);
 		gran_total += detail[i].total_venta != '' ? parseFloat(detail[i].total_venta) : parseFloat(0);
@@ -227,23 +245,32 @@ function templateStationsSearch(data,t,cm) {
 
 	//gran_util
 	console.log('> gran_util: '+gran_util);
-	html += '<div class="panel panel-primary">'
-	+'<div class="panel-heading" title="Ver total de productos"><div class="panel-title">Total General</div></div>'
-	+'<div class="panel-body all-result-sales-comb" data-station="'+data.id+'" data-begindate="'
-	+data.beginDate+'" data-enddate="'+data.endDate+'" data-typecost="'+data.typeCost+'" '
-	+'data-typestation="'+data.typeStation+'">'
-	+'<div class="row">'
-	+'<div class="col-md-6">'
-	+'<div class="mid"><b>Venta: S/ '+numeral(gran_total).format('0,0')+'</b></div>'
-	+' <div class="mid"><b>'+numeral(gran_qty).format('0,0')+' '+unit+'</b></div>'
-	+'</div>'
-	+'<div class="col-md-6">'
-	+' <div class="mid"><b>Costo: S/ '+numeral(gran_cost).format('0,0')+'</b></div>'
-	+' <div class="mid"><b>Margen: S/ '+numeral(gran_util).format('0,0')+'</b></div>'
-	+'</div>'
-	+'</div>'
-	+'</div>'
-	+'</div>';
+	html += `<div class="card shadow mb-4">
+					<div class="card-header bg-primary text-white" title="Ver total de productos">
+						<div>Total General</div>
+					</div>
+					<div class="card-footer bg-gray text-dark all-result-sales-comb" data-station="${data.id}" data-begindate="${data.beginDate}" 
+					data-enddate="${data.endDate}" data-typecost="${data.typeCost}" data-typestation="${data.typeStation}">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="mid">
+									<b>Venta: S/ ${numeral(gran_total).format('0,0')}</b>
+								</div>
+								<div class="mid">
+									<b>${numeral(gran_qty).format('0,0')} ${unit}</b>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="mid">
+									<b>Costo: S/ ${numeral(gran_cost).format('0,0')}</b>
+								</div>
+								<div class="mid">
+									<b>Margen: S/ ${numeral(gran_util).format('0,0')}</b>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>`;
 
 	storageStations();
 	if(count > 1) {
@@ -2518,8 +2545,8 @@ function imprimirLinea(array, label, totalventa = ""){
  */
 function viewDetailStation(t) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
-	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
+	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 
 	var params = {
@@ -2536,7 +2563,7 @@ function viewDetailStation(t) {
 		console.log(data);
 		setContendModal('#normal-modal', '.modal-title', 'Detalle en '+data.stations[0].name, true);
 		setContendModal('#normal-modal', '.modal-body', templateDetailStation(data, data.typeStation), true);
-		setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+		setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>', true);
 	}, 'json');
 }
 
@@ -2626,7 +2653,7 @@ function templateDetailStation(data, type) { //DETALLE COMBUSTIBLE / MARKET
 		}
 
 		if(qty_nglp > 0) {
-			html_ = '<tr class="info"><th scope="row"></th>'
+			html_ = '<tr class="table-info"><th scope="row"></th>'
 			+'<td align="right">'+numeral(qty_nglp).format('0,0')+' Gl</td>'
 			+'<td align="right">S/ '+numeral(total_nglp).format('0,0')+'</td>'
 			+'<td align="right">S/ '+numeral(cost_nglp).format('0,0')+'</td>'
@@ -2644,7 +2671,7 @@ function templateDetailStation(data, type) { //DETALLE COMBUSTIBLE / MARKET
 		console.log('qty: '+qty_nglp + ' - '+qty_glp);
 		
 		return html+html_+html__
-		+'<tr class="success"><th scope="row">Total General</th>'
+		+'<tr class="table-success"><th scope="row">Total General</th>'
 		+'<td align="right">'+numeral(total_qty).format('0,0')+' Gl</td>'
 		+'<td align="right">S/ '+numeral(gran_total).format('0,0')+'</td>'
 		+'<td align="right">S/ '+numeral(cost_total).format('0,0')+'</td>'
@@ -2668,7 +2695,7 @@ function templateDetailStation(data, type) { //DETALLE COMBUSTIBLE / MARKET
 			console.log('last util: '+util+'\n');
 		}
 		console.log('qty: '+qty+', sale: '+sale+' cost: '+cost+', util: '+util);
-		return html+'<tr class="success"><th scope="row">Total General</th>'
+		return html+'<tr class="table-success"><th scope="row">Total General</th>'
 		+'<td align="right">'+numeral(qty).format('0,0')+'</td>'
 		+'<td align="right">S/ '+numeral(sale).format('0,0')+'</td>'
 		+'<td align="right">S/ '+numeral(cost).format('0,0')+'</td>'
@@ -3232,7 +3259,7 @@ function detailAllResult(t) {
 	console.log('click 666');
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
 	setContendModal('#normal-modal', '.modal-body', loading(), true);
-	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 
 	var params = {
@@ -3322,7 +3349,7 @@ function detailAllResult(t) {
 			};
 
 			if(qty_nglp > 0) {
-				html_ = '<tr class="info"><th scope="row"></th>'
+				html_ = '<tr class="table-info"><th scope="row"></th>'
 				+'<td align="right">'+numeral(qty_nglp).format('0,0')+' '+unit+'</td>'
 				+'<td align="right">S/ '+numeral(total_nglp).format('0,0')+'</td>'
 				+'<td align="right">S/ '+numeral(cost_nglp).format('0,0')+'</td>'
@@ -3338,7 +3365,7 @@ function detailAllResult(t) {
 			util_total = util_nglp + util_glp;
 			
 			var _html = html+html_+html__
-			+'<tr class="success"><th scope="row">Total General</th>'
+			+'<tr class="table-success"><th scope="row">Total General</th>'
 			+'<td align="right">'+numeral(total_qty).format('0,0')+' '+unit+'</td>'
 			+'<td align="right">S/ '+numeral(gran_total).format('0,0')+'</td>'
 			+'<td align="right">S/ '+numeral(cost_total).format('0,0')+'</td>'
@@ -3363,7 +3390,7 @@ function detailAllResult(t) {
 
 		setContendModal('#normal-modal', '.modal-title', 'Resumen del total de productos vendidos', true);
 		setContendModal('#normal-modal', '.modal-body', _html, true);
-		setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+		setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>', true);
 	}, 'json');
 }
 

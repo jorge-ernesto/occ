@@ -12,15 +12,27 @@
         <div class="row">
             <div class="col-lg-12">
 
-                <?php $this->load->view('tags/controlsSearch.php'); ?>
+                <?php $this->load->view('tags/controlsSearchSale.php'); ?>
                 <div class="row">&nbsp;</div>
                 <hr>
                 
                 <div class="result-search">
-                    <!--<br>
-                    <div align="center">
-                        <img class="img-responsive" src="<?php echo base_url() ?>assets/images/logo-open.jpg" width="300px">
-                    </div>-->
+                </div>
+                <div class="card shadow container-chart-station d-none">
+                    <div class="card-header bg-primary text-white"><div align="center">Gráficos</div></div>
+                        <div class="card-body">
+                        <div class="titleStation" align="center"></div>
+                        <div align="center"><h4><b>Ventas por estaciones</b></h4></div>
+                        <div class="chartStation"></div><hr>
+                        <div align="center"><h4><b>Cantidades por estaciones</b></h4></div>
+                        <div class="chartStationQty"></div><hr>
+                        <div align="center"><h4><b>Utilidades por estaciones</b></h4></div>
+                        <div class="chartStationUtil"></div>
+                    </div>
+                </div>
+                <br>
+                <div class="container-ss-station d-none">
+                    <button class="btn btn-primary btn-block btn-lg download-comb-sales" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>
                 </div>               
                 <div class="row">&nbsp;</div>
                 

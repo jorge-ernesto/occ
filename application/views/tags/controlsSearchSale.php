@@ -19,18 +19,22 @@ if ($typeStation == 0) {
 }
 ?>
 
-                <h3><span>Ventas</span> - <span><?php echo $nameTStation ?></span></h3>
-                <label>Consultar en:</label>
+                <!-- <h3><span>Ventas</span> - <span><?php echo $nameTStation ?></span></h3> -->
+                <!-- <label>Consultar en:</label> -->
 
-                <select name="select-station" id="select-station" class="form-control size-text-select">
-                    <option value="*">Todas las Estaciones</option>
-                    <?php
-                    foreach ($result_c_org as $key => $cOrg) {
-                        echo '<option value="'.$cOrg->c_org_id.'">'.$cOrg->name.'</option>';
-                    }
-                    ?>
-                </select>
-                <br>
+                <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                    <label>Consultar en:</label>
+                    <select name="select-station" id="select-station" class="form-control">
+                        <option value="*">Todas las Estaciones</option>
+                        <?php
+                        foreach ($result_c_org as $key => $cOrg) {
+                            echo '<option value="'.$cOrg->c_org_id.'">'.$cOrg->name.'</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <!-- <br> -->
+
                 <?php if($typeStation == 4) { ?>
                 <label for="">Periodo Anterior:</label>
                 <div class="form-group form-group-filled" id="_event_period">
@@ -41,9 +45,14 @@ if ($typeStation == 0) {
                 <?php if($typeStation == 4) { ?>
                 <label for="">Periodo Actual:</label>
                 <?php } ?>
-                <div class="form-group form-group-filled" id="event_period">
-                    <input type="text" class="actual_range form-control" id="start-date-request" value="<?php echo $default_start_date; ?>">
-                    <input type="text" class="actual_range form-control" id="end-date-request" value="<?php echo $default_start_date; ?>">
+                <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                    <label>Desde:</label>
+                    <input type="text" class="form-control" required id="start-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> <!-- readonly -->
+                </div>
+
+                <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                    <label>Hasta:</label>
+                    <input type="text" class="form-control" required id="end-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> <!-- readonly -->
                 </div>
                 
                 <?php if($typeStation == 6) { ?>
@@ -121,6 +130,6 @@ if ($typeStation == 0) {
                     <option value="0">Gráfico de Barras</option>
                     <option value="1">Gráfico Circular</option>
                 </select>-->
-                <br>
+                <!-- <br> -->
                 <input type="hidden" id="typeStation" value="<?php echo $typeStation ?>">
                 <button class="btn btn-primary btn-block btn-search-sale" data-ismarket="<?php echo $typeStation ?>"><span class="glyphicon glyphicon-search"></span> Buscar</button>

@@ -27,7 +27,7 @@ class Flotas extends CI_Controller {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Consultas > Despachos';
-				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFlotas(1);
+				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFleets(1);
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');
@@ -48,7 +48,7 @@ class Flotas extends CI_Controller {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Consultas > Comprobantes de Cobranza';
-				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFlotas(1);
+				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFleets(1);
 				$data['result_c_client'] = $this->CPrivilege_model->getRucByUser($_SESSION['user_id']);
 
 				$this->load->helper('functions');

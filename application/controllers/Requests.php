@@ -2183,11 +2183,11 @@ class Requests extends CI_Controller {
 				$isAllStations = true;
 				if($this->input->post('id') != '*') {
 					if($isAllStations) {
-						$dataStations = $this->COrg_model->getOrgByTypeAndIdFlotas(1, $this->input->post('id'));
+						$dataStations = $this->COrg_model->getOrgByTypeAndIdFleets(1, $this->input->post('id'));
 					}
 				} else {
 					if($isAllStations) {
-						$dataStations = $this->COrg_model->getCOrgByTypeFlotas(1);
+						$dataStations = $this->COrg_model->getCOrgByTypeFleets(1);
 					}
 				}
 				error_log("Estaciones cargadas");
@@ -2334,11 +2334,11 @@ class Requests extends CI_Controller {
 				$isAllStations = true;
 				if($this->input->post('id') != '*') {
 					if($isAllStations) {
-						$dataStations = $this->COrg_model->getOrgByTypeAndIdFlotas(1, $this->input->post('id'));
+						$dataStations = $this->COrg_model->getOrgByTypeAndIdFleets(1, $this->input->post('id'));
 					}
 				} else {
 					if($isAllStations) {
-						$dataStations = $this->COrg_model->getCOrgByTypeFlotas(1);
+						$dataStations = $this->COrg_model->getCOrgByTypeFleets(1);
 					}
 				}
 				error_log("Estaciones cargadas");
