@@ -12,61 +12,14 @@ class COrg_model extends CI_Model {
 	}
 
 	/**
-	 * CONSULTAS FLOTAS - WEB FLOTAS
-	 */
-
-	public function getAllCOrgFleets()
-	{
-		$query = $this->db->query("SELECT
-	cnf_org_id AS c_org_id,
-	name AS name,
-	ipaddress AS ip,
-	value AS almacen_id
-FROM 
-	cnf_org
-ORDER BY
-	1;");
-		return $query->result();
-	}
-
-	public function getOrgByTypeAndIdFleets($type, $id){
-		$query = $this->db->query("SELECT
-	cnf_org_id AS c_org_id,	
-	name AS name,	
-	ipaddress AS ip,
-	value AS almacen_id
-FROM
-	cnf_org
-WHERE
-	orgtype = $type
-	AND cnf_org_id = '$id'
-ORDER BY
-	1;");
-		return $query->result();
-	}
-
-	public function getCOrgByTypeFleets($type){
-		$query = $this->db->query("SELECT
-	cnf_org_id AS c_org_id,	
-	name AS name,	
-	ipaddress AS ip,
-	value AS almacen_id
-FROM
-	cnf_org
-WHERE
-	orgtype = $type
-ORDER BY
-	1;");
-		return $query->result();
-	}
-
-	/**
-	 * CONSULTAS ESTACIONES - OCS MANAGER
+	 * CONSULTAS REPORTES ESTACIONES
 	 */
 
 	public function getAllCOrg($type)
 	{
 		$type = ($type == 'C') ? '1' : '0';
+
+		$whereOrgs = $this->getWhereOrgsByUser($_SESSION['user_id']);
 
 		$query = $this->db->query("SELECT
 	co.cnf_org_id as c_org_id,
@@ -76,6 +29,7 @@ FROM
 	cnf_org co
 WHERE
 	co.orgtype = ?
+	$whereOrgs 
 ORDER BY co.cnf_org_id ASC;", array($type));
 		return $query->result();
 	}
@@ -83,6 +37,8 @@ ORDER BY co.cnf_org_id ASC;", array($type));
 	public function getOrgByTypeAndId($type,$id)
 	{
 		$type = ($type == 'C') ? '1' : '0';
+
+		$whereOrgs = $this->getWhereOrgsByUser($_SESSION['user_id']);		
 
 		$query = $this->db->query("SELECT
 	cc.name AS client_name,
@@ -99,6 +55,7 @@ FROM
 WHERE
 	co.orgtype = '$type'
 	AND co.cnf_org_id = ?
+	$whereOrgs
 ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;", array($id));
 		
 error_log("Query getOrgByTypeAndId");
@@ -118,6 +75,7 @@ FROM
 WHERE
 	co.orgtype = '$type'
 	AND co.cnf_org_id = '$id'
+	$whereOrgs
 ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
 ");
 
@@ -126,6 +84,8 @@ ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
 
 	public function getCOrgByType($type) {
 		$type = ($type == 'C') ? '1' : '0';
+
+		$whereOrgs = $this->getWhereOrgsByUser($_SESSION['user_id']);
 
 		$query = $this->db->query("SELECT
 	cc.name AS client_name,
@@ -141,6 +101,7 @@ FROM
 	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
 	co.orgtype = ?
+	$whereOrgs
 ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;", array($type));
 
 error_log("Query getCOrgByType");
@@ -159,6 +120,7 @@ FROM
 	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
 	co.orgtype = '$type'
+	$whereOrgs
 ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
 ");
 
@@ -355,4 +317,82 @@ ORDER BY org.c_org_id ASC;";
 		$query = $this->db->query($sql);
 		return $query->result();
 	}
+
+	public function getWhereOrgsByUser($id){
+		$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
+		
+		if(!$privilege) { //NO TIENE PRIVILEGIO DE SUPERUSER O ADMIN
+			$query = $this->db->query("SELECT
+	sup.*
+FROM
+	sec_user su
+	JOIN sec_user_privilege sup ON (su.sec_user_id = sup.sec_user_id)
+	JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
+WHERE
+	su.sec_user_id = '$id'
+	AND sp.value = 'OrgReports';
+			");
+			$result = $query->result();			
+
+			$orgs = "";
+			foreach ($result as $key => $value) {
+				$orgs .= $value->cnf_org_id . ",";
+			}			
+			$orgs = $orgs == "" ? 0 : substr($orgs, 0, -1);
+			
+			return "AND co.cnf_org_id IN ($orgs)";
+		}
+
+		return ""; //TIENE PRIVILEGIO DE SUPERUSER O ADMIN, DE MODO QUE NO HAY RESTRICCION EN WHERE Y LISTARA TODAS LAS ORGANIZACIONES
+	}
+
+	/**
+	 * CONSULTAS REPORTES FLOTAS
+	 */
+
+	public function getAllCOrgFleets()
+	{
+		$query = $this->db->query("SELECT
+	cnf_org_id AS c_org_id,
+	name AS name,
+	ipaddress AS ip,
+	value AS almacen_id
+FROM 
+	cnf_org
+ORDER BY
+	1;");
+		return $query->result();
+	}
+
+	public function getOrgByTypeAndIdFleets($type, $id){
+		$query = $this->db->query("SELECT
+	cnf_org_id AS c_org_id,	
+	name AS name,	
+	ipaddress AS ip,
+	value AS almacen_id
+FROM
+	cnf_org
+WHERE
+	orgtype = $type
+	AND cnf_org_id = '$id'
+ORDER BY
+	1;");
+		return $query->result();
+	}
+
+	public function getCOrgByTypeFleets($type){
+		$query = $this->db->query("SELECT
+	cnf_org_id AS c_org_id,	
+	name AS name,	
+	ipaddress AS ip,
+	value AS almacen_id
+FROM
+	cnf_org
+WHERE
+	orgtype = $type
+ORDER BY
+	1;");
+		return $query->result();
+	}
+	
 }

@@ -41,7 +41,7 @@ class Users extends CI_Controller {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Seguridad > Usuarios';			
-				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto solo esta aqui como referencia
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');
@@ -114,7 +114,7 @@ class Users extends CI_Controller {
 				redirect('secure/login', 'location');								
 			}else{
 				$data['title'] = 'Seguridad > Usuarios';			
-				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto solo esta aqui como referencia
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');
@@ -194,7 +194,7 @@ class Users extends CI_Controller {
 				
 				//Redirecciono la pagina a la url por defecto
 				$data['title'] = 'Seguridad > Usuarios';			
-				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto solo esta aqui como referencia
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');
@@ -288,7 +288,7 @@ class Users extends CI_Controller {
 				
 				//Redirecciono la pagina a la url por defecto
 				$data['title'] = 'Seguridad > Usuarios';			
-				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto solo esta aqui como referencia
 
 				$this->load->helper('functions');
 				$data['default_start_date'] = getDateDefault('d/m/Y');

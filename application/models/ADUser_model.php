@@ -48,8 +48,8 @@ class ADUser_model extends CI_Model {
 			1 as privilege
 		FROM
 			sec_user su
-			LEFT JOIN sec_user_privilege sup ON (su.sec_user_id = sup.sec_user_id)
-			LEFT JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
+			JOIN sec_user_privilege sup ON (su.sec_user_id = sup.sec_user_id)
+			JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
 		WHERE
 			su.sec_user_id = $sec_user_id
 			AND sp.value = '$value_privilege'
@@ -117,8 +117,8 @@ class ADUser_model extends CI_Model {
 						sp.value
 					FROM
 						sec_user su
-						LEFT JOIN sec_user_privilege sup ON (su.sec_user_id = sup.sec_user_id)
-						LEFT JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
+						JOIN sec_user_privilege sup ON (su.sec_user_id = sup.sec_user_id)
+						JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
 					WHERE
 						su.sec_user_id = sec_user.sec_user_id
 						AND sp.value = 'Superuser'
