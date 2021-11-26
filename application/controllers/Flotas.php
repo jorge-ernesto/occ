@@ -10,7 +10,7 @@ class Flotas extends CI_Controller {
 		$this->load->library('session');
 		$this->load->helper('url');
 		$this->load->model('COrg_model');
-		$this->load->model('CRuc_model');
+		$this->load->model('CPrivilege_model');
 		$this->load->helper('functions');
 	}
 
@@ -22,14 +22,19 @@ class Flotas extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Consultas > Despachos';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg();
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');								
+			}else{
+				$data['title'] = 'Consultas > Despachos';
+				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFlotas(1);
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 0;
-			$this->load->view('flotas/despachos',$data);
+				$data['typeStation'] = 0;
+				$this->load->view('flotas/despachos',$data);
+			}
 		}
 	}
 
@@ -38,15 +43,20 @@ class Flotas extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Consultas > Comprobantes de Cobranza';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg();
-			$data['result_c_client'] = $this->CRuc_model->getRucByClient($_SESSION['user_id']);
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');								
+			}else{
+				$data['title'] = 'Consultas > Comprobantes de Cobranza';
+				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFlotas(1);
+				$data['result_c_client'] = $this->CPrivilege_model->getRucByUser($_SESSION['user_id']);
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 1;
-			$this->load->view('flotas/comprobantes_cobranza',$data);
+				$data['typeStation'] = 1;
+				$this->load->view('flotas/comprobantes_cobranza',$data);
+			}
 		}
 	}
 }

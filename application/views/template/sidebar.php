@@ -14,17 +14,17 @@
          <div id="collapseConsultasEstaciones" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
             <div class="bg-white py-2 collapse-inner rounded">
                <h6 class="collapse-header">Ventas:</h6>
-               <a class="collapse-item" href="home">Resumen</a>
-               <a class="collapse-item" href="home">Estadística</a>
-               <a class="collapse-item" href="home">Combustible</a>
-               <a class="collapse-item" href="home">Market Tienda</a>
-               <a class="collapse-item" href="home">Productos por Linea (MT)</a>
-               <a class="collapse-item" href="home">Market Playa</a>
-               <a class="collapse-item" href="home">Ventas por Horas</a>
-               <a class="collapse-item" href="home">Liquidacion Diaria</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/resumen">Resumen</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/estadistica">Estadística</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/combustibles"">Combustible</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/market">Market Tienda</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/market_productos_linea">Productos por Linea (MT)</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/market_playa">Market Playa</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/ventas_horas">Ventas por Horas</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/liquidacion_diaria">Liquidacion Diaria</a>
                <div class="collapse-divider"></div>
                <h6 class="collapse-header">Stock:</h6>
-               <a class="collapse-item" href="home">Diario</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/stocks/diario">Diario</a>
             </div>
          </div>
       </li>

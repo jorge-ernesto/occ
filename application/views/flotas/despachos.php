@@ -14,8 +14,8 @@
 
                 <?php $this->load->view('tags/controlsSearch.php'); ?>
                 <div class="row">&nbsp;</div>
-
                 <hr>
+                
                 <div class="result-search">
                 </div>
                 <div class="table-responsive d-none">

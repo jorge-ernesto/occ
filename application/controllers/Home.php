@@ -21,14 +21,19 @@ class Home extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Consultas > Despachos';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg();
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports'] || $_SESSION['FleetReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');								
+			}else{
+				//AQUI TAMBIEN PODRIA IR UNA VISTA HOME DE BIENVENIDA, LO DEJAMOS PENDIENTE		
+				if($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) {
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+					redirect('flotas/despachos', 'location');
+				}else if($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) {
 
-			$data['typeStation'] = 0;
-			$this->load->view('flotas/despachos',$data);
+					redirect('ventas/combustibles', 'location');
+				}
+			}
 		}
 	}
 

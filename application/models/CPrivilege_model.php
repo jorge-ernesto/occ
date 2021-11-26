@@ -141,16 +141,20 @@ class CPrivilege_model extends CI_Model {
 	/**
 	 * Obtener RUCs por usuario logueado
 	 */
-	public function getRucByClient($user_id){
+	public function getRucByUser($user_id){
 		$sql = "
 			SELECT 
 				* 
 			FROM 
-				sec_user_client secuser
-				INNER JOIN cnf_client cnfcli ON (secuser.cnf_client_id = cnfcli.cnf_client_id)
+				sec_user_privilege sep
+				INNER JOIN cnf_client cli ON (sep.cnf_client_id = cli.cnf_client_id)
 			WHERE
-				secuser.sec_user_id = '$user_id';
+				sep.sec_user_id = '$user_id';
 		";
+
+		if($_SESSION['Superuser'] || $_SESSION['Admin']){
+			$sql = "SELECT * FROM cnf_client";
+		}
 
 		$query = $this->db->query($sql);
 		return $query->result();		
