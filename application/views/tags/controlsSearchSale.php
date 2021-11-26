@@ -93,8 +93,9 @@ if ($typeStation == 0) {
                     <div id="unidadmedida">
                         <label for="">Seleccionar Unidad de Medida:</label>
                         <select name="unidadmedida" class="form-control">
-                            <option value="LITROS">LITROS</option>
-                            <option value="GALONES">GALONES</option>
+                            <option value="-">No convertir unidades</option>
+                            <option value="Litros_a_Galones">Convertir de litros a galones</option>
+                            <option value="Galones_a_Litros">Convertir de galones a litros</option>
                         </select>                              
                     </div>
                 <?php } ?>

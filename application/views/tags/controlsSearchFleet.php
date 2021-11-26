@@ -51,4 +51,4 @@
 <input type="hidden" id="chart-mode" value="0">
 
 <input type="hidden" id="typeStation" value="<?php echo $typeStation ?>">
-<button class="btn btn-primary btn-block btn-search" data-ismarket="<?php echo $typeStation ?>"><span class="glyphicon glyphicon-search"></span> Buscar</button>
+<button class="btn btn-primary btn-block btn-search-fleet" data-ismarket="<?php echo $typeStation ?>"><span class="glyphicon glyphicon-search"></span> Buscar</button>

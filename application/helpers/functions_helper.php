@@ -4,14 +4,14 @@
  * Evaluar
  */
 function getDateNow($text) {
-	return date($text);
+    return date($text);
 }
 
 /**
  * Fecha por defecto -1 un día
  */
 function getDateDefault($text) {
-	return date($text, strtotime('-1 day'));
+    return date($text, strtotime('-1 day'));
 }
 
 function getDatePrevious($text, $num) {
@@ -23,15 +23,15 @@ function getDatePrevious($text, $num) {
  * Evalua Sesión activa
  */
 function checkSession() {
-	$return = false;
-	if(isset($_SESSION['user_id'])) {
-		$return = true;
-	}
-	return $return;
+    $return = false;
+    if(isset($_SESSION['user_id'])) {
+        $return = true;
+    }
+    return $return;
 }
 
 function appName() {
-	return 'Web Flotas';
+    return 'Opensoft Cloud Companion';
 }
 
 /**
@@ -57,9 +57,10 @@ function formatDateCentralizer($str,$type) {
  * @return float
  */
 function converterUM($data) {
-	if($data['type'] == 0) {
-		return $data['co'] / 3.7853;//11620307 - GLP
-	} else if($data['type'] == 1) {
+    if($data['type'] == 0) {
+        // return $data['co'] / 3.7853;//11620307 - GLP
+        return $data['co'] / 1;//11620307 - GLP
+    } else if($data['type'] == 1) {
         return $data['co'] / 3.15;//11620308 - GNV
     } else {
         return $data['co'];
@@ -67,18 +68,18 @@ function converterUM($data) {
 }
 
 function getUncompressData($url) {
-	$old = ini_set('default_socket_timeout', 40);//considerar menos(inicial 120)
-	//$old = ini_set('default_socket_timeout', 5);
-	$fh = fopen($url, 'rb');
-	if ($fh === FALSE) {
-		log_message('Error', 'Error al conectarse a '.$url);
-		return FALSE;
-	} else {
+    $old = ini_set('default_socket_timeout', 40);//considerar menos(inicial 120)
+    //$old = ini_set('default_socket_timeout', 5);
+    $fh = fopen($url, 'rb');
+    if ($fh === FALSE) {
+        log_message('Error', 'Error al conectarse a '.$url);
+        return FALSE;
+    } else {
         log_message('Error', '$fh '.$fh);
     }
-	$res = '';
-	while (!feof($fh)) {
-		$res .= fread($fh, 8192);
+    $res = '';
+    while (!feof($fh)) {
+        $res .= fread($fh, 8192);
     }
     fclose($fh);
     
@@ -93,7 +94,7 @@ function getUncompressData($url) {
     if($descomprimido === false){
         return explode("\n", $res);
     }
-	return explode("\n", $descomprimido);
+    return explode("\n", $descomprimido);
 }
 
 function array_sort($array, $on, $order = SORT_ASC) {
@@ -143,9 +144,9 @@ function subval_sort($a,$subkey,$or) {
         $b[$k] = strtolower($v[$subkey]);
     }
     if($or == 'ASC') {
-    	asort($b);
+        asort($b);
     } else {
-    	arsort($b);
+        arsort($b);
     }
     
     foreach($b as $key=>$val) {

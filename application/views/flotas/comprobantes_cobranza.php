@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-lg-12">
 
-                <?php $this->load->view('tags/controlsSearch.php'); ?>
+                <?php $this->load->view('tags/controlsSearchFleet.php'); ?>
                 <div class="row">&nbsp;</div>
                 <hr>
                 

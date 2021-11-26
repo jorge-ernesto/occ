@@ -29,7 +29,7 @@ ORDER BY
 		return $query->result();
 	}
 
-	public function getOrgByTypeAndIdFlotas($id){
+	public function getOrgByTypeAndIdFlotas($type, $id){
 		$query = $this->db->query("SELECT
 	cnf_org_id AS c_org_id,	
 	name AS name,	
@@ -38,7 +38,8 @@ ORDER BY
 FROM
 	cnf_org
 WHERE
-	cnf_org_id = '$id'
+	orgtype = $type
+	AND cnf_org_id = '$id'
 ORDER BY
 	1;");
 		return $query->result();

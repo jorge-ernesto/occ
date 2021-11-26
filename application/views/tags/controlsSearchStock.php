@@ -1,4 +1,4 @@
-                <h3><span><?php echo $name ?></span></h3>
+<h3><span><?php echo $name ?></span></h3>
                 <label>Consultar en:</label>
                 <?php
                 $submit = $actions['submit'];
