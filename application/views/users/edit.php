@@ -20,31 +20,7 @@
                     <div class="col-lg-12 form-group">
                         <label>Email:</label>
                         <input type="email" name="email" value="<?php echo $user[0]->email; ?>" id="email" class="form-control" required> <!-- required -->
-                    </div>                                                                                                              
-                    <div class="col-lg-12 form-group">
-                        <label>Admin:</label>                                                     
-                        <select name="isadmin" id="isadmin" class="form-control">
-                            <?php if($user[0]->isadmin == 0) { ?>
-                                <option value="0" selected>NO</option> 
-                                <option value="1">SI</option> 
-                            <?php } else { ?>
-                                <option value="0">NO</option> 
-                                <option value="1" selected>SI</option> 
-                            <?php } ?>                                                
-                        </select>
-                    </div>
-                    <div class="col-lg-12 form-group">
-                        <label>Activo:</label>
-                        <select name="isactive" id="isactive" class="form-control">
-                            <?php if($user[0]->isactive == 0) { ?>
-                                <option value="0" selected>NO</option> 
-                                <option value="1">SI</option> 
-                            <?php } else { ?>
-                                <option value="0">NO</option> 
-                                <option value="1" selected>SI</option> 
-                            <?php } ?>                                                                                                                                             
-                        </select>
-                    </div>
+                    </div>                                                                                                                                  
                     <!-- <div class="col-lg-12 form-group"> -->
                         <input type="submit" name="submit" value="Editar Usuario" class="btn btn-primary" style="width:49%;"></input>
                         <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view" style="width:49%;">Atr&aacute;s</a>
@@ -59,15 +35,21 @@
                     <table id="table_id" class="table table-striped table-bordered table-hover dataTable" cellspacing="0" style="width: 100%;" role="grid"> <!-- <table class="table table-sm table-bordered table-striped table-hover table-responsive"> -->
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>RUC</th>
-                                <th>Razon Social</th>
-                                <th class="noExport"></th>
+                                <th>Privilegio ID</th>
+                                <th>Centro de Costo ID</th>
+                                <th>RUC ID</th>
+                                <th style="width:25%;">Privilegio</th>
+                                <th style="width:25%;">Centro de Costo</th>
+                                <th style="width:25%;">RUC</th>
+                                <th style="width:25%;" class="noExport"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>                                                
+                            <tr>
                                 <th></th>                                                
+                                <th></th>                                                
+                                <td></td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>                                               
@@ -76,7 +58,7 @@
                     </table>
                 </div>
                 <h4>
-                    <a id="wea" class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/rucs/create/<?php echo $user[0]->sec_user_id ?>">Agregar RUC</a>
+                    <a id="wea" class="btn btn-primary mr-2" href="<?php echo base_url() ?>index.php/privileges/create/<?php echo $user[0]->sec_user_id ?>">Agregar Privilegios</a>
                 </h4>
 
             </div>
@@ -87,6 +69,6 @@
 
     <?php $this->load->view('template/footer.php'); ?>
     <?php $this->load->view('template/scripts.php'); ?>
-    <script src="<?php echo base_url() ?>assets/js/rucs.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/privileges.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-var url = '/webflotas/index.php/';
+var url = '/occ/index.php/';
 var tabla;
 
 function init() {
@@ -16,7 +16,7 @@ function listar() {
         "serverSide": false,
         ajax: {
             method: 'post',
-            url: url+'rucs/list/'+sec_user_id,
+            url: url+'privileges/list/'+sec_user_id,
             dataType: 'json',
             error: function(e) {
                 console.log(e.responseText);
@@ -47,7 +47,7 @@ function listar() {
             }
         },
         "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
-        "pageLength": 5,
+        "pageLength": 20,
         dom: 'Bfrtip', // Blfrtip
         // buttons: [
         //     'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
@@ -89,7 +89,7 @@ function listar() {
         ],
         "columnDefs": [
             {
-                "targets": [ 0 ],
+                "targets": [ 0, 1, 2 ],
                 "visible": false,                
             }
         ]        

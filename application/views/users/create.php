@@ -24,21 +24,7 @@
                     <div class="col-lg-12 form-group">
                         <label>Contrase&ntilde;a:</label>                        
                         <input type="password" name="password" value="" id="password" class="form-control" required> <!-- required -->                        
-                    </div>
-                    <div class="col-lg-12 form-group">
-                        <label>Admin:</label>
-                        <select name="isadmin" id="isadmin" class="form-control">
-                            <option value="0" selected>NO</option> 
-                            <option value="1">SI</option> 
-                        </select>
-                    </div>
-                    <div class="col-lg-12 form-group">
-                        <label>Activo:</label>                                        
-                        <select name="isactive" id="isactive" class="form-control">
-                            <option value="0">NO</option>  
-                            <option value="1" selected>SI</option>                                                                                                                                              
-                        </select>                                        
-                    </div>                                        
+                    </div>                                                        
                     <!-- <div class="col-lg-12 form-group"> -->
                         <input type="submit" name="submit" value="Crear Usuario" class="btn btn-primary" style="width:49%;"></input>&nbsp;
                         <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/view" style="width:49%;">Atr&aacute;s</a>

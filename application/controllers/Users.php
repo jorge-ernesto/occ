@@ -36,7 +36,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
@@ -56,7 +56,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');
 			}else{
@@ -64,18 +64,20 @@ class Users extends CI_Controller {
 				// error_log(json_encode($users));		
 				
 				$listJson = array();
-				foreach ($users as $key => $user) {
+				foreach ($users as $key => $user) {					
+					//Validacion para excluir registro superusuario en caso el usuario logueado no lo sea					
+					if($user->privilege == "Superuser") { //El registro listado cuenta con privilegio "Superuser"
+						if(!$_SESSION['Superuser']) { //El usuario logueado no es "Superuser"
+							continue;
+						}
+					}
+					//Cerrar Validacion para excluir registro superusuario en caso el usuario logueado no lo sea
+
 					$listJson[] = array(
 						"0" => $user->sec_user_id,
 						"1" => $user->name,
 						"2" => $user->email,
-						"3" => ($user->isadmin == 1) ?
-								'<h6><span class="badge bg-primary text-white rounded-pill">Si</span></h6>' :
-								'<h6><span class="badge bg-danger text-white rounded-pill">No</span></h6>',
-						"4" => ($user->isactive == 1) ?
-								'<h6><span class="badge bg-primary text-white rounded-pill">Si</span></h6>' :
-								'<h6><span class="badge bg-danger text-white rounded-pill">No</span></h6>',
-						"5" => '<div class="d-flex">
+						"3" => '<div class="d-flex">
 										<div class="dropdown mr-1">
 											<button type="button" class="btn btn-secondary" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
 												<i class="fas fa-cog"></i>
@@ -107,7 +109,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
@@ -134,7 +136,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
@@ -150,9 +152,7 @@ class Users extends CI_Controller {
 					$add=$this->ADUser_model->storeUser(
 									$this->input->post("name"),
 									$this->input->post("email"),
-									hash("SHA256", $this->input->post("password")),
-									$this->input->post("isadmin"),
-									$this->input->post("isactive")
+									hash("SHA256", $this->input->post("password"))
 					);
 			}
 			if($add==true){
@@ -176,7 +176,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
@@ -218,7 +218,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
@@ -243,9 +243,7 @@ class Users extends CI_Controller {
 						$mod=$this->ADUser_model->updateUser(
 										$id_usuario,
 										$this->input->post("name"),
-										$this->input->post("email"),
-										$this->input->post("isadmin"),
-										$this->input->post("isactive")
+										$this->input->post("email")
 						);											
 				}
 				if($mod==true){
@@ -272,7 +270,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{
@@ -314,7 +312,7 @@ class Users extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$privilege = ($_SESSION['superuser'] || $_SESSION['admin']) ? 1 : 0;
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
 			if(!$privilege) {
 				redirect('secure/login', 'location');								
 			}else{

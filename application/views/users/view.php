@@ -34,16 +34,12 @@
                     <tr>
                         <th>ID</th>                                                
                         <th>Nombre</th>
-                        <th>Email</th>                                                
-                        <th>Admin</th>
-                        <th>Activo</th>
+                        <th>Email</th>
                         <th style="width: 0%;" class="noExport"></th>                                                
                     </tr>
                 </thead>
                 <tbody>
                     <tr>                                                
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

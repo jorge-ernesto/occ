@@ -1,4 +1,4 @@
-var url = '/webflotas/index.php/';
+var url = '/occ/index.php/';
 var tabla;
 
 function init() {
@@ -54,7 +54,7 @@ function listar() {
             {
                 extend: 'copy',    
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4] //Es lo mismo que thead th:not(.noExport)
+                    columns: [0, 1, 2, 3] //Es lo mismo que thead th:not(.noExport)
                 }
             },
             {
@@ -117,3 +117,23 @@ function listar() {
     $('.dt-buttons button').removeClass('btn-secondary'); // Remueve class="btn-secondary"
     $('.dt-buttons button').addClass('btn-primary');      // Agrega class="btn-primary"
 }
+
+$(document).ready(function(){
+    
+    $('#select-privilege').on('change', function(e) {
+        var privilege = $('#select-privilege').val();
+    
+        //No mostrara nada si es privilegio "Superuser" o "Admin"
+        $('.div-station').addClass('d-none');
+        $('.div-ruc').addClass('d-none');
+        $('.div-razsocial').addClass('d-none');
+
+        if(privilege == 3){ //OrgReports
+            $('.div-station').removeClass('d-none');
+        }else if(privilege == 4){ //FleetReports        
+            $('.div-ruc').removeClass('d-none');
+            $('.div-razsocial').removeClass('d-none');
+        }
+    });
+
+});

@@ -55,16 +55,21 @@ class Secure extends CI_Controller {
 					$_SESSION['user_id']   = $return['result_ad_user'][0]->sec_user_id;
 					$_SESSION['name']      = $return['result_ad_user'][0]->name;
 					$_SESSION['loginname'] = $return['result_ad_user'][0]->email;
+					
+					/* Obtenemos permisos de sec_privilege */					
+					$this->load->model('CPrivilege_model');
+					$sec_user_id = $return['result_ad_user'][0]->sec_user_id;
+					$privileges  = $this->CPrivilege_model->getAllPrivileges();					
 
-					/* Obtenemos permisos de sec_privilege */
-					$sec_user_id              = $return['result_ad_user'][0]->sec_user_id;
-					$_SESSION['superuser']    = $this->ADUser_model->searchPrivilege($sec_user_id, 1);
-					$_SESSION['admin']        = $this->ADUser_model->searchPrivilege($sec_user_id, 2);
-					$_SESSION['orgReports']   = $this->ADUser_model->searchPrivilege($sec_user_id, 3);
-					$_SESSION['fleetReports'] = $this->ADUser_model->searchPrivilege($sec_user_id, 4);
+					foreach ($privileges as $key => $privilege) {						
+						$_SESSION[$privilege->value] = $this->ADUser_model->searchPrivilege($sec_user_id, $privilege->value);												
+					}
 
-					// error_log("SESSION");
-					// error_log(json_encode($_SESSION));
+					$_SESSION['isreserved'] = $this->ADUser_model->searchReserved($sec_user_id);						
+					/* Cerrar Obtenemos permisos de sec_privilege */
+
+					error_log("SESSION");
+					error_log(json_encode($_SESSION));
 				} else {
 					$return['status'] = 2;
 					$return['message'] = 'El usuario y/o contraseña no es válido';

@@ -7,17 +7,41 @@
          <a class="nav-link" href="<?php echo base_url() ?>index.php/"><i class="fas fa-fw fa-home ocsicon"></i><span>Inicio</span></a>
       </li>
       <hr class="sidebar-divider d-none d-md-block" />
+      <?php if($_SESSION['Superuser'] == 1 || $_SESSION['Admin'] == 1 || $_SESSION['OrgReports']) { ?>
       <li class="nav-item">
-         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultas" aria-expanded="true"
-            aria-controls="collapseConsultas"><i class="fas fa-fw fa-file-invoice ocsicon"></i><span>Consultas</span></a>
-         <div id="collapseConsultas" class="collapse" aria-labelledby="headingEbi" data-parent="#accordionSidebar">
+         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultasEstaciones" aria-expanded="true"
+            aria-controls="collapseConsultasEstaciones"><i class="fas fa-fw fa-file-invoice ocsicon"></i><span>Consultas Estaciones</span></a>
+         <div id="collapseConsultasEstaciones" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
+            <div class="bg-white py-2 collapse-inner rounded">
+               <h6 class="collapse-header">Ventas:</h6>
+               <a class="collapse-item" href="home">Resumen</a>
+               <a class="collapse-item" href="home">Estadística</a>
+               <a class="collapse-item" href="home">Combustible</a>
+               <a class="collapse-item" href="home">Market Tienda</a>
+               <a class="collapse-item" href="home">Productos por Linea (MT)</a>
+               <a class="collapse-item" href="home">Market Playa</a>
+               <a class="collapse-item" href="home">Ventas por Horas</a>
+               <a class="collapse-item" href="home">Liquidacion Diaria</a>
+               <div class="collapse-divider"></div>
+               <h6 class="collapse-header">Stock:</h6>
+               <a class="collapse-item" href="home">Diario</a>
+            </div>
+         </div>
+      </li>
+      <?php } ?>
+      <?php if($_SESSION['Superuser'] == 1 || $_SESSION['Admin'] == 1 || $_SESSION['FleetReports']) { ?>
+      <li class="nav-item">
+         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultasFlotas" aria-expanded="true"
+            aria-controls="collapseConsultasFlotas"><i class="fas fa-fw fa-file-invoice ocsicon"></i><span>Consultas Flotas</span></a>
+         <div id="collapseConsultasFlotas" class="collapse" aria-labelledby="headingEbi" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/flotas/despachos">Despachos</a>
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/flotas/comprobantes_cobranza">Comprobantes cobranza</a>
             </div>
          </div>
       </li>
-      <?php if($_SESSION['superuser'] == 1 || $_SESSION['admin'] == 1) { ?>
+      <?php } ?>
+      <?php if($_SESSION['Superuser'] == 1 || $_SESSION['Admin'] == 1) { ?>
       <li class="nav-item">
          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSeguridad" aria-expanded="true"
             aria-controls="collapseSeguridad"><i class="fas fa-fw fa-file-invoice ocsicon"></i><span>Seguridad</span></a>
