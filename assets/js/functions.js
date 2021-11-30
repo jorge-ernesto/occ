@@ -4255,13 +4255,13 @@ function templateTableStatistics(data, pr, type) {
 	html += '<div class="table-responsive" style="background-color: #fff; border-radius: 4px; padding: 5px;">';
 	html += '<table class="table">'
 	+'<thead>'
-	+'<tr class="header-table-sumary">'
+	+'<tr class="bg-primary text-white">'
 	+'<th colspan="10" style="text-align: center">Estadística de Ventas</th>'
 	+'</tr>'
-	+'<tr class="header-table-sumary">'
+	+'<tr class="bg-primary text-white">'
 	+'<th></th><th colspan="8" style="text-align: center">Galones</th><th style="text-align: center">Soles</th>'
 	+'</tr>'
-	+'<tr class="header-table-sumary">'
+	+'<tr class="bg-primary text-white">'
 	+'<th>Estación</th>'
 	+'<th style="text-align: right;">84</th>'
 	+'<th style="text-align: right;">90</th>'
@@ -4595,7 +4595,7 @@ function templateTableStatistics(data, pr, type) {
 	};
 	html += '</tbody>';
 	html += '<tfoot>';
-	html += '<tr class="header-table-sumary" style="font-weight: bold;">';
+	html += '<tr class="bg-primary text-white" style="font-weight: bold;">';
 	html += '<td>Totales</td>';
 	html += '<td align="right">'+numeral(sale_total[0]).format('0,0')+'</td>';
 	html += '<td align="right">'+numeral(sale_total[1]).format('0,0')+'</td>';
@@ -4608,7 +4608,7 @@ function templateTableStatistics(data, pr, type) {
 	html += '<td align="right">'+numeral(sale_total[8]).format('0,0')+'</td>';
 	html += '</tr>';
 
-	html += '<tr class="header-table-sumary" style="font-weight: bold;">';
+	html += '<tr class="bg-primary text-white" style="font-weight: bold;">';
 	html += '<td>Anterior</td>';
 	html += '<td align="right">'+numeral(sale__total[0]).format('0,0')+'</td>';
 	html += '<td align="right">'+numeral(sale__total[1]).format('0,0')+'</td>';
@@ -4621,7 +4621,7 @@ function templateTableStatistics(data, pr, type) {
 	html += '<td align="right">'+numeral(sale__total[8]).format('0,0')+'</td>';
 	html += '</tr>';
 
-	html += '<tr class="col-dif" style="font-weight: bold;">';
+	html += '<tr class="col-dif text-dark" style="font-weight: bold;">';
 	html += '<td> '+text[2]+'</td>';
 	html += '<td align="right">'+numeral(dif_total[0]).format('0.00')+'</td>';
 	html += '<td align="right">'+numeral(dif_total[1]).format('0.00')+'</td>';

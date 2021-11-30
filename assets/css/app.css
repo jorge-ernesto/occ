@@ -15,6 +15,10 @@
   cursor: pointer;
 }
 
+.col-dif {
+  background-color: #EEF2F4;
+}
+
 /* Estilos complementarios para clientes.css */
 @media (max-width: 600px) {
   .card-body {
@@ -26,11 +30,11 @@
 }
 
 table th {
-  color: #5a5c69!important;
+  color: #5A5C69!important; /* Este color se obtuvo de text-dark de clientes.css */
 }
 
 .bg-gray {
-  background-color: #f5f5f5!important;  
+  background-color: #F5F5F5!important;
 }
 
 .bg-primary {

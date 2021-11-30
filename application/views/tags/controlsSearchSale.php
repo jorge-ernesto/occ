@@ -35,24 +35,31 @@ if ($typeStation == 0) {
                 </div>
 
                 <?php if($typeStation == 4) { ?>
-                <label for="">Periodo Anterior:</label>
-                <div class="form-group form-group-filled" id="_event_period">
-                    <input type="text" class="previous_range form-control" id="_start-date-request" value="<?php echo $previous_start_date; ?>">
-                    <input type="text" class="previous_range form-control" id="_end-date-request" value="<?php echo $previous_start_date; ?>">
-                </div>
-                <?php } ?>
-                <?php if($typeStation == 4) { ?>
-                <label for="">Periodo Actual:</label>
-                <?php } ?>
-                <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
-                    <label>Desde:</label>
-                    <input type="text" class="form-control" required id="start-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> <!-- readonly -->
-                </div>
 
-                <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
-                    <label>Hasta:</label>
-                    <input type="text" class="form-control" required id="end-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span> <!-- readonly -->
-                </div>
+                    <label for="">Periodo Anterior:</label>
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <input type="text" class="form-control" required id="_start-date-request" value="<?php echo $previous_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                        <input type="text" class="form-control" required id="_end-date-request" value="<?php echo $previous_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                    </div>
+
+                    <label for="">Periodo Actual:</label>
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <input type="text" class="form-control" required id="start-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                        <input type="text" class="form-control" required id="end-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                    </div>
+
+                <?php } else { ?>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label>Desde:</label>
+                        <input type="text" class="form-control" required id="start-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                    </div>
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label>Hasta:</label>
+                        <input type="text" class="form-control" required id="end-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                    </div>
+
+                <?php } ?>                
                 
                 <?php if($typeStation == 6) { ?>
                     <div class="btn-group" data-toggle="buttons" style="margin-bottom:5px!important">
