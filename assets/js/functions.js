@@ -3258,7 +3258,7 @@ function setDataResultRequest2(element,data) {
 function detailAllResult(t) {
 	console.log('click 666');
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 
@@ -3716,7 +3716,7 @@ function searchSumarySales(t) {
 	console.log(paramsRequest);
 
 	/*setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();*/
 
@@ -3799,7 +3799,7 @@ function searchSalesForHours(t) {
 	console.log(paramsRequest);
 
 	/*setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();*/
 
@@ -3842,7 +3842,7 @@ function searchLiquidacionDiaria(t){ //ACA
 	console.log(paramsRequest);
 
 	/*setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();*/
 
@@ -4805,7 +4805,7 @@ function renderRowTableLineProduct(data,req,isLink) {
 
 function searchDetailProductsLine(t) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 	var params = {
@@ -5049,7 +5049,7 @@ function templateTableSearchMerchandise(data, is) {
 	*/
 function loadModalAddClient(_this) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 	$.ajax({
@@ -5069,14 +5069,14 @@ function loadModalAddClient(_this) {
 
 function loadModalAddOrg(_this) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 }
 
 function loadModalAddWarehouse(_this) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 }
@@ -5086,21 +5086,21 @@ function loadModalAddWarehouse(_this) {
 	*/
 function loadModalEditClient(_this) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 }
 
 function loadModalEditOrg(_this) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 }
 
 function loadModalEditWarehouse(_this) {
 	setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
-	setContendModal('#normal-modal', '.modal-body', loading(), true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
 	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
 	$('#normal-modal').modal();
 }
@@ -5331,7 +5331,7 @@ function  amountPercentage(data) {
 
 function searchValesClientesCredito(t){
 	//Loading Viejo
-	// $('.result-search').html('<br><br>'+loading());
+	// $('.result-search').html('<br><br>'+loading_bootstrap4());
 	
 	//Loading Bootstrap 4
 	$('.table-responsive').addClass('d-none');
@@ -5568,7 +5568,7 @@ function templateStationsSearchValesClientesCredito(data,t,cm) {
 
 function searchComprobantesCobranza(t){
 	//Loading Viejo
-	// $('.result-search').html('<br><br>'+loading());
+	// $('.result-search').html('<br><br>'+loading_bootstrap4());
 	
 	//Loading Bootstrap 4
 	$('.table-responsive').addClass('d-none');
