@@ -13,6 +13,13 @@
 
 .search-detail-products-line {
   cursor: pointer;
+  color: #337ab7!important;
+  text-decoration: none!important;
+}
+.search-detail-products-line:hover {
+  cursor: pointer;
+  color: #337ab7!important;
+  text-decoration: underline!important;
 }
 
 .col-dif {

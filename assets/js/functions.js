@@ -4716,6 +4716,7 @@ function downloadStatistics(t) {
 	* Resumen de margen por lineas (ventas/market_productos_linea)
 	*/
 function searchLineProduct() {
+	$('.result-search').html(loading_bootstrap4());
 	var params = {
 		id: $('#select-station').val(),
 		dateBegin: $('#start-date-request').val(),
@@ -4755,7 +4756,7 @@ function templateTableLineProduct(data, req) {
 	var html = '<br><div class="table-responsive" style="background-color: #fff; border-radius: 4px; padding: 5px;">';
 	html += '<table class="table table-striped">';
 	html += '<thead>';
-	html += '<tr class="header-table-sumary">';
+	html += '<tr class="bg-primary">';
 	html += '<th>Línea</th>';
 	html += '<th style="text-align: right;">Cantidad</th>';
 	html += '<th style="text-align: right;">Venta</th>';
@@ -4833,7 +4834,7 @@ function searchDetailProductsLine(t) {
 		setContendModal('#normal-modal', '.modal-body', html, true);
 		//var btn = '<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>';
 		var btn = '';
-		btn += '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>';
+		btn += '<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>';
 		setContendModal('#normal-modal', '.modal-footer', btn, true);
 	}, 'json');
 }
@@ -4847,7 +4848,7 @@ function templateTableProductLine(data,req) {
 	html += '<br><div class="table-responsive" style="background-color: #fff; border-radius: 4px; padding: 5px;">';
 	html += '<table class="table table-striped">';
 	html += '<thead>';
-	html += '<tr class="header-table-sumary">';
+	html += '<tr class="bg-primary">';
 	html += '<th>Estación</th>';
 	html += '<th>Producto</th>';
 	html += '<th>Cantidad</th>';//cantidad vendida
