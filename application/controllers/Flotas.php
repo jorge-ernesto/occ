@@ -24,7 +24,7 @@ class Flotas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');								
+				$this->error_404();							
 			}else{
 				$data['title'] = 'Consultas > Despachos';
 				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFleets(1);
@@ -45,7 +45,7 @@ class Flotas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['FleetReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');								
+				$this->error_404();
 			}else{
 				$data['title'] = 'Consultas > Comprobantes de Cobranza';
 				$data['result_c_org'] = $this->COrg_model->getCOrgByTypeFleets(1);
@@ -58,5 +58,12 @@ class Flotas extends CI_Controller {
 				$this->load->view('flotas/comprobantes_cobranza',$data);
 			}
 		}
+	}
+
+	public function error_404()
+	{
+		$data['heading'] = "404 Page Not Found";
+		$data['message'] = "The page you requested was not found.";
+		$this->load->view('errors/html/error_404', $data);
 	}
 }

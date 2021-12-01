@@ -20,7 +20,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Combustibles';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -41,7 +41,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Market Tienda';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
@@ -62,7 +62,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Market Playa';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -83,7 +83,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Resumen';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -106,7 +106,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Ventas por Horas';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -132,7 +132,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Liquidacion Diaria';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -155,7 +155,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Estadística';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -177,7 +177,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Productos por Línea (MT)';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
@@ -202,7 +202,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');
+				$this->error_404();
 			}else{
 				$data['title'] = 'Ventas > Mercaderías';
 				$data['name'] = 'Mercaderías';
@@ -218,5 +218,12 @@ class Ventas extends CI_Controller {
 				$this->load->view('ventas/mercaderias',$data);
 			}
 		}
+	}
+
+	public function error_404()
+	{
+		$data['heading'] = "404 Page Not Found";
+		$data['message'] = "The page you requested was not found.";
+		$this->load->view('errors/html/error_404', $data);
 	}
 }
