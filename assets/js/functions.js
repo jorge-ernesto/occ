@@ -3403,25 +3403,45 @@ function templateStock(data,type,chart) {
 
 		if(taxid != detail[i].group.taxid) {
 			html += (i != 0 ? '<hr>' : '');
-			html += '<div class="panel-group-station"><h5 title="RUC: '+detail[i].group.taxid+'">'+detail[i].group.name+'</h5></div>';
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
 			taxid = detail[i].group.taxid;
 		}
 		if(!detail[i].isConnection) {
-			html += '<div class="container-station"><div class="panel panel-danger">'
-			+'<div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong></div>';
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
 		} else {
-			html += '<div class="container-station"><div class="panel panel-default">';
+			html += `<div class="">
+							<div class="card shadow mb-4">`;
 		}
-		html += '<div class="panel-body detail" data-station="'+detail[i].id+'"'
-		+'data-begindate="'+data.beginDate+'" data-enddate="'+data.endDate+'" data-typestation="'+data.typeStation+'"'
-		+'><span class="glyphicon glyphicon-stop" style="color: '+color_id+'"></span> '+num+'. '+detail[i].name
-		+'<br><table class="table table-bordered table-striped d-none">'
-		+'<thead> <tr> <th>Prod.</th> <th align="right">Cap.</th> <th align="right">% Disp.</th> <th align="right">Días Aprox.</th> </tr> </thead>'
-		+'<tbody> ';
+		html += `<div class="card-body detail" data-station="${detail[i].id}"
+					data-begindate="${data.beginDate}" data-enddate="${data.endDate}" data-typestation="${data.typeStation}"
+					>
+						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num}. ${detail[i].name}
+						<br>
+						<table class="table table-bordered table-striped d-none">
+							<thead> 
+								<tr> 
+									<th>Prod.</th> 
+									<th align="right">Cap.</th> 
+									<th align="right">% Disp.</th> 
+									<th align="right">Días Aprox.</th> 
+								</tr> 
+							</thead>
+							<tbody>`;
 		html += templateTableDetailStock(detail[i].data,detail[i].id);
-		html += ' </tbody> </table><br><div class="row container-canvas canvas-station-'+detail[i].id+'"></div>'
-		+'</div></div>'
-		+'</div></div>';
+				html += `</tbody> 
+						</table>
+						<br>
+						<div class="row container-canvas canvas-station-${detail[i].id}"></div>
+					</div></div>
+					</div></div>`;
 		num++;
 	}
 	return html;
@@ -3468,8 +3488,8 @@ function templateTankSimulation(data) {
 		for(var j = 0; j < count_; j++) {
 			//Solo no se considera GNV
 			typeMedition = data_[j].cod_comb != '11620307' ? 'gal' : 'ltr';
-			append += '<div class="col-md-4 tank-in">'
-			+'<div class="panel panel-default"><div class="panel-body panel-body-tank">'
+			append += '<div class="col-md-4 mb-4">'
+			+'<div class="card shadow"><div class="card-body panel-body-tank f-14">'
 			+'<div class="row info-tank info-tank-'+id+'-'+data_[j].cod_comb+'">'
 			+'<div class="col-md-4" align="center">'
 			+'<div class="name-tank msg-tank-'+id+'-'+data_[j].cod_comb+'"><label>'+data_[j].desc_comb+'</label></div>'
@@ -3494,10 +3514,10 @@ function templateTankSimulation(data) {
 
 			console.log('data_[j].nu_capacidad: '+data_[j].nu_capacidad+', data_[j].porcentaje_existente: '+data_[j].porcentaje_existente+' | '+id+'-'+data_[j].cod_comb);
 			detailTank = '';
-			detailTank += '<label class="label-detail-comb">Inventario:</label> '+numeral(data_[j].nu_medicion).format('0')+' '+typeMedition+'</div>'
-			+'<div><label class="label-detail-comb">Promedio:</label> '+numeral(data_[j].nu_venta_promedio_dia).format('0')+' '+typeMedition+' por día</div>'
-			+'<div><label class="label-detail-comb">Tiempo en vaciar:</label> '+numeral(data_[j].tiempo_vaciar).format('0')+' día(s)</div>'
-			+'<div><label class="label-detail-comb">Última compra:</label> '+numeral(data_[j].cantidad_ultima_compra).format('0')+' '+typeMedition+', '+data_[j].fecha_ultima_compra;
+			detailTank += '<label class="label-detail-comb text-dark font-weight-bold">Inventario:</label> '+numeral(data_[j].nu_medicion).format('0')+' '+typeMedition+'</div>'
+			+'<div><label class="label-detail-comb text-dark font-weight-bold">Promedio:</label> '+numeral(data_[j].nu_venta_promedio_dia).format('0')+' '+typeMedition+' por día</div>'
+			+'<div><label class="label-detail-comb text-dark font-weight-bold">Tiempo en vaciar:</label> '+numeral(data_[j].tiempo_vaciar).format('0')+' día(s)</div>'
+			+'<div><label class="label-detail-comb text-dark font-weight-bold">Última compra:</label> '+numeral(data_[j].cantidad_ultima_compra).format('0')+' '+typeMedition+', '+data_[j].fecha_ultima_compra;
 			$('.detail-tank-'+id+'-'+data_[j].cod_comb).append(detailTank);
 			if(data_[j].nu_capacidad <= 0) {
 				$('.msg-tank-'+id+'-'+data_[j].cod_comb).prepend('<button class="resume-info-tank" title="Información" data-content="Se registró cero o menos<br>como capacidad del tanque.<br><p>Capacidad: '+numeral(data_[j].nu_capacidad).format('0')+' '+typeMedition+'</p>" data-placement="top" data-html="true" data-trigger="focus"><span style="color: #C65959;" class="glyphicon glyphicon-exclamation-sign"></span></button> ');

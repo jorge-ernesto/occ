@@ -26,6 +26,43 @@
   background-color: #EEF2F4;
 }
 
+.panel-body-tank {
+  padding: 12px 6px;
+}
+
+.detail-tank {
+  padding-left: 34px;
+}
+
+.label-detail-comb {
+  margin-bottom: 2px;
+}
+
+.panel-body-tank {
+  height: 134px;
+}
+
+.name-tank {
+  text-align: left;
+  padding-left: 10px;
+}
+
+@media only screen and (max-width: 768px) {
+  .msg-tank-mobile {
+    text-align: center;
+  }
+  .detail-tank {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+  .name-tank {
+    text-align: center;
+  }
+  .panel-body-tank {
+    height: auto;
+  }
+}
+
 /* Estilos complementarios para clientes.css */
 @media (max-width: 600px) {
   .card-body {
