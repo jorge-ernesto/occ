@@ -313,33 +313,42 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	var num = 1;
 	var unit = t == 6 ? 'Gln' : '';
 
-	var mostrar_cards = ""; //none
-
 	var color_id, taxid;
 	for(var i = 0; i<count; i++) {
 		color_id = getRandomColor();
 		if(taxid != detail[i].group.taxid) {
-			html += (i != 0 ? '<hr class="'+mostrar_cards+'">' : '');
-			html += '<div class="panel-group-station '+mostrar_cards+'"><h5 title="RUC: '+detail[i].group.taxid+'">'+detail[i].group.name+'</h5></div>';
+			html += (i != 0 ? '<hr>' : '');
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
 			taxid = detail[i].group.taxid;
 		}
 
 		var mostrar = true;
 		if(!detail[i].isConnection) { //Si no hay conexion
-			html += '<div class="container-station"><div class="panel panel-danger '+mostrar_cards+'">'
-			+'<div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong></div>';
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
 
 			mostrar = false;
 		} else {
 			verificar_data = detail[i].data;
 			
 			if(verificar_data.length == 0){ //Si hay conexion pero datos vacios
-				html += '<div class="container-station"><div class="panel panel-success '+mostrar_cards+'">'
-				+'<div class="panel-heading"><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>No hay informacion.</strong></div>';
+				html += `<div class="">
+								<div class="card shadow mb-4">
+									<div class="card-header bg-danger text-white">
+										<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>No hay informacion.</strong>
+									</div>`;
 
 				mostrar = false;
 			}else{ //Si hay conexion y hay datos
-				html += '<div class="container-station"><div class="panel panel-default '+mostrar_cards+'">';
+				html += `<div class="">
+								<div class="card shadow mb-4">`;
 			}
 		}
 
@@ -351,9 +360,9 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 			for (var almacenes in dataAlmacenes) {
 				// console.log(`${almacenes}: ${dataAlmacenes[almacenes]}`);
 				
-				var tbody_almacenes = `<tr class="success">
-											<th colspan="28">${almacenes}</th>
-										</tr>`;
+				var tbody_almacenes = `<tr class="bg-primary">
+													<th colspan="28">${almacenes}</th>
+												</tr>`;
 
 				var nombre_combustible = {
 					'11620301': '84',
@@ -366,17 +375,17 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 				};
 				var partes = dataAlmacenes[almacenes].partes;
 				for (var fecha in partes) {
-					var th = "";
+					var td = "";
 					for (var k=0; k<24; k++) {
-						th += `<th>${ (partes[fecha][k] === undefined) ? 0 : partes[fecha][k].toFixed(0) }</th>`;					
+						td += `<td>${ (partes[fecha][k] === undefined) ? 0 : partes[fecha][k].toFixed(0) }</td>`;					
 					}
 
 					tbody_almacenes += `<tr>
-											<th>${nombre_combustible[fecha]}</th>
-											${th}
-											<th>${partes[fecha].total.toFixed(0)}</th>
-											<th>${partes[fecha].promedio.toFixed(0)}</th>
-										</tr>`;
+													<th>${nombre_combustible[fecha]}</th>
+													${td}
+													<th>${partes[fecha].total.toFixed(0)}</th>
+													<th>${partes[fecha].promedio.toFixed(0)}</th>
+												</tr>`;
 				}
 			}
 
@@ -396,72 +405,73 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 			}
 
 			var tbody = `<tbody>
-							${tbody_almacenes}
-							<tr class="success">
-								<th>Total General</th>
-								${th_general}
-								<th>${detail[i].data.totales.total.toFixed(0)}</th>
-								<th>${detail[i].data.totales.promedio.toFixed(0)}</th>
-							</tr>
-							<tr class="success">
-								<th>Promedio</th>
-								${th_promedio}
-								<th>${detail[i].data.promedio.total.toFixed(0)}</th>
-								<th>${detail[i].data.promedio.promedio.toFixed(0)}</th>
-							</tr>
-							<tr class="success">
-								<th>Porcentaje (%)</th>
-								${th_porcentaje}
-								<th>${detail[i].data.porcentaje.total}</th>
-								<th>${detail[i].data.porcentaje.promedio}</th>
-							</tr>
-						</tbody>`;
+								${tbody_almacenes}
+								<tr class="bg-primary">
+									<th>Total General</th>
+									${th_general}
+									<th>${detail[i].data.totales.total.toFixed(0)}</th>
+									<th>${detail[i].data.totales.promedio.toFixed(0)}</th>
+								</tr>
+								<tr class="bg-primary">
+									<th>Promedio</th>
+									${th_promedio}
+									<th>${detail[i].data.promedio.total.toFixed(0)}</th>
+									<th>${detail[i].data.promedio.promedio.toFixed(0)}</th>
+								</tr>
+								<tr class="bg-primary">
+									<th>Porcentaje (%)</th>
+									${th_porcentaje}
+									<th>${detail[i].data.porcentaje.total}</th>
+									<th>${detail[i].data.porcentaje.promedio}</th>
+								</tr>
+							</tbody>`;
 			//CERRAR REPORTE VENTAS POR HORAS
 		}
 
 		var tabla = "";
 		if(mostrar == true){
-			tabla += `<br>
-					<br>
-					<div class="table-responsive">
-						<table class="table table-bordered">
-							<thead>
-								<tr class="success">
-									<th>Horas</th>
-									<th>00</th>
-									<th>01</th>
-									<th>02</th>
-									<th>03</th>
-									<th>04</th>
-									<th>05</th>
-									<th>06</th>
-									<th>07</th>
-									<th>08</th>
-									<th>09</th>
-									<th>10</th>
-									<th>11</th>
-									<th>12</th>
-									<th>13</th>
-									<th>14</th>
-									<th>15</th>
-									<th>16</th>
-									<th>17</th>
-									<th>18</th>
-									<th>19</th>
-									<th>20</th>
-									<th>21</th>
-									<th>22</th>
-									<th>23</th>
-									<th>Total</th>
-									<th>Promedio</th>
-								</tr>
-							</thead>
-							${tbody}	
-						</table>
-					</div>`;
+			tabla += `  <br>
+							<br>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover">
+									<thead>
+										<tr class="bg-primary">
+											<th>Horas</th>
+											<th>00</th>
+											<th>01</th>
+											<th>02</th>
+											<th>03</th>
+											<th>04</th>
+											<th>05</th>
+											<th>06</th>
+											<th>07</th>
+											<th>08</th>
+											<th>09</th>
+											<th>10</th>
+											<th>11</th>
+											<th>12</th>
+											<th>13</th>
+											<th>14</th>
+											<th>15</th>
+											<th>16</th>
+											<th>17</th>
+											<th>18</th>
+											<th>19</th>
+											<th>20</th>
+											<th>21</th>
+											<th>22</th>
+											<th>23</th>
+											<th>Total</th>
+											<th>Promedio</th>
+										</tr>
+									</thead>
+									${tbody}	
+								</table>
+							</div>
+						</div>`;
 		}
 		
-		html += `<div class="panel-body" data-station="${detail[i].id}" 
+		html += `<div class="card-body" data-station="${detail[i].id}" 
 						data-begindate="${data.beginDate}" data-enddate="${data.endDate}" data-typestation="${data.typeStation}"
 						data-typecost="${data.typeCost}" title="Ver detalle de ${detail[i].name}">
 						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num + ". " + detail[i].name}
@@ -470,40 +480,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 						${tabla}
 						<!-- CERRRAR REPORTE VENTAS POR HORAS -->
 					</div>
-					<!-- 
-					<div class="panel-footer">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="mid"><b>Venta: S/ ${numeral(detail[i].total_venta).format('0,0')}</b></div>
-								<div class="mid"><b>${numeral(detail[i].total_cantidad).format('0,0') + " " + unit}</b></div>
-							</div>
-							<div class="col-md-6">
-								<div class="mid"><b>Costo: S/ ${numeral(detail[i].total_costo).format('0,0')}</b></div>
-								<div class="mid"><b>Margen: S/ ${numeral(detail[i].total_utilidad).format('0,0')}</b></div>
-							</div>
-						</div>
-					</div>
-					-->
-					</div>`;
-
-		// console.log('> gran_util: '+gran_util);
-		// gran_total += detail[i].total_venta != '' ? parseFloat(detail[i].total_venta) : parseFloat(0);
-		// gran_qty += detail[i].total_cantidad != '' ? parseFloat(detail[i].total_cantidad) : parseFloat(0);
-		// gran_util += detail[i].total_utilidad != '' ? parseFloat(detail[i].total_utilidad) : parseFloat(0);
-		// gran_cost += detail[i].total_costo != '' ? parseFloat(detail[i].total_costo) : parseFloat(0);
-
-		// /**
-		//  * Importante: considerar que PUSH esta agregando venta, cantidad y utilidad
-		//  * solo si el monto es positivo, caso contrario solo se agrega 0(cero)
-		//  */
-		// dataStations.push({
-		// 	name: detail[i].initials,
-		// 	total: detail[i].total_venta > 0 ? parseFloat(detail[i].total_venta) : parseFloat(0),
-		// 	qty: detail[i].total_cantidad > 0 ? parseFloat(detail[i].total_cantidad) : parseFloat(0),
-		// 	util: detail[i].total_utilidad > 0 ? parseFloat(detail[i].total_utilidad) : parseFloat(0),
-		// 	color: color_id,
-		// 	data: detail[i].data,
-		// });
+				</div>`;
 		num++;
 	}
 
@@ -517,9 +494,9 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	for (var combustible in data_totales_combustibles) {
 		// console.log(`${combustible}: ${data_totales_combustibles[combustible]}`);
 
-		var th = "";
+		var td = "";
 		for (var k=0; k<24; k++) {
-			th += `<th>${ (data_totales_combustibles[combustible][k] === undefined) ? 0 : data_totales_combustibles[combustible][k].toFixed(0) }</th>`;					
+			td += `<td>${ (data_totales_combustibles[combustible][k] === undefined) ? 0 : data_totales_combustibles[combustible][k].toFixed(0) }</td>`;					
 		}
 
 		//RECORREMOS LA DATA DE LAS ESTACIONES
@@ -533,10 +510,10 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 			for(var combustible_dentro_estaciones in data_estaciones_array){
 				if(combustible_dentro_estaciones == combustible){
 					for (var k=0; k<24; k++) {
-						th_estaciones += `<th>${ (data_estaciones_array[combustible_dentro_estaciones][k]) === undefined ? 0 : data_estaciones_array[combustible_dentro_estaciones][k].toFixed(0) }</th>`;					
+						th_estaciones += `<td>${ (data_estaciones_array[combustible_dentro_estaciones][k]) === undefined ? 0 : data_estaciones_array[combustible_dentro_estaciones][k].toFixed(0) }</td>`;					
 					}
-					th_estaciones += `<th>${ (data_estaciones_array[combustible_dentro_estaciones].total) === undefined ? 0 : data_estaciones_array[combustible_dentro_estaciones].total.toFixed(0) }</th>`;
-					th_estaciones += `<th>${ (data_estaciones_array[combustible_dentro_estaciones].promedio) === undefined ? 0 : data_estaciones_array[combustible_dentro_estaciones].promedio.toFixed(0) }</th>`;
+					th_estaciones += `<td>${ (data_estaciones_array[combustible_dentro_estaciones].total) === undefined ? 0 : data_estaciones_array[combustible_dentro_estaciones].total.toFixed(0) }</td>`;
+					th_estaciones += `<td>${ (data_estaciones_array[combustible_dentro_estaciones].promedio) === undefined ? 0 : data_estaciones_array[combustible_dentro_estaciones].promedio.toFixed(0) }</td>`;
 				}
 			}
 			//CERRAR RECORREMOS LOS DATOS DE LOS COMBUSTIBLES 
@@ -544,27 +521,27 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 			//SI NO ES EL COMBUSTIBLE
 			if(th_estaciones == ""){
 				for (var k=0; k<24; k++) {
-					th_estaciones += `<th>0</th>`;					
+					th_estaciones += `<td>0</td>`;					
 				}
-				th_estaciones += `<th>0</th>`;					
-				th_estaciones += `<th>0</th>`;					
+				th_estaciones += `<td>0</td>`;					
+				th_estaciones += `<td>0</td>`;					
 			}
 			//CERRAR SI NO ES EL COMBUSTIBLE
 
-			tr_estaciones += `<tr class="text-primary collapse order${i}">
-									<th>${estacion}</th>
-									${th_estaciones}
-								</tr>`;
+			tr_estaciones += `<tr class="text-link collapse order${i}">
+										<td>${estacion}</td>
+										${th_estaciones}
+									</tr>`;
 		}
 		//CERRAR RECORREMOS LA DATA DE LAS ESTACIONES
 
-		tbody_totales_combustible += `<tr data-toggle='collapse' data-target='.order${i}'>
-										<th>${nombre_combustible[combustible]}</th>
-										${th}
-										<th>${data_totales_combustibles[combustible].total.toFixed(0)}</th>
-										<th>${data_totales_combustibles[combustible].promedio.toFixed(0)}</th>
-									</tr>
-									${tr_estaciones}`;
+		tbody_totales_combustible += `<tr data-toggle="collapse" data-target=".order${i}" class="pointer">
+													<th>${nombre_combustible[combustible]}</th>
+													${td}
+													<th>${data_totales_combustibles[combustible].total.toFixed(0)}</th>
+													<th>${data_totales_combustibles[combustible].promedio.toFixed(0)}</th>
+												</tr>
+												${tr_estaciones}`;
 		i++;
 	}
 
@@ -585,19 +562,19 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 
 	var tbody_total_general = `<tbody>
 									${tbody_totales_combustible}
-									<tr class="success">
+									<tr class="bg-primary">
 										<th>Total General</th>
 										${th_all_general}
 										<th>${data_all_stations.totales.total.toFixed(0)}</th>
 										<th>${data_all_stations.totales.promedio.toFixed(0)}</th>
 									</tr>
-									<tr class="success">
+									<tr class="bg-primary">
 										<th>Promedio</th>
 										${th_all_promedio}
 										<th>${data_all_stations.promedio.total.toFixed(0)}</th>
 										<th>${data_all_stations.promedio.promedio.toFixed(0)}</th>
 									</tr>
-									<tr class="success">
+									<tr class="bg-primary">
 										<th>Porcentaje (%)</th>
 										${th_all_porcentaje}
 										<th>${data_all_stations.porcentaje.total}</th>
@@ -608,7 +585,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	var tabla_total_general = `<div class="table-responsive">
 									<table class="table table-bordered table-hover">
 										<thead>
-											<tr class="success">
+											<tr class="bg-primary">
 												<th>Horas</th>
 												<th>00</th>
 												<th>01</th>
@@ -644,16 +621,16 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 
 	//gran_util
 	// console.log('> gran_util: '+gran_util);
-	html += `<div class="panel panel-primary"> 
-				<div class="panel-heading" title="Ver total de productos"><div class="panel-title">Total General</div></div>
-					<div class="panel-body" data-station="${data.id}" data-begindate="
-					${data.beginDate}" data-enddate="${data.endDate}" data-typecost="${data.typeCost}"
-					data-typestation="${data.typeStation}">
-					<!-- REPORTE VENTAS POR HORAS -->
-						${tabla_total_general}
-					<!-- CERRRAR REPORTE VENTAS POR HORAS -->
-				</div>
-			</div>`;
+	html += `<div class="card shadow"> 
+					<div class="card-header bg-primary text-white" title="Ver total de productos"><div class="panel-title">Total General</div></div>
+						<div class="card-body" data-station="${data.id}" data-begindate="
+						${data.beginDate}" data-enddate="${data.endDate}" data-typecost="${data.typeCost}"
+						data-typestation="${data.typeStation}">
+						<!-- REPORTE VENTAS POR HORAS -->
+							${tabla_total_general}
+						<!-- CERRRAR REPORTE VENTAS POR HORAS -->
+					</div>
+				</div>`;
 	//CERRAR CUADRO FINAL Y TOTAL
 
 	storageStations();

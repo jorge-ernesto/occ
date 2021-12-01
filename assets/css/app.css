@@ -50,3 +50,20 @@ table th {
 .bg-primary th {
   color: #fff!important;
 }
+
+.btn-group .active {
+  color: #fff!important;
+  background-color: #CA6F1E!important;
+  border-color: #CA6F1E!important;
+}
+
+.text-link {
+  cursor: pointer;
+  color: #337ab7!important;
+  text-decoration: none!important;
+}
+.text-link:hover {
+  cursor: pointer;
+  color: #337ab7!important;
+  text-decoration: underline!important;
+}

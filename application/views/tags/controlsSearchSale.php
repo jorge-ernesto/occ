@@ -62,7 +62,7 @@ if ($typeStation == 0) {
                 <?php } ?>                
                 
                 <?php if($typeStation == 6) { ?>
-                    <div class="btn-group" data-toggle="buttons" style="margin-bottom:5px!important">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-bottom:5px!important">
                         <label class="btn btn-sm btn-primary active">
                             <input type="radio" name="local" id="local_combustible" value="COMBUSTIBLE" checked> COMBUSTIBLE
                         </label>
@@ -72,7 +72,7 @@ if ($typeStation == 0) {
                     </div>  
                     <br>                  
 
-                    <div class="btn-group" data-toggle="buttons" style="margin-bottom:5px!important">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-bottom:5px!important">
                         <label class="btn btn-sm btn-primary active">
                             <input type="radio" name="importe" id="importe_importe" value="IMPORTE" checked> IMPORTE
                         </label>
@@ -82,7 +82,7 @@ if ($typeStation == 0) {
                     </div>                                
                     <br>
 
-                    <div class="btn-group" data-toggle="buttons" style="margin-bottom:10px!important">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-bottom:10px!important">
                         <label class="btn btn-sm btn-primary active">
                             <input type="radio" name="modo" id="modo_detallado" VALUE="DETALLADO" checked> DETALLADO
                         </label>                        
@@ -105,7 +105,7 @@ if ($typeStation == 0) {
                         </select>                              
                     </div>
 
-                    <div id="unidadmedida">
+                    <div id="unidadmedida" style="margin-bottom:10px!important">
                         <label for="">Seleccionar Unidad de Medida:</label>
                         <select name="unidadmedida" class="form-control">
                             <option value="-">No convertir unidades</option>
