@@ -20,7 +20,7 @@ class Ventas extends CI_Controller {
 		} else {
 			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
 			if(!$privilege) {
-				redirect('secure/login', 'location');								
+				redirect('secure/login', 'location');
 			}else{
 				$data['title'] = 'Ventas > Combustibles';
 				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
@@ -39,14 +39,19 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Market Tienda';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Market Tienda';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 1;
-			$this->load->view('ventas/market',$data);
+				$data['typeStation'] = 1;
+				$this->load->view('ventas/market',$data);
+			}
 		}
 	}
 
@@ -55,14 +60,19 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Market Playa';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Market Playa';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 2;
-			$this->load->view('ventas/market_playa',$data);
+				$data['typeStation'] = 2;
+				$this->load->view('ventas/market_playa',$data);
+			}
 		}
 	}
 
@@ -71,14 +81,19 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Resumen';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Resumen';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 3;
-			$this->load->view('ventas/resumen',$data);
+				$data['typeStation'] = 3;
+				$this->load->view('ventas/resumen',$data);
+			}
 		}
 	}
 
@@ -89,16 +104,21 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Ventas por Horas';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Ventas por Horas';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');			
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');			
 
-			$data['typeStation'] = 6;
+				$data['typeStation'] = 6;
 
-			error_log(json_encode($data));
-			$this->load->view('ventas/ventas_horas',$data);
+				error_log(json_encode($data));
+				$this->load->view('ventas/ventas_horas',$data);
+			}
 		}
 	}
 
@@ -110,16 +130,21 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Liquidacion Diaria';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Liquidacion Diaria';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');			
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');			
 
-			$data['typeStation'] = 7;
+				$data['typeStation'] = 7;
 
-			error_log(json_encode($data));
-			$this->load->view('ventas/liquidacion_diaria',$data);
+				error_log(json_encode($data));
+				$this->load->view('ventas/liquidacion_diaria',$data);
+			}
 		}
 	}
 
@@ -128,15 +153,20 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Estadística';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Estadística';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
-			$data['previous_start_date'] = getDatePrevious('d/m/Y',2);
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
+				$data['previous_start_date'] = getDatePrevious('d/m/Y',2);
 
-			$data['typeStation'] = 4;
-			$this->load->view('ventas/estadistica',$data);
+				$data['typeStation'] = 4;
+				$this->load->view('ventas/estadistica',$data);
+			}
 		}
 	}
 
@@ -145,14 +175,19 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Productos por Línea (MT)';
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Productos por Línea (MT)';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 5;
-			$this->load->view('ventas/market_productos_linea',$data);
+				$data['typeStation'] = 5;
+				$this->load->view('ventas/market_productos_linea',$data);
+			}
 		}
 	}
 
@@ -165,18 +200,23 @@ class Ventas extends CI_Controller {
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Ventas > Mercaderías';
-			$data['name'] = 'Mercaderías';
-			$data['actions'] = array(
-				'submit' => 'btn-search-merchandise-sale'
-			);
-			$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');
+			}else{
+				$data['title'] = 'Ventas > Mercaderías';
+				$data['name'] = 'Mercaderías';
+				$data['actions'] = array(
+					'submit' => 'btn-search-merchandise-sale'
+				);
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('M');
 
-			$this->load->helper('functions');
-			$data['default_start_date'] = getDateDefault('d/m/Y');
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
 
-			$data['typeStation'] = 1;
-			$this->load->view('ventas/mercaderias',$data);
+				$data['typeStation'] = 1;
+				$this->load->view('ventas/mercaderias',$data);
+			}
 		}
 	}
 }
