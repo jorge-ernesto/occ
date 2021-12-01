@@ -683,7 +683,6 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 	var espacio = '&nbsp;&nbsp;';
 	var dnone   = 'style="display:none;"';
 	var fDecimal = 2;	
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	/*Cabecera*/
 	var thead_name_stations = '';
@@ -782,8 +781,8 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 
 	for(var i = 0; i<count; i++) {
 		/*Cabecera*/
-		thead_name_stations += `<th style="font-weight: 200;">${detail[i].name}</th>`;			
-		thead_stations      += `<th style="font-weight: 200;">IMP.</th>`;
+		thead_name_stations += `<th class="font-weight-normal">${detail[i].name}</th>`;			
+		thead_stations      += `<th class="font-weight-normal">IMP.</th>`;
 		
 		/*1. Venta Combustible*/
 		var venta_combustible   = detail[i].data['1_venta_vombustible'];
@@ -1054,7 +1053,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 		tbody_total_venta_combustible += `<th>${ total_venta_combustible.toFixed(2) }</th>`;
 
 		/*2. Venta de Productos y Promociones*/
-		tbody_detalle_venta_productos_promociones += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_venta_productos_promociones_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_venta_productos_promociones += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_venta_productos_promociones_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_venta_productos_promociones += `<td>${ venta_de_tienda.toFixed(2) }</td>`;	
 
 		//Modal Venta de Productos y Promociones
@@ -1064,14 +1063,14 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 		tbody_total_venta += `<th>${ total_venta.toFixed(2) }</th> `;
 
 		/*3. Credito Clientes*/			
-		tbody_detalle_credito_clientes += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_credito_clientes_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_credito_clientes += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_credito_clientes_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_credito_clientes += `<th>${ total_val_imp.toFixed(2) }</th>`;			
 
 		//Modal Credito Clientes
 		modal_credito_clientes += crear_modal_credito_clientes(detail[i], vales_credito_detalle_html, total_val_can, total_val_imp);			
 
 		/*4. Tarjetas de Credito*/	
-		tbody_detalle_tarjetas_credito += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_tarjetas_credito_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_tarjetas_credito += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_tarjetas_credito_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_tarjetas_credito += `<th>${ total_val_importetarjeta.toFixed(2) }</th>`;
 		
 		//Modal Tarjetas de Credito
@@ -1096,7 +1095,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 		tbody_TVContado += `<th>${ TVContado_.toFixed(2) }</th>`;
 
 		/*8. Sobrantes Faltantes por Trabajador*/
-		tbody_detalle_sobrantes_faltantes_por_trabajador += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_sobrantes_faltantes_por_trabajador_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_sobrantes_faltantes_por_trabajador += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_sobrantes_faltantes_por_trabajador_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_sobrantes_faltantes_por_trabajador += `<th>${ total_val_imp_sob.toFixed(2) }</th>`;
 
 		//Modal Sobrantes Faltantes por Trabajador
@@ -1106,28 +1105,28 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 		tbody_DD += `<th>${ DD_.toFixed(2) }</th>`;
 
 		/*10.1 Ingresos al contado del día*/
-		tbody_detalle_ingreso_contado_dia += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_ingresos_contado_dia_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_ingreso_contado_dia += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_ingresos_contado_dia_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_ingreso_contado_dia += `<th>${ total_val_ingresos.toFixed(2) }</th>`;
 
 		//Modal Ingresos al contado del día
 		modal_ingresos_contado_dia += crear_modal_ingresos_contado_dia(detail[i], ingresos_contado_dia_html, total_val_ingresos);			
 
 		/*10.2 Cobranzas y Amortizaciones por CC*/
-		tbody_detalle_cobranzas_amortizaciones_cc += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_cobranza_amortizaciones_cc_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_cobranzas_amortizaciones_cc += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_cobranza_amortizaciones_cc_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_cobranzas_amortizaciones_cc += `<th>${ total_val_ingresos_cc.toFixed(2) }</th>`;
 
 		//Modal Cobranzas y Amortizaciones por CC
 		modal_cobranza_amortizaciones_cc += crear_modal_cobranza_amortizaciones_cc(detail[i], ingresos_cobranzas_cc_html, total_val_ingresos_cc);			
 
 		/*12. Egresos*/
-		tbody_detalle_egresos += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_egresos_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_egresos += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_egresos_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_egresos += `<th>${ total_val_egresos.toFixed(2) }</th>`;
 
 		//Modal Egresos
 		modal_egresos += crear_modal_egresos(detail[i], egresos_html, total_val_egresos);			
 
 		/*13. Documentos de Venta Manual*/
-		tbody_detalle_documentos_venta_manual += `<td><button type="button" class="btn btn-sm" ${btnpurple} data-toggle="modal" data-target="#modal_documentos_venta_manual_${detail[i].id}">Ver det.</button></td>`;
+		tbody_detalle_documentos_venta_manual += `<td><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_documentos_venta_manual_${detail[i].id}">Ver det.</button></td>`;
 		tbody_total_documentos_venta_manual += `<th>${ total_manuales_.toFixed(2) }</th>`;
 
 		//Modal Documentos de Venta Manual
@@ -1148,21 +1147,22 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 					${modal_cobranza_amortizaciones_cc}
 					${modal_egresos}
 					${modal_documentos_venta_manual}
-					<div class="container-station" style="margin-bottom: 60px;">
-						<div class="panel panel-default">
-							<div class="panel-heading">
+					<div class="">
+						<div class="card shadow mb-4">
+							<div class="card-header bg-primary text-white">
 								LIQUIDACION DIARIA
 							</div>
 							
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover"> <!-- tab-responsive -->
+							<div class="card-body">
+							<div class="table-responsive f-18">
+								<table class="table table-bordered table-hover">
 									<thead>										
-										<tr style="background-color: #7952b3; color: #fff;"> 
-											<th width="75%" style="font-weight: 200;">ESTACIONES</th> 												
+										<tr class="bg-secondary"> 
+											<th width="75%" class="font-weight-normal">ESTACIONES</th> 												
 											${thead_name_stations}
 										</tr>
-										<tr style="background-color: #7952b3; color: #fff;"> 
-											<th width="75%" style="font-weight: 200;">CONCEPTO</th> 												
+										<tr class="bg-secondary"> 
+											<th width="75%" class="font-weight-normal">CONCEPTO</th> 												
 											${thead_stations}
 										</tr>
 									</thead>
@@ -1202,7 +1202,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 										
 										<!-- Total Venta (1+2) -->
 										<tr>
-											<th>Total Venta${ espacio }<b style="font-size:0.6em; color:red;">(1+2)</b></th> 
+											<th>Total Venta${ espacio }<b style="font-size:0.7em; color:#e74a3b">(1+2)</b></th> 
 											${tbody_total_venta}
 										</tr>
 										<tr> 
@@ -1260,7 +1260,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 										<tr> 
 											<th>
 												Total Venta Creditos y Otros No al Contado
-												<br><b style="font-size:0.6em; color:red;">(3+4+5+6+7)</b>
+												<br><b style="font-size:0.7em; color:#e74a3b">(3+4+5+6+7)</b>
 											</th> 												
 											${tbody_TVCO}
 										</tr>
@@ -1277,7 +1277,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 										<tr> 
 											<th>
 												Total Venta Contado
-												<br><b style="font-size:0.6em; color:red;">(Total Venta - Total Venta Creditos)</b>
+												<br><b style="font-size:0.7em; color:#e74a3b">(Total Venta - Total Venta Creditos)</b>
 											</th> 
 											${tbody_TVContado}												
 										</tr>
@@ -1302,7 +1302,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 										<tr> 
 											<th>
 												Diferencia Diaria
-												<br><b style="font-size:0.6em; color:red;">(Total Efectivo en Boveda + Sobrantes y Faltantes + Total Venta Contado)</b>
+												<br><b style="font-size:0.7em; color:#e74a3b">(Total Efectivo en Boveda + Sobrantes y Faltantes + Total Venta Contado)</b>
 											</th> 												
 											${tbody_DD}
 										</tr>
@@ -1368,7 +1368,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 										<tr> 
 											<th>
 												14. Saldo Neto a Depositar
-												<br><b style="font-size:0.6em; color:red;">(Total Venta Contado + Sobrantes y Faltantes - Ingresos al contado del dia - Egresos)</b>
+												<br><b style="font-size:0.7em; color:#e74a3b">(Total Venta Contado + Sobrantes y Faltantes - Ingresos al contado del dia - Egresos)</b>
 											</th> 												
 											${tbody_saldo_neto_a_depositar}
 										</tr>
@@ -1383,6 +1383,7 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 										</tr>											
 									</tbody>
 								</table>
+							</div>
 							</div>
 						</div>
 					</div>`;
@@ -1399,17 +1400,16 @@ function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
 //Modal Venta de Productos y Promociones
 function crear_modal_venta_productos_promociones(detail, venta_productos_promociones_detalle_html, canti_de_tienda, venta_de_tienda){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_venta_productos_promociones_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
+					<h4 class="modal-title">2. Venta de Productos y Promociones - ${ detail.name }</h4>
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">2. Venta de Productos y Promociones - ${ detail.name }</h4>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1434,7 +1434,7 @@ function crear_modal_venta_productos_promociones(detail, venta_productos_promoci
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1446,17 +1446,16 @@ function crear_modal_venta_productos_promociones(detail, venta_productos_promoci
 //Modal Credito Clientes
 function crear_modal_credito_clientes(detail, vales_credito_detalle_html, total_val_can, total_val_imp){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_credito_clientes_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">3. Credito Clientes - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1481,7 +1480,7 @@ function crear_modal_credito_clientes(detail, vales_credito_detalle_html, total_
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1493,17 +1492,16 @@ function crear_modal_credito_clientes(detail, vales_credito_detalle_html, total_
 //Modal Tarjetas de Credito
 function crear_modal_tarjetas_credito(detail, tarjetas_credito_detalle_html, total_val_importetarjeta){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_tarjetas_credito_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">4. Tarjetas Credito - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1528,7 +1526,7 @@ function crear_modal_tarjetas_credito(detail, tarjetas_credito_detalle_html, tot
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1540,17 +1538,16 @@ function crear_modal_tarjetas_credito(detail, tarjetas_credito_detalle_html, tot
 //Modal Sobrantes Faltantes por Trabajador
 function crear_modal_sobrantes_faltantes_por_trabajador(detail, sobrantes_faltantes_por_trabajador_html, total_val_imp_sob){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_sobrantes_faltantes_por_trabajador_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">8. Sobrantes Faltantes por Trabajador - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1575,7 +1572,7 @@ function crear_modal_sobrantes_faltantes_por_trabajador(detail, sobrantes_faltan
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1587,17 +1584,16 @@ function crear_modal_sobrantes_faltantes_por_trabajador(detail, sobrantes_faltan
 //Modal Ingresos al contado del día
 function crear_modal_ingresos_contado_dia(detail, ingresos_contado_dia_html, total_val_ingresos){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_ingresos_contado_dia_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">8. Sobrantes Faltantes por Trabajador - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1622,7 +1618,7 @@ function crear_modal_ingresos_contado_dia(detail, ingresos_contado_dia_html, tot
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1634,17 +1630,16 @@ function crear_modal_ingresos_contado_dia(detail, ingresos_contado_dia_html, tot
 //Modal Ingresos al contado del día
 function crear_modal_cobranza_amortizaciones_cc(detail, ingresos_cobranzas_cc_html, total_val_ingresos_cc){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_cobranza_amortizaciones_cc_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">8. Sobrantes Faltantes por Trabajador - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1669,7 +1664,7 @@ function crear_modal_cobranza_amortizaciones_cc(detail, ingresos_cobranzas_cc_ht
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1681,17 +1676,16 @@ function crear_modal_cobranza_amortizaciones_cc(detail, ingresos_cobranzas_cc_ht
 //Modal Egresos
 function crear_modal_egresos(detail, egresos_html, total_val_egresos){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_egresos_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">12. Egresos - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1716,7 +1710,7 @@ function crear_modal_egresos(detail, egresos_html, total_val_egresos){
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -1728,17 +1722,16 @@ function crear_modal_egresos(detail, egresos_html, total_val_egresos){
 //Modal Documentos de Venta Manual
 function crear_documentos_venta_manual(detail, manuales_html, total_manuales_){		
 	var tab = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	var btnpurple = 'style="background-color:#7952b3; border-color:#7952b3; color:#fff;"';
 
 	return `			
 		<div id="modal_documentos_venta_manual_${ detail.id }" class="modal fade" role="dialog">
-			<div class="modal-dialog">
+			<div class="modal-dialog modal-lg">
 		
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title">13. Documentos de Venta Manual - ${ detail.name }</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">						
 						<br>
@@ -1763,7 +1756,7 @@ function crear_documentos_venta_manual(detail, manuales_html, total_manuales_){
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn" ${btnpurple} data-dismiss="modal">Cerrar</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
 					</div>
 				</div>
 		
@@ -2066,18 +2059,18 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 		saldo_acumulado_caja_banco_    = Math.round10(saldo_acumulado_caja_banco, -fDecimal);	
 
 		var table = `<!-- Table -->
-						<div class="table-responsive">
-							<table class="table table-bordered table-hover tab-responsive"> 
+						<div class="table-responsive f-18">
+							<table class="table table-bordered table-hover"> 
 								<thead> 
-									<tr style="background-color: #7952b3; color: #fff;"> 
-										<th width="70%" style="font-weight: 200;">CONCEPTO</th> 
-										<th style="font-weight: 200;">CANTIDAD</th> 
-										<th style="font-weight: 200;">IMPORTE</th> 
+									<tr class="bg-secondary"> 
+										<th width="70%" class="font-weight-normal">CONCEPTO</th> 
+										<th class="font-weight-normal">CANTIDAD</th> 
+										<th class="font-weight-normal">IMPORTE</th> 
 									</tr> 
 								</thead> 
 								<tbody>
 									<!-- 1. Venta Combustible --> 
-									<tr data-toggle="collapse" data-target=".venta_combustible_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".venta_combustible_${detail[i].id}" class="pointer"> 
 										<td>1. Venta Combustible</td> 
 										<td>${ total_canti_combustible.toFixed(2) }</td> 
 										<td>${ total_venta_combustible.toFixed(2) }</td> 
@@ -2102,7 +2095,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr> 
 									
 									<!-- 2. Venta de Productos y Promociones -->
-									<tr data-toggle="collapse" data-target=".venta_producto_promociones_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".venta_producto_promociones_${detail[i].id}" class="pointer"> 
 										<td>2. Venta de Productos y Promociones</td> 
 										<td>${ canti_de_tienda.toFixed(2) }</td> 
 										<td>${ venta_de_tienda.toFixed(2) }</td> 
@@ -2114,7 +2107,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									
 									<!-- Total Venta (1+2) -->
 									<tr> 
-										<th>${ tab }${ tab }Total Venta${ espacio }<b style="font-size:0.6em; color:red;">(1+2)</b></th> 
+										<th>${ tab }${ tab }Total Venta${ espacio }<b style="font-size:0.7em; color:#e74a3b">(1+2)</b></th> 
 										<th>${ total_canti.toFixed(2) }</th> 
 										<th>${ total_venta.toFixed(2) }</th> 
 									</tr>
@@ -2123,7 +2116,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr>
 									
 									<!-- 3. Credito Clientes -->
-									<tr data-toggle="collapse" data-target=".credito_clientes_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".credito_clientes_${detail[i].id}" class="pointer"> 
 										<td>3. Credito Clientes</td> 
 										<td>${ total_val_can.toFixed(2) }</td>
 										<td>${ total_val_imp.toFixed(2) }</td>
@@ -2139,7 +2132,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr>
 
 									<!-- 4. Tarjetas de Credito -->
-									<tr data-toggle="collapse" data-target=".tarjetas_credito_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".tarjetas_credito_${detail[i].id}" class="pointer"> 
 										<td>4. Tarjetas de Credito</td> 
 										<td></td>
 										<td>${ total_val_importetarjeta.toFixed(2) }</td>
@@ -2182,7 +2175,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									<tr> 
 										<th>
 											${ tab }${ tab }Total Venta Creditos y Otros No al Contado
-											<br>${ tab }${ tab }<b style="font-size:0.6em; color:red;">(3+4+5+6+7)</b>
+											<br>${ tab }${ tab }<b style="font-size:0.7em; color:#e74a3b">(3+4+5+6+7)</b>
 										</th> 
 										<th></th> 
 										<th>${ TVCO_.toFixed(2) }</th> 
@@ -2201,7 +2194,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									<tr> 
 										<th>
 											${ tab }${ tab }Total Venta Contado
-											<br>${ tab }${ tab }<b style="font-size:0.6em; color:red;">(Total Venta - Total Venta Creditos)</b>
+											<br>${ tab }${ tab }<b style="font-size:0.7em; color:#e74a3b">(Total Venta - Total Venta Creditos)</b>
 										</th> 
 										<th></th> 
 										<th>${ TVContado_.toFixed(2) }</th> 
@@ -2211,7 +2204,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr>
 
 									<!-- 8. Sobrantes Faltantes por Trabajador -->
-									<tr data-toggle="collapse" data-target=".sobrantes_faltantes_por_trabajador_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".sobrantes_faltantes_por_trabajador_${detail[i].id}" class="pointer"> 
 										<td>8. Sobrantes Faltantes por Trabajador</td>
 										<td></td>
 										<td>${ total_val_imp_sob.toFixed(2) }</td> 											
@@ -2230,7 +2223,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									<tr> 
 										<th>
 											${ tab }${ tab }Diferencia Diaria
-											<br>${ tab }${ tab }<b style="font-size:0.6em; color:red;">(Total Efectivo en Boveda - Sobrantes y Faltantes - Total Venta Contado)</b>
+											<br>${ tab }${ tab }<b style="font-size:0.7em; color:#e74a3b">(Total Efectivo en Boveda - Sobrantes y Faltantes - Total Venta Contado)</b>
 										</th> 
 										<th></th> 
 										<th>${ DD_.toFixed(2) }</th> 
@@ -2245,7 +2238,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr>
 
 									<!-- 10.1 Ingresos al contado del día -->
-									<tr data-toggle="collapse" data-target=".ingresos_contado_dia_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".ingresos_contado_dia_${detail[i].id}" class="pointer"> 
 										<td>${ tab }10.1 Ingresos al contado del día</td> 											
 										<td></td> 
 										<td>${ total_val_ingresos.toFixed(2) }</td> 
@@ -2253,7 +2246,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									${ ingresos_contado_dia_html }										
 
 									<!-- 10.2 Cobranzas y Amortizaciones por CC -->
-									<tr data-toggle="collapse" data-target=".ingresos_cobranzas_cc_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".ingresos_cobranzas_cc_${detail[i].id}" class="pointer"> 
 										<td>${ tab }10.2 Cobranzas y Amortizaciones por CC</td> 											
 										<td></td> 
 										<td>${ total_val_ingresos_cc.toFixed(2) }</td> 
@@ -2264,7 +2257,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr>										
 
 									<!-- 12. Egresos -->
-									<tr data-toggle="collapse" data-target=".egresos_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".egresos_${detail[i].id}" class="pointer"> 
 										<td>12. Egresos</td> 											
 										<td></td> 
 										<td>${ total_val_egresos.toFixed(2) }</td> 
@@ -2275,7 +2268,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									</tr>
 
 									<!-- 13. Documentos de Venta Manual -->
-									<tr data-toggle="collapse" data-target=".manuales_${detail[i].id}"> 
+									<tr data-toggle="collapse" data-target=".manuales_${detail[i].id}" class="pointer"> 
 										<td>13. Documentos de Venta Manual</td> 											
 										<td></td> 
 										<td>${ total_manuales_.toFixed(2) }</td> 
@@ -2289,7 +2282,7 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 									<tr> 
 										<td>
 											14. Saldo Neto a Depositar
-											<br><b style="font-size:0.6em; color:red;">(Total Venta Contado + Sobrantes y Faltantes - Ingresos al contado del dia - Egresos)</b>
+											<br><b style="font-size:0.7em; color:#e74a3b">(Total Venta Contado + Sobrantes y Faltantes - Ingresos al contado del dia - Egresos)</b>
 										</td> 
 										<td></td> 
 										<th>${ total_calculo_.toFixed(2) }</th> 
@@ -2362,26 +2355,25 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 		var table_inv = '';
 		if ( data.inventariocombustible == 'Si' ) {
 			table_inv = `<!-- Table -->
-							<hr style="margin-top:0px">
 							<br>
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover"> 
+							<div class="table-responsive f-14">
+								<table class="table table-bordered"> 
 									<thead> 
-										<tr class="bg-primary" style="color: #fff;"> 
-											<th colspan="11" style="font-weight: 200;">COMBUSTIBLES</th> 
+										<tr class="bg-secondary"> 
+											<th colspan="11" class="font-weight-normal">COMBUSTIBLES</th> 
 										</tr> 
-										<tr class="bg-primary" style="color: #fff;"> 
-											<th style="font-weight: 200;">PRODUCTO</th> 
-											<th style="font-weight: 200;">STOCK INICIAL</th> 
-											<th style="font-weight: 200;">COMPRAS</th> 
-											<th style="font-weight: 200;">VENTAS</th> 
-											<th style="font-weight: 200;">%</th> 
-											<th style="font-weight: 200;">TRANSFERENCIAS</th> 
-											<th style="font-weight: 200;">STOCK FINAL</th> 
-											<th style="font-weight: 200;">MEDICION</th> 
-											<th style="font-weight: 200;">DIF. DIA</th> 
-											<th style="font-weight: 200;">DIF. MES</th> 
-											<th style="font-weight: 200;">IMPORTE VENTA</th> 
+										<tr class="bg-secondary"> 
+											<th class="font-weight-normal">PRODUCTO</th> 
+											<th class="font-weight-normal">STOCK INICIAL</th> 
+											<th class="font-weight-normal">COMPRAS</th> 
+											<th class="font-weight-normal">VENTAS</th> 
+											<th class="font-weight-normal">%</th> 
+											<th class="font-weight-normal">TRANSFERENCIAS</th> 
+											<th class="font-weight-normal">STOCK FINAL</th> 
+											<th class="font-weight-normal">MEDICION</th> 
+											<th class="font-weight-normal">DIF. DIA</th> 
+											<th class="font-weight-normal">DIF. MES</th> 
+											<th class="font-weight-normal">IMPORTE VENTA</th> 
 										</tr> 
 									</thead> 
 									<tbody> 
@@ -2396,49 +2388,31 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 		color_id = getRandomColor();
 		if(taxid != detail[i].group.taxid) {
 			html += (i != 0 ? '<hr>' : '');
-			html += '<div class="panel-group-station"><h5 title="RUC: '+detail[i].group.taxid+'">'+detail[i].group.name+'</h5></div>';
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
 			taxid = detail[i].group.taxid;
 		}
 		if(!detail[i].isConnection) {
-			html += `<div class="container-station">
-							<div class="panel panel-danger">
-							<div class="panel-heading">
-								<span class="glyphicon glyphicon-exclamation-sign"></span> 
-								<strong>Sin conexión.</strong>
-							</div>`;
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
 		} else {
-			html += `<div class="container-station" style="margin-bottom: 60px;">
-							<div class="panel panel-default">`;
+			html += `<div class="">
+							<div class="card shadow mb-4">`;
 		}
-		html += `<div class="panel-heading">
-						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num} ${detail[i].name} 
+		html += `<div class="card-header bg-primary text-white">
+						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num}. ${detail[i].name} 
 					</div>
-		
-					<!--
-					<div class="panel-body detail-station" data-station="${detail[i].id}"
-						data-begindate="${data.beginDate}" data-enddate="${data.endDate}" data-typestation="${data.typeStation}"
-						data-typecost="${data.typeCost}" title="Ver detalle de ${detail[i].name}">
-						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num} ${detail[i].name} 
-					</div>
-					-->
 					
-					${table}						
-					${table_inv}
-					
-					<!-- 
-					<div class="panel-footer">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="mid"></div>
-								<div class="mid"></div>
-							</div>
-							<div class="col-md-6">
-								<div class="mid"></div>
-								<div class="mid"></div>
-							</div>
-						</div>
+					<div class="card-body">
+						${table}						
+						${table_inv}
 					</div>
-					-->
 
 				</div>
 			</div>`;
@@ -2462,7 +2436,7 @@ function imprimirLinea(array, label, totalventa = ""){
 	var negrita2;
 
 	if (label == "Total") {
-		negrita1 = ' style="color:black; font-weight:bold"">';
+		negrita1 = ' style="color:#5A5C69; font-weight:bold"">';
 		negrita2 = '';
 	} else {
 		negrita1 = '>';
@@ -2473,10 +2447,10 @@ function imprimirLinea(array, label, totalventa = ""){
 	var compras = Math.round10(+array['compras'], -fDecimal);
 	var ventas = Math.round10(+array['ventas'], -fDecimal);
 
-	result += '<td align="left" style="font-weight:bold">'+ array['producto'] + '</td>';
+	result += '<td  align="left" style="color:#5A5C69; font-weight:bold">' +array['producto']+ '</td>';
 	result += '<td align="right"' +negrita1+ inicial.toFixed(2) +negrita2+ '</td>';
 	result += '<td align="right"' +negrita1+ compras.toFixed(2) +negrita2+ '</td>';
-	result += '<td align="right"' +negrita1+ ventas.toFixed(2) +negrita2+ '</td>';
+	result += '<td align="right"' +negrita1+ ventas.toFixed(2)  +negrita2+ '</td>';
 
 	var porcentaje = 0;
 	if (label != "Total" && label != "11620307") {
@@ -2509,7 +2483,7 @@ function imprimirLinea(array, label, totalventa = ""){
 	result += '<td align="right"' +negrita1+ medicion.toFixed(2) +negrita2+ '</td>';
 	result += '<td align="right"' +negrita1+ dia.toFixed(2) +negrita2+ '</td>';
 	result += '<td align="right"' +negrita1+ mes.toFixed(2) +negrita2+ '</td>';
-	result += '<td align="right" style="font-weight:bold">' +importe.toFixed(2) + '</td>';
+	result += '<td align="right" style="color:#5A5C69; font-weight:bold">' +importe.toFixed(2) + '</td>';
 	result += '</tr>';
 
 	return result;

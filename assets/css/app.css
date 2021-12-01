@@ -50,6 +50,12 @@ table th {
 .bg-primary th {
   color: #fff!important;
 }
+.bg-secondary {
+  background-color: #FF7F32!important;  
+}
+.bg-secondary th {
+  color: #fff!important;
+}
 
 .btn-group .active {
   color: #fff!important;
@@ -66,4 +72,21 @@ table th {
   cursor: pointer;
   color: #337ab7!important;
   text-decoration: underline!important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.f-20 {
+  font-size: 20px;
+}
+.f-18 {
+  font-size: 18px;
+}
+.f-16 {
+  font-size: 16px;
+}
+.f-14 {
+  font-size: 14px;
 }

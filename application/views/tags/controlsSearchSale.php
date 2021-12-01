@@ -116,17 +116,21 @@ if ($typeStation == 0) {
                 <?php } ?>
 
                 <?php if($typeStation == 7) { ?>
-                    <label for="">Inventario de Combustible:</label>
-                    <select name="inventariocombustible" class="form-control">
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select> 
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label for="">Inventario de Combustible:</label>
+                        <select name="inventariocombustible" class="form-control">
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
 
-                    <label for="">Formato:</label>
-                    <select name="demo" class="form-control">
-                        <option value="Demo1">Formato 1</option>
-                        <option value="Demo2">Formato 2</option>
-                    </select> 
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label for="">Formato:</label>
+                        <select name="demo" class="form-control">
+                            <option value="Demo1">Formato 1</option>
+                            <option value="Demo2">Formato 2</option>
+                        </select>
+                    </div>
                 <?php } ?>
 
                 <input type="hidden" id="qty_sale" value="kardex"><!--kardex y tickets-->
