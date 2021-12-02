@@ -856,6 +856,7 @@ class Requests extends CI_Controller {
 					);
 				}
 				
+				if (!empty($resultAllGroupByCombustible)) {
 				$numerodias = substr($hasta,0,2) - substr($desde,0,2) + 1;
 
 				for($i=0;$i<24;$i++){
@@ -870,6 +871,7 @@ class Requests extends CI_Controller {
 				$resultAllGroupByCombustible['porcentaje']['promedio'] = ' ';
 
 				$return['all_stations'] = $resultAllGroupByCombustible;							
+				}						
 			} else {
 				$return['status'] = 100;
 				$return['message'] = 'Error al enviar datos.';

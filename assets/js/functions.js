@@ -302,6 +302,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	clearStations();
 	var html = '<br>';
 	var detail = data.stations;
+	var all_stations = data.all_stations;
 	if (typeof detail == "undefined") {
 		return '<div class="alert alert-info">No existe información</div>';
 	}
@@ -338,10 +339,10 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 		} else {
 			verificar_data = detail[i].data;
 			
-			if(verificar_data.length == 0){ //Si hay conexion pero datos vacios
+			if(verificar_data.length < 1 || typeof all_stations == "undefined"){ //Si hay conexion pero datos vacios
 				html += `<div class="">
 								<div class="card shadow mb-4">
-									<div class="card-header bg-danger text-white">
+									<div class="card-header bg-danger text-white d-none"> <!-- Quitar d-none, si quieremos que se muestre -->
 										<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>No hay informacion.</strong>
 									</div>`;
 
@@ -485,6 +486,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	}
 
 	//CUADRO FINAL Y TOTAL
+	if (typeof all_stations != "undefined") {
 	var data_all_stations = data.all_stations;
 	var data_totales_combustibles = data.all_stations.totales_combustibles;
 	var data_estaciones = data.all_stations.estaciones;
@@ -618,6 +620,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 										${tbody_total_general}	
 									</table>
 								</div>`;
+	}
 
 	//gran_util
 	// console.log('> gran_util: '+gran_util);
