@@ -1800,6 +1800,51 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 	var dnone   = 'style="display:none;"';
 	var fDecimal = 2;
 	for(var i = 0; i<count; i++) {
+		color_id = getRandomColor();
+		if(taxid != detail[i].group.taxid) {
+			html += (i != 0 ? '<hr>' : '');
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
+			taxid = detail[i].group.taxid;
+		}
+
+		var mostrar = true;
+		if(!detail[i].isConnection) { //Si no hay conexion
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
+
+			mostrar = false;
+		} else {
+			var verificar_data = detail[i].data['1_venta_vombustible'];
+			var verificar_data_ = false;
+			if( (typeof verificar_data[0].liquido      == "undefined" || verificar_data[0].liquido       == null) &&
+				(typeof verificar_data[0].liquido_canti == "undefined" || verificar_data[0].liquido_canti == null) &&
+				(typeof verificar_data[0].glp           == "undefined" || verificar_data[0].glp           == null) &&
+				(typeof verificar_data[0].glp_canti     == "undefined" || verificar_data[0].glp_canti     == null) ) {
+					verificar_data_ = true;
+			}
+			
+			if(verificar_data_){ //Si hay conexion pero datos vacios
+				html += `<div class="">
+								<div class="card shadow mb-4">
+									<div class="card-header bg-danger text-white d-none"> <!-- Quitar d-none, si quieremos que se muestre -->
+										<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>No hay informacion.</strong>
+									</div>`;
+
+				mostrar = false;
+			}else{ //Si hay conexion y hay datos
+				html += `<div class="">
+								<div class="card shadow mb-4">`;
+			}
+		}
+
+		if(mostrar == true){
 		/*1. Venta Combustible*/
 		var venta_combustible   = detail[i].data['1_venta_vombustible'];
 		TVCombustible         	= +venta_combustible[0].liquido + +venta_combustible[0].glp; //TVCombustible: Total Venta Combustible
@@ -2386,28 +2431,8 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 							</div>	
 			`;
 		}
-		
+		}
 
-		color_id = getRandomColor();
-		if(taxid != detail[i].group.taxid) {
-			html += (i != 0 ? '<hr>' : '');
-			html += `<div class="card shadow">
-							<div class="card-header bg-primary text-white">
-								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
-							</div>
-						</div>`;
-			taxid = detail[i].group.taxid;
-		}
-		if(!detail[i].isConnection) {
-			html += `<div class="">
-							<div class="card shadow mb-4">
-								<div class="card-header bg-danger text-white">
-									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
-								</div>`;
-		} else {
-			html += `<div class="">
-							<div class="card shadow mb-4">`;
-		}
 		html += `<div class="card-header bg-primary text-white">
 						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num}. ${detail[i].name} 
 					</div>
