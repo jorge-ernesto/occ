@@ -10,7 +10,7 @@
       <?php if($_SESSION['Superuser'] == 1 || $_SESSION['Admin'] == 1 || $_SESSION['OrgReports']) { ?>
       <li class="nav-item">
          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultasEstaciones" aria-expanded="true"
-            aria-controls="collapseConsultasEstaciones"><i class="fas fa-fw fa-gas-pump ocsicon"></i><span>Consultas Estaciones</span></a>
+            aria-controls="collapseConsultasEstaciones"><i class="fas fa-fw fa-gas-pump ocsicon"></i><span>Informes Gerenciales</span></a>
          <div id="collapseConsultasEstaciones" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar" style="">
             <div class="bg-white py-2 collapse-inner rounded">
                <h6 class="collapse-header">Ventas:</h6>
@@ -32,7 +32,7 @@
       <?php if($_SESSION['Superuser'] == 1 || $_SESSION['Admin'] == 1 || $_SESSION['FleetReports']) { ?>
       <li class="nav-item">
          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultasFlotas" aria-expanded="true"
-            aria-controls="collapseConsultasFlotas"><i class="fas fa-fw fa-truck ocsicon"></i><span>Consultas Flotas</span></a>
+            aria-controls="collapseConsultasFlotas"><i class="fas fa-fw fa-truck ocsicon"></i><span>Informes Flotas</span></a>
          <div id="collapseConsultasFlotas" class="collapse" aria-labelledby="headingEbi" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/flotas/despachos">Despachos</a>
