@@ -12,8 +12,8 @@
                   aria-labelledby="userDropdown">
                   <a class="dropdown-item" href="#"><i
                         class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i><?php echo $_SESSION['loginname'] ?></a>
-                  <!-- <a class="dropdown-item" href="/cpl.changepass.page"><i
-                        class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Cambiar Contrase&ntilde;a</a> -->
+                  <a class="dropdown-item" href="<?php echo base_url() ?>index.php/users/editpass_autoservice"><i
+                        class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Cambiar Contrase&ntilde;a</a>
                   <!-- <a class="dropdown-item" href="/cpl.config.page"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Configuraci&oacute;n</a>-->                                    
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="<?php echo base_url() ?>index.php/secure/logout"><i

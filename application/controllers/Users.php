@@ -361,4 +361,111 @@ class Users extends CI_Controller {
 			}  
 		}
 	}
+
+	public function editpass_autoservice(){
+		// echo "Metodo edit";
+		// echo $user_id;
+		// return;				
+
+		$edit=false;
+		if(!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			$edit=true;									
+		}
+
+		//Obtenemos id del usuario
+		$id_usuario = $_SESSION['user_id'];
+
+		if($edit==true){
+			if(is_numeric($id_usuario)){
+				//Validamos que exista el usuario
+				$data['user'] = $this->ADUser_model->findUser($id_usuario);
+				if(!$data['user']){
+					redirect('secure/login', 'location');
+				}
+				
+				//Redirecciono la pagina a la url por defecto
+				$data['title'] = 'Seguridad > Usuarios';			
+				// $data['result_c_org'] = $this->COrg_model->getAllCOrg('C'); //Esto solo esta aqui como referencia
+
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');
+
+				$data['typeStation'] = 0;
+				$this->load->view('users/editpass_autoservice',$data);		
+			}else{
+				redirect('secure/login', 'location');
+			}  
+		}
+	}
+
+	public function updatepass_autoservice(){
+		// echo "Metodo update";
+		// echo "<pre>";
+		// print_r($this->input->post());
+		// echo "</pre>";
+		// return;
+
+		$update=false;
+		if(!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			$update=true;
+		}		
+
+		//Obtenemos id del usuario
+		$id_usuario            = $this->input->post("sec_user_id");
+		$password_current      = $this->input->post("password_current");
+		$password              = $this->input->post("password");
+		$password_confirmation = $this->input->post("password_confirmation");
+
+		if($update==true){
+			if(is_numeric($id_usuario)){
+				//Validamos que exista el usuario
+				$data['user'] = $this->ADUser_model->findUser($id_usuario);
+				if(!$data['user']){
+					redirect('secure/login', 'location');
+				}
+
+				//Validamos que el usuario ingrese la contraseña actual correctamente
+				$user = array(
+					'loginname' => $data['user'][0]->email,
+					'password' => hash("SHA256", $password_current)
+				);
+				$return['result_ad_user'] = $this->ADUser_model->searchUserByUP($user);		
+
+				if(count($return['result_ad_user']) != 1){
+					$this->session->set_flashdata('incorrecto', 'Contraseña actual no es correcta');
+					redirect('users/editpass_autoservice', 'location');	
+				}
+
+				//Validamos que contraseña y su confirmacion sean iguales
+				if($password != $password_confirmation){
+					$this->session->set_flashdata('incorrecto', 'Contraseñas no son iguales');
+					redirect('users/editpass_autoservice', 'location');		
+				}
+				
+				//Compruebo si se a enviado submit
+				if($this->input->post("submit")){
+
+						$mod=$this->ADUser_model->updatePassword(
+										$id_usuario,
+										Hash("SHA256", $this->input->post("password"))
+						);											
+				}
+				if($mod==true){
+					//Sesion de una sola ejecución
+					$this->session->set_flashdata('correcto', 'Contraseña modificada correctamente');
+				}else{
+					$this->session->set_flashdata('incorrecto', 'Contraseña no se pudo modificar');
+				}	
+
+				//Redirecciono la pagina a la url por defecto
+				redirect('users/editpass_autoservice', 'location');		
+			}else{
+				redirect(base_url());
+			}  
+		}
+	}
 }
