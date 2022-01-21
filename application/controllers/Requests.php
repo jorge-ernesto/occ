@@ -2247,9 +2247,12 @@ class Requests extends CI_Controller {
 
 						//ARRAY PARA DATATABLES
 						foreach ($data['vales_clientes_credito'] as $key => $vales) {
+							$hora = $vales['hora'];
+							$hora_replicacion = $vales['hora_replicacion'];
+
 							$listJson[] = array(
 								"0" => $countJson,
-								"1" => $vales['fecha'] . " " . $vales['hora'],								
+								"1" => $vales['fecha'] . " " . (!empty($hora) ? $hora : $hora_replicacion) ,
 								"2" => $dataStation->name,
 								"3" => $vales['placa'],
 								"4" => $vales['odometro'],
