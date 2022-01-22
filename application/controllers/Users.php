@@ -522,6 +522,12 @@ class Users extends CI_Controller {
 		}
 
 		if($destroy==true){
+			//Validamos que el usuario a eliminar no sea el usuario logueado
+			if($this->input->post("sec_user_id") == $_SESSION['user_id']){
+				$this->session->set_flashdata('incorrecto', 'No puede eliminar usuario actual');
+				redirect('users/view', 'location');
+			}
+
 			//Compruebo si se a enviado submit
 			if($this->input->post("submit")){
     
