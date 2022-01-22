@@ -79,12 +79,45 @@ class Users extends CI_Controller {
 						"2" => $user->email,
 						"3" => '<div class="d-flex">
 										<div class="dropdown mr-1">
+											<!-- Boton desplegable de configuracion -->
 											<button type="button" class="btn btn-secondary" id="dropdownMenuOffset" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
 												<i class="fas fa-cog"></i>
 											</button>
 											<div class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
 												<a class="dropdown-item" href="'.base_url().'index.php/users/edit/'.$user->sec_user_id.'">Editar</a>
 												<a class="dropdown-item" href="'.base_url().'index.php/users/editpass/'.$user->sec_user_id.'">Cambiar contraseña</a>												
+											</div>
+
+											<!-- Boton eliminar -->
+											<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal_delete_'.$user->sec_user_id.'" style="background-color: #e74a3b;!important">
+												<i class="far fa-trash-alt"></i>
+											</button>
+											
+											<!-- Modal -->
+											<div class="modal fade animated fadeIn" id="modal_delete_'.$user->sec_user_id.'">
+												<div class="modal-dialog" role="document">                    
+													<div class="modal-content text-dark">
+															<div class="modal-header">                
+																<h5 class="modal-title">Eliminar</h5>
+																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">                
+																¿Desea eliminar el registro?
+															</div>
+															<div class="modal-footer">
+
+																<form method="POST" action="'.base_url().'index.php/users/destroy">
+																	<!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button> -->
+																	<input type="submit" name="submit" value="Eliminar" class="btn btn-danger"></input>                                
+
+																	<input type="hidden" name="sec_user_id" value="'. $user->sec_user_id .'" class="form-control">
+																</form>
+
+															</div>
+													</div>        
+												</div>
 											</div>
 										</div>
 									</div>
@@ -466,6 +499,46 @@ class Users extends CI_Controller {
 			}else{
 				redirect(base_url());
 			}  
+		}
+	}
+
+	public function destroy(){
+		// echo "Metodo destroy";
+		// echo "<pre>";
+		// print_r($this->input->post());
+		// echo "</pre>";
+		// return;
+
+		$destroy=false;
+		if(!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin']) ? 1 : 0;
+			if(!$privilege) {
+				redirect('secure/login', 'location');								
+			}else{
+					$destroy=true;
+			}
+		}
+
+		if($destroy==true){
+			//Compruebo si se a enviado submit
+			if($this->input->post("submit")){
+    
+					//Llamo al metodo destroy
+					$des=$this->ADUser_model->destroyUser(
+									$this->input->post("sec_user_id")
+					);
+			}
+			if($des==true){
+				//Sesion de una sola ejecución
+				$this->session->set_flashdata('correcto', 'Usuario eliminado correctamente');
+			}else{
+				$this->session->set_flashdata('incorrecto', 'Usuario no se pudo eliminar');
+			}
+				
+			//Redirecciono la pagina a la url por defecto	
+			redirect('users/view', 'location');		
 		}
 	}
 }

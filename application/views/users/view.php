@@ -23,7 +23,7 @@
                         <th>ID</th>                                                
                         <th>Nombre</th>
                         <th>Email</th>
-                        <th style="width: 0%;" class="noExport"></th>                                                
+                        <th style="width: 20%;" class="noExport"></th>                                                
                     </tr>
                 </thead>
                 <tbody>

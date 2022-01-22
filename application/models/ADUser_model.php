@@ -205,4 +205,36 @@ class ADUser_model extends CI_Model {
 				return false;
 		}		
   	}
+
+	/**
+	 * Eliminar usuarios
+	 */
+	public function destroyUser($id_usuario){
+		//Obtenemos todos los RUCs asociados al usuario si los tuviera		
+		$query = $this->db->query("SELECT * FROM sec_user_privilege WHERE sec_user_id = '$id_usuario';");
+		$rucs = $query->result();		
+
+		//Eliminamos todos los privilegios del usuario
+		$consultaprivileges=$this->db->query("DELETE FROM sec_user_privilege WHERE sec_user_id = '$id_usuario';");
+		
+		if($consultaprivileges){			
+			foreach ($rucs as $key => $ruc) {
+				if(!empty($ruc->cnf_client_id)){
+					//Eliminamos todos los RUCs asociados al usuario si los tuviera
+					$this->db->query("DELETE FROM cnf_client WHERE cnf_client_id = '$ruc->cnf_client_id';");
+				}
+			}			
+			
+			//Eliminamos el usuario
+			$consultauser=$this->db->query("DELETE FROM sec_user WHERE sec_user_id = '$id_usuario';");			
+		}				
+
+		if($consultaprivileges==true && $consultauser==true){
+			return true;
+		}else{
+				$this->session->set_flashdata('database_error', $this->db->error());			
+				// error_log(json_encode($this->db->error()));								
+				return false;
+		}
+	}
 }

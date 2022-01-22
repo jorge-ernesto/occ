@@ -43,12 +43,12 @@ class CPrivilege_model extends CI_Model {
 				corg.cnf_org_id,     --Estas variables se pusieron para que ordene datatables
 				cli.cnf_client_id,   --Estas variables se pusieron para que ordene datatables
 
-				sup.sec_user_privilege_id,	--Estas variables se utilizan para eliminar el privilegio			
+				sup.sec_user_privilege_id, --Estas variables se utilizan para eliminar el privilegio			
 				cli.cnf_client_id,         --Estas variables se utilizan para eliminar el privilegio			
 				su.sec_user_id,            --Estas variables se utilizan para eliminar el privilegio			
 				
 				sp.name as privilegio,                          --Estas variables se muestran en la tabla
-				corg.name as centro_costo,								--Estas variables se muestran en la tabla
+				corg.name as centro_costo,						--Estas variables se muestran en la tabla
 				cli.value || ' - ' || cli.name AS ruc_razsocial --Estas variables se muestran en la tabla								
 			FROM
 				sec_privilege sp

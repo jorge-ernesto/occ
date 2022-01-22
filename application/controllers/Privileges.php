@@ -222,12 +222,12 @@ class Privileges extends CI_Controller {
 			if($this->input->post("submit")){
     
 					//Llamo al metodo destroy
-					$destroy=$this->CPrivilege_model->destroyPrivilege(
+					$des=$this->CPrivilege_model->destroyPrivilege(
 									$this->input->post("sec_user_privilege_id"),
 									$this->input->post("cnf_client_id")
 					);
 			}
-			if($add==true){
+			if($des==true){
 				//Sesion de una sola ejecución
 				$this->session->set_flashdata('correcto', 'RUC eliminado correctamente');
 			}else{
