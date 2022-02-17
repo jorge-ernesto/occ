@@ -35,6 +35,15 @@ $( document ).ready(function() {
 		}
 	});
 
+	$(document).on('click', '.btn-identity', function() {
+		identity();
+	});
+	$('.keypress').keypress(function( event ) {
+		if ( event.which == 13 ) {
+			identity();
+		}
+	});
+
 	$(document).on('click', '.btn-search-fleet', function() {
 		console.log($(this).attr('data-ismarket'));
 		$(this).prop('disabled', true);

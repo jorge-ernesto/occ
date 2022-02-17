@@ -10,23 +10,19 @@
 							<div class="text-center">
 								<h1 class="h4 text-gray-900 mb-4"><img src="https://cdn.opensysperu.com/img/logocu.png" style="max-width: 100%; max-height: 100%;" /></h1>
 								<h1 class="h4 text-gray-900 mb-4">Opensoft Cloud Companion</h1>
+								<h1 class="h6 text-gray-900 mb-2">¿Olvidaste tu contrase&ntilde;a?</h1>
+								<p class="mb-4">Lo entendemos, pasan cosas. ¡Simplemente ingrese su dirección de correo electrónico a continuación y le enviaremos un enlace para restablecer su contraseña!</p>
 							</div>							
 							
 							<form class="user">
 								<div class="form-group">
-									<input type="email" name="username" id="username" class="form-control form-control-user keypress" placeholder="Email" autofocus required />
+									<input type="email" name="email" id="email" class="form-control form-control-user keypress" placeholder="Email" autofocus required />
 								</div>
-								<div class="form-group">
-									<input type="password" name="password" id="password" class="form-control form-control-user keypress" placeholder="Contrase&ntilde;a" required />
-								</div>
-								<div class="msg-login"></div>
-								<button type="button" class="btn btn-primary btn-user btn-block btn-login">Iniciar sesi&oacute;n</button>
+								<div class="msg-identity"></div>
+								<button type="button" class="btn btn-primary btn-user btn-block btn-identity">Restablecer contrase&ntilde;a</button>
 							</form>
 							
 							<hr>
-							<div class="text-center">
-								<a class="small" href="<?php echo base_url() ?>index.php/secure/identity">¿Has olvidado la contrase&ntilde;a?</a>
-							</div>
 							<div class="text-center">
 								<a class="small" target="_blank" href="https://opensysperu.com/">Open Comb Systems</a>
 							</div>							

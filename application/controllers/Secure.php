@@ -91,4 +91,14 @@ class Secure extends CI_Controller {
 		session_destroy();
 		redirect('secure/login', 'location');
 	}
+
+	public function identity()
+	{
+		if(!checkSession()) {
+			$data['title'] = '¿Has olvidado la contrase&ntilde;a?';
+			$this->load->view('secure/identity',$data);
+		} else {
+			redirect('home', 'location');
+		}
+	}
 }

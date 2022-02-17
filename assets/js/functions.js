@@ -52,6 +52,13 @@ function login() {
 }
 
 /**
+ * Funcion para restablecer contraseña
+ */
+function identity() {
+	$('.msg-identity').html(_alert('success', 'Se envio enlace a su correo electronico'));
+}
+
+/**
  * Buscar ventas en estacion(es), combustibles y market
  * typeStation:
  * 0 - origen: ventas/combustibles, mod: TOTALS_SALE_COMB
