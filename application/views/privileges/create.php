@@ -46,8 +46,8 @@
                         <input type="text" name="razon_social" value="" id="razon_social" class="form-control"> <!-- required -->                        
                     </div>                                                                                                             
                     <!-- <div class="col-lg-12 form-group"> -->
-                        <input type="submit" name="submit" value="Crear Privilegio" class="btn btn-primary" style="width:49%;"></input>&nbsp;
-                        <a class="btn btn-primary" href="<?php echo base_url() ?>index.php/users/edit/<?php echo $user[0]->sec_user_id; ?>" style="width:49%;">Atr&aacute;s</a>
+                        <input type="submit" name="submit" value="Crear Privilegio" class="btn btn-primary mb-2" style="width:49%;"></input>&nbsp;
+                        <a class="btn btn-primary mb-2" href="<?php echo base_url() ?>index.php/users/edit/<?php echo $user[0]->sec_user_id; ?>" style="width:49%;">Atr&aacute;s</a>
                     <!-- </div> -->
 
                     <input type="hidden" name="sec_user_id" value="<?php echo $user[0]->sec_user_id; ?>" id="id" class="form-control">
