@@ -22,6 +22,7 @@
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/market_playa">Market Playa</a>
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/ventas_horas">Ventas por Horas</a>
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/liquidacion_diaria">Liquidacion Diaria</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/saldo_socio">Saldo Pendiente Socio</a>
                <div class="collapse-divider"></div>
                <h6 class="collapse-header">Stock:</h6>
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/stocks/diario">Diario</a>

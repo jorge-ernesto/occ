@@ -124,8 +124,7 @@ class Ventas extends CI_Controller {
 
 	public function liquidacion_diaria()
 	{	
-		error_log("Liquidacion diaria");		
-		error_log(json_encode( $this->input->get() ));
+		error_log("Liquidacion diaria");
 
 		if (!checkSession()) {
 			redirect('secure/login', 'location');
@@ -144,6 +143,31 @@ class Ventas extends CI_Controller {
 
 				error_log(json_encode($data));
 				$this->load->view('ventas/liquidacion_diaria',$data);
+			}
+		}
+	}
+
+	public function saldo_socio()
+	{
+		error_log("Saldos Pendiente de Socio");		
+
+		if (!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				$this->error_404();
+			}else{
+				$data['title'] = 'Ventas > Saldo Pendiente de Socio';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');			
+
+				$data['typeStation'] = 8;
+
+				error_log(json_encode($data));
+				$this->load->view('ventas/saldo_socio',$data);
 			}
 		}
 	}

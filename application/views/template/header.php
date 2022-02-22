@@ -29,6 +29,9 @@
 	<script src="<?php echo base_url() ?>assets/plugins/chart/Chart.min.js"></script>
 	<script src="<?php echo base_url() ?>assets/plugins/numeral/numeral.min.js"></script>
 
+	<!-- extends plugins -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
 	<!-- extends -->
 	<link href="<?php echo base_url() ?>assets/css/app.css" rel="stylesheet">
 	<script src="<?php echo base_url() ?>assets/js/application.js"></script>
