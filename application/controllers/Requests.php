@@ -1003,6 +1003,140 @@ class Requests extends CI_Controller {
 		unset($return);		
 	}
 
+	public function getSaldoSocio()
+	{
+		// Verificamos datos enviados por POST
+		error_log('getSaldoSocio');
+		error_log(json_encode($this->input->post()));
+
+		$return = array();
+		$return['memory'][] = getMemory(array('start function'));
+		if(checkSession()) {
+			if($this->input->post('dateEnd') != null && /*$this->input->post('id') != null &&*/ $this->input->post('typeStation') != null) {
+				$return['status'] = 1;
+				$return['formatDateBegin'] = formatDateCentralizer($this->input->post('dateEnd'),1);
+				$return['formatDateEnd'] = formatDateCentralizer($this->input->post('dateEnd'),1);
+				$return['typeCost'] = $this->input->post('typeCost');
+
+				$return['dateBegin'] = $this->input->post('dateEnd');
+				$return['dateEnd'] = $this->input->post('dateEnd');
+				$return['typeStation'] = $this->input->post('typeStation');
+				$return['id'] = $this->input->post('id');
+
+				$return['socios'] = $this->input->post('socios');
+				$return['vales'] = $this->input->post('vales');
+				$return['vista'] = $this->input->post('vista');
+
+				$typeStation = getDescriptionTypeStation($return['typeStation']);		
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
+    
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				$stationsIdSelectMultiple = ($this->input->post('id') == NULL) ? '*' : $this->input->post('id');
+				error_log("IDs de las estaciones seleccionadas en select multiple");
+				error_log(json_encode($stationsIdSelectMultiple));
+				if($stationsIdSelectMultiple != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndIdSelectMultiple($typeStation == 'MP' ? 'C' : $typeStation,$stationsIdSelectMultiple);
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStation == 'MP' ? 'C' : $typeStation);
+					}
+				}
+				error_log("Estaciones cargadas");
+				error_log(json_encode($dataStations));
+
+				/* Obtenemos Codigos de Socios */
+				$codigos_socios = implode("|", $this->input->post('socios'));
+				error_log("Codigos de Socios");
+				error_log(json_encode($this->input->post('socios')));
+				error_log(json_encode($codigos_socios));
+				/* Cerrar */
+
+				$mod = '';
+				if($return['typeStation'] == 8) {
+					$mod = 'TOTALS_SALDO_SOCIO';
+				} else {
+					$mod = 'ERR';
+				}
+				$return['mode'] = $mod;
+
+				/*echo json_encode(array('http' => $mod));
+				exit;*/
+
+				error_log("****** Recorremos estaciones cargadas ******");
+				foreach($dataStations as $key => $dataStation) {
+					if($isAllStations) {
+						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
+						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateBegin'].'&to='.$return['formatDateEnd'].'&warehouse_id='.$dataStation->almacen_id.'&desde='.$return['dateBegin'].'&hasta='.$return['dateEnd'].'&socios='.$codigos_socios.'&vales='.$return['vales'].'&vista='.$return['vista'];						
+						error_log("Url de la estacion cargada");
+						error_log($curl);
+						$dataRemoteStations = getUncompressData($curl);
+					}
+					error_log("Data de la estacion cargada");
+					error_log(json_encode($dataRemoteStations));
+
+					$return['curl'][] = $curl;
+
+					$data = array();
+					$dataRemoteStations = json_decode($dataRemoteStations[0], true);
+
+					if($dataRemoteStations != false) {
+						$return['status'] = 1;
+						// $data = $dataRemoteStations;
+						
+						error_log("****");
+						error_log(json_encode($dataRemoteStations));
+
+						foreach ($dataRemoteStations["1_cuentas_por_cobrar"] as $key => $cuenta) {
+							$data["1_cuentas_por_cobrar"][$cuenta['cliente'] . " - " . $cuenta['razonsocial']][] = $cuenta;
+						}
+						foreach ($dataRemoteStations["2_vales"] as $key => $vale) {
+							$data["2_vales"][$vale['cliente'] . " - " . $vale['razonsocial']][] = $vale;
+						}
+					}else{
+						$return['status'] = 4;
+					}
+
+					$return['stations'][] = array(
+						'name' => $dataStation->name,
+						'initials' => $dataStation->initials == null ? '<s/n>' : $dataStation->initials,
+						'group' => array('taxid' => $dataStation->taxid, 'name' => $dataStation->client_name),
+						'url' => $curl,
+						'id' => $dataStation->c_org_id,
+						'warehouse_id' => $dataStation->almacen_id,
+						'data' => $data,
+						// 'total_qty' => $total_cantidad,
+						// 'total_price' => $total_precio,
+						// 'total_cost' => $total_costo,
+						// 'margin' => $total_utilidad,
+						'isConnection' => $return['status'] == 4 ? false : true
+					);
+				}
+			} else {
+				$return['status'] = 100;
+				$return['message'] = 'Error al enviar datos.';
+			}
+		} else {
+			$return['status'] = 101;
+			$return['message'] = 'No existe sesión.';
+		}
+		$return['memory'][] = getMemory(array('end function'));
+		unset($curl);
+		unset($typeStation);
+		unset($dataStations);
+		unset($dataRemoteStations);
+		unset($data);
+
+		$return['memory'][] = getMemory(array('unset function'));
+		error_log("return final");
+		error_log(json_encode($return));
+		echo json_encode($return);
+		unset($return);
+	}
+
 	public function getStatisticsSale()
 	{
 		$return = array();
@@ -2212,7 +2346,7 @@ class Requests extends CI_Controller {
 
 				$mod = '';
 				if($return['typeStation'] == 0) {
-					$mod = 'VALES_CLIENTES_CREDITO';
+					$mod = 'VALES_CLIENTES_CREDITO'; //
 				} else {
 					$mod = 'ERR';
 				}

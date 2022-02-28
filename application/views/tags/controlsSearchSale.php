@@ -22,17 +22,34 @@ if ($typeStation == 0) {
                 <!-- <h3><span>Ventas</span> - <span><?php echo $nameTStation ?></span></h3> -->
                 <!-- <label>Consultar en:</label> -->
 
-                <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
-                    <label>Consultar en:</label>
-                    <select name="select-station" id="select-station" class="form-control">
-                        <option value="*">Todas las Estaciones</option>
-                        <?php
-                        foreach ($result_c_org as $key => $cOrg) {
-                            echo '<option value="'.$cOrg->c_org_id.'">'.$cOrg->name.'</option>';
-                        }
-                        ?>
-                    </select>
-                </div>
+                <?php if($typeStation == 8) { ?>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label>Consultar en:</label>
+                        <select name="select-station" id="select-station" class="form-control selectpicker" multiple title="Elige una de los siguientes opciones, por defecto todos." data-style="btn-primary"> <!-- data-style="btn-primary" -->
+                            <?php
+                            foreach ($result_c_org as $key => $cOrg) {
+                                echo '<option value="'.$cOrg->c_org_id.'">'.$cOrg->name.'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                <?php } else { ?>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label>Consultar en:</label>
+                        <select name="select-station" id="select-station" class="form-control">
+                            <option value="*">Todas las Estaciones</option>
+                            <?php
+                            foreach ($result_c_org as $key => $cOrg) {
+                                echo '<option value="'.$cOrg->c_org_id.'">'.$cOrg->name.'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+    
+                <?php } ?>
 
                 <?php if($typeStation == 4) { ?>
 
@@ -45,6 +62,13 @@ if ($typeStation == 0) {
                     <label for="">Periodo Actual:</label>
                     <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
                         <input type="text" class="form-control" required id="start-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                        <input type="text" class="form-control" required id="end-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                    </div>
+
+                <?php } else if($typeStation == 8) { ?>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label>Hasta:</label>
                         <input type="text" class="form-control" required id="end-date-request" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
                     </div>
 
@@ -129,6 +153,31 @@ if ($typeStation == 0) {
                         <select name="demo" class="form-control">
                             <option value="Demo1">Formato 1</option>
                             <option value="Demo2">Formato 2</option>
+                        </select>
+                    </div>
+                <?php } ?>
+
+                <?php if($typeStation == 8) { ?>
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label for="">Socio:</label>
+                        <input type="text" name="socio" value="" id="socio" class="form-control">
+                    </div>
+
+                    <div class="d-flex align-content-start flex-wrap bd-highlight mb-3" id="lista-socios"></div>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label for="">Vales no Liquidados:</label>
+                        <select name="vales" class="form-control">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label for="">Vista:</label>
+                        <select name="vista" class="form-control">
+                            <option value="DET">Detallada</option>
+                            <option value="RES">Resumida</option>
                         </select>
                     </div>
                 <?php } ?>

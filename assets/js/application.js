@@ -67,6 +67,8 @@ $( document ).ready(function() {
 			searchSalesForHours($(this).attr('data-ismarket'));
 		} else if ($('#typeStation').val() == 7) {			
 			searchLiquidacionDiaria($(this).attr('data-ismarket'));	
+		} else if ($('#typeStation').val() == 8) {			
+			searchSaldoSocio($(this).attr('data-ismarket'));	
 		} else {
 			searchSale($(this).attr('data-ismarket'));
 		}
@@ -250,4 +252,45 @@ $( document ).ready(function() {
 		  	return decimalAdjust('ceil', value, exp);
 		};
 	}
+
+	// Capturamos enter en input socio
+	$("#socio").keypress(function(e) {
+		if(e.which == 13) {
+		   // Acciones a realizar, por ej: enviar formulario.
+		   console.log("Enter en input socio");
+		
+		   // Obtenemos el socio ingresado
+		   var socio = $("#socio").val();
+		   socio = socio.trim();
+
+		   // Validamos que se haya ingresado socio
+		   if(socio == "") {
+				Swal.fire(
+					'Error!',
+					'Debe ingresar el RUC del socio!',
+					'error'
+				);
+				return;
+		   }
+
+		   // Agregamos socios uno a uno en HTML
+		   $("#lista-socios").append(
+			   `<div class="alert alert-primary alert-dismissible fade show p-1 m-1" role="alert">
+			  		${socio} &nbsp;&nbsp;&nbsp;&nbsp;
+					<input name="socios[]" type="hidden" value="${socio}"></input>
+
+					<button type="button" class="close p-1" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>`
+		   );
+
+		   // Limpiamos input de socio
+		   $("#socio").val("");
+
+		   // Obtenemos valores
+		   var values = $("input[name='socios[]']").map(function(){return $(this).val();}).get();
+		   console.log('Socios: ', values);
+		}
+	});
 });

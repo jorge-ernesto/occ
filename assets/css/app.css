@@ -101,6 +101,12 @@ table th {
   border-color: #CA6F1E!important;
 }
 
+.alert-primary{
+  color: #fff!important;
+  background-color: #FF7F32!important;
+  border-color: #ff7f32!important;
+}
+
 .text-link {
   cursor: pointer;
   color: #337ab7!important;

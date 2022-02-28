@@ -319,7 +319,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	gran_util = 0.0;
 	gran_cost = 0.0;
 	var num = 1;
-	var unit = t == 6 ? 'Gln' : '';
+	var unit = t == 0 ? 'Gln' : '';
 
 	var color_id, taxid;
 	for(var i = 0; i<count; i++) {
@@ -644,17 +644,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 	//CERRAR CUADRO FINAL Y TOTAL
 
 	storageStations();
-	// if(count > 1) {
-	// 	$('.container-chart-station').removeClass('d-none');
-			
-	// 	if(cm == 0) {
-	// 		viewChartBarStation();
-	// 		viewChartBarStationQty();
-	// 		viewChartBarStationUtil();
-	// 	} else {
-	// 		viewChartStation();
-	// 	}
-	// }
+
 	$('.container-ss-station').removeClass('d-none');
 
 	setDataResultRequest2('.download-sales-for-hours',data);
@@ -668,7 +658,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
  * @return string html
  */
 function templateStationsSearchLiquidacionDiaria_(data,t,cm) {
-	console.log('data en templateStationsSearchLiquidacionDiaria:', data);
+	console.log('data en templateStationsSearchLiquidacionDiaria_:', data);
 
 	// $('.result-search').addClass('container');
 	// $('.result-search').attr('style', 'width:100%');
@@ -2525,6 +2515,286 @@ function imprimirLinea(array, label, totalventa = ""){
 }
 
 /**
+ * Plantilla de estaciones buscadas para Ventas - Saldo Pendiente Socio
+ * @param obj data, int t(typo estacion), int cm(chart mode)
+ * @return string html
+ */
+function templateStationsSearchSaldoSocio(data,t,cm) {
+	console.log('data en templateStationsSearchSaldoSocio:', data);
+
+	clearStations();
+	var html = '<br>';
+	var detail = data.stations;
+	if (typeof detail == "undefined") {
+		return '<div class="alert alert-info">No existe información</div>';
+	}
+	var count = detail.length;
+	gran_total = 0.0;
+	gran_qty = 0.0;
+	gran_util = 0.0;
+	gran_cost = 0.0;
+	var num = 1;
+	var unit = t == 0 ? 'Gln' : '';
+
+	var color_id, taxid;
+	for(var i = 0; i<count; i++) {
+		color_id = getRandomColor();
+		if(taxid != detail[i].group.taxid) {
+			html += (i != 0 ? '<hr>' : '');
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
+			taxid = detail[i].group.taxid;
+		}
+
+		var mostrar = true;
+		if(!detail[i].isConnection) { //Si no hay conexion
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
+
+			mostrar = false;
+		} else {
+			html += `<div class="">
+							<div class="card shadow mb-4">`;
+		}
+
+		verificar_data = detail[i].data;
+
+		var tabla = '';
+		if(mostrar == true){
+			//REPORTE CUENTAS POR COBRAR
+			var mostrar_cuentas = ( typeof verificar_data['1_cuentas_por_cobrar'] == "undefined" || verificar_data['1_cuentas_por_cobrar'] == null ) ? false : true;
+			if(mostrar_cuentas) {
+				var tbody = '';
+
+				//VARIABLES PARA SUMAR TOTALES		
+				var sumTotalInicialSoles = 0.00;
+				var sumTotalPagoSoles = 0.00;
+				var sumTotalSaldoSoles = 0.00;
+
+				var sumTotalInicialDolares = 0.00;
+				var sumTotalPagoDolares = 0.00;
+				var sumTotalSaldoDolares = 0.00;
+				
+				//OBTENEMOS CUENTAS POR COBRAR
+				var dataCuentasCobrar = verificar_data['1_cuentas_por_cobrar'];		
+				// console.log('dataCuentasCobrar', dataCuentasCobrar);	
+
+				//RECORREMOS CUENTAS POR COBRAR
+				for (var key in dataCuentasCobrar) {
+					// console.log(dataCuentasCobrar[key], key);
+
+					//LIMPIAMOS TOTALES POR CLIENTE
+					sumTotalInicialSoles = 0.00;
+					sumTotalPagoSoles = 0.00;
+					sumTotalSaldoSoles = 0.00;
+
+					sumTotalInicialDolares = 0.00;
+					sumTotalPagoDolares = 0.00;
+					sumTotalSaldoDolares = 0.00;
+
+					//MOSTRAMOS NOMBRE DE CADA CLIENTE
+					tbody += `<tr class="bg-secondary"><th colspan=11>${key}</th></tr>`;
+
+					//OBTENEMOS CLIENTES
+					var dataClientes = dataCuentasCobrar[key];
+					
+					//RECORREMOS CLIENTES
+					for (var key2 in dataClientes) {
+						// console.log(dataClientes[key], key);
+						elemento = dataClientes[key2];		
+						if(data.vista == "DET"){
+							tbody += `<tr>
+									<td align="center">${elemento['moneda']}</td>
+									<td align="center">${elemento['documento']}</td>
+									<td align="center">${elemento['fechaemision']}</td>
+									<td align="center">${elemento['fechavencimiento']}</td>
+									<td align="center">${elemento['tipocambio']}</td>										
+									<td align="right">${elemento['importeinicial_dolares']}</td>
+									<td align="right">${elemento['importeinicial_soles']}</td>
+									<!-- <td align="right">${elemento['pago_dolares']}</td> -->
+									<!-- <td align="right">${elemento['pago_soles']}</td> -->
+									<td align="right">${elemento['saldo_dolares']}</td>
+									<td align="right">${elemento['saldo_soles']}</td>								
+								</tr>`;
+						}
+
+						//SUMAMOS TOTALES POR CLIENTE
+						if(elemento['moneda'] == 'S/'){ //SOLES
+							if(elemento['tipodocumento'] == '20' || elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+								sumTotalInicialSoles 	-= +elemento['importeinicial_soles'];
+								sumTotalPagoSoles 		-= +elemento['pago_soles'];
+								sumTotalSaldoSoles 	    -= +elemento['saldo_soles'];
+							}else{ //OTROS DOCUMENTOS
+								sumTotalInicialSoles 	+= +elemento['importeinicial_soles'];
+								sumTotalPagoSoles 		+= +elemento['pago_soles'];
+								sumTotalSaldoSoles     	+= +elemento['saldo_soles'];
+							}
+						} else { //DOLARES
+							if(elemento['tipodocumento'] == "20" || elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+								sumTotalInicialDolares  -= +elemento["importeinicial_dolares"];
+								sumTotalPagoDolares 	-= +elemento["pago_dolares"];
+								sumTotalSaldoDolares 	-= +elemento["saldo_dolares"];
+							}else{ //OTROS DOCUMENTOS
+								sumTotalInicialDolares  += +elemento["importeinicial_dolares"];
+								sumTotalPagoDolares 	+= +elemento["pago_dolares"];
+								sumTotalSaldoDolares 	+= +elemento["saldo_dolares"];
+							}
+						}
+					}
+
+					//MOSTRAMOS TOTALES POR CLIENTES
+					tbody += `<tr class="table-warning">
+								<th style="text-align:right;" colspan=5>TOTAL CLIENTE</th>
+								<th style="text-align:right;">${sumTotalInicialDolares.toFixed(2)}</th>
+								<th style="text-align:right;">${sumTotalInicialSoles.toFixed(2)}</th>
+								<!-- <th style="text-align:right;">${sumTotalPagoDolares.toFixed(2)}</th> -->
+								<!-- <th style="text-align:right;">${sumTotalPagoSoles.toFixed(2)}</th> -->
+								<th style="text-align:right;">${sumTotalSaldoDolares.toFixed(2)}</th>
+								<th style="text-align:right;">${sumTotalSaldoSoles.toFixed(2)}</th>														
+							</tr>
+							<tr><th colspan=9>&nbsp;</th></tr>`;
+
+				}
+
+				//RENDERIZAMOS INFORMACION DE CUENTAS POR COBRAR
+				tabla += `  <br>
+							<br>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-sm">
+									<thead>
+										<tr class="bg-primary">
+											<th colspan=5></th>
+											<th colspan=2 style="text-align:center;">IMPORTE TOTAL</th>
+											<!-- <th colspan=2 style="text-align:center;">PAGOS</th> -->
+											<th colspan=2 style="text-align:center;">SALDO</th>
+										</tr>
+										<tr class="bg-primary">
+											<th style="text-align:center;">MONEDA</th>
+											<th style="text-align:center;">DOCUMENTO</th>
+											<th style="text-align:center;">F.EMISION</th>
+											<th style="text-align:center;">F.VENCIMIENTO</th>
+											<th style="text-align:center;">T.CAMBIO</th>											
+											<th style="text-align:center;">DOLARES</th>
+											<th style="text-align:center;">SOLES</th>
+											<!-- <th style="text-align:center;">DOLARES</th> -->
+											<!-- <th style="text-align:center;">SOLES</th> -->
+											<th style="text-align:center;">DOLARES</th>
+											<th style="text-align:center;">SOLES</th>
+										</tr>
+									</thead>
+									<tbody>
+										${tbody}							
+									</tbody>
+								</table>
+							</div>`;
+			}
+			//CERRAR REPORTE CUENTAS POR COBRAR
+		}
+		
+		var tabla2 = '';
+		if(mostrar == true && data.vales == 1){
+			//REPORTE VALES NO LIQUIDADOS
+			var mostrar_vales = ( typeof verificar_data['2_vales'] == "undefined" || verificar_data['2_vales'] == null ) ? false : true;
+			if(mostrar_vales) {
+				var tbody2 = '';
+
+				//VARIABLES PARA SUMAR TOTALES
+				var sumTotalImporteVales = 0.00;
+
+				//OBTENEMOS CUENTAS POR COBRAR
+				var dataVales = verificar_data['2_vales'];
+				// console.log('dataVales', dataVales);
+
+				//RECORREMOS VALES
+				for (var key3 in dataVales) {
+					// console.log(dataVales[key], key);
+
+					//LIMPIAMOS TOTALES POR VALES
+					sumTotalImporteVales = 0.00;
+
+					//MOSTRAMOS NOMBRE DE CADA CLIENTE
+					tbody2 += `<tr class="bg-primary"><th colspan=11>${key3}</th></tr>`;
+
+					//OBTENEMOS CLIENTES
+					var dataClientes = dataVales[key3];
+
+					//RECORREMOS CLIENTES
+					for (var key4 in dataClientes) {
+						// console.log(dataClientes[key], key);
+						elemento = dataClientes[key4];
+						if(data.vista == "DET"){
+							tbody2 += `<tr>
+										<th colspan=6 width="60%">&nbsp;</th>
+										<th>${elemento["documentoval"]}</th>
+										<th>${elemento["fecha"]}</th>
+										<th>${elemento["importeval"]}</th>
+									</tr>`;
+						}
+
+						sumTotalImporteVales += +elemento["importeval"];
+					}
+
+					//TOTALIZAMOS VALES
+					tbody2 += `<tr class="table-primary">
+								<th class="bg-white" colspan=6 width="60%">&nbsp;</th>
+								<th style="text-align:right;" colspan=2>TOTAL VALES</th>
+								<th>${sumTotalImporteVales.toFixed(2)}</th>																		
+							</tr>
+							<tr><th colspan=9>&nbsp;</th></tr>`;
+				}
+				
+				//RENDERIZAMOS INFORMACION DE VALES NO LIQUIDADOS
+				tabla2 = `	<br>
+							<br>
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover table-sm">
+									<thead>
+										<tr class="bg-primary">
+											<th colspan=6>&nbsp;</th>
+											<th>NRO.VALE</th>
+											<th>F.EMISION</th>
+											<th>IMPORTE</th>
+										</tr>
+									</thead>
+									<tbody>
+										${tbody2}
+									</tbody>
+								</table>
+							</div>`;
+			}
+			//CERRAR REPORTE VALES NO LIQUIDADOS
+		}
+
+		html += `<div class="card-body" data-station="${detail[i].id}" 
+						data-begindate="${data.beginDate}" data-enddate="${data.endDate}" data-typestation="${data.typeStation}"
+						data-typecost="${data.typeCost}" title="Ver detalle de ${detail[i].name}">
+						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num + ". " + detail[i].name}
+
+						<!-- REPORTE SALDO PENDIENTE DE SOCIO -->
+						${tabla}
+						${tabla2}
+						<!-- REPORTE SALDO PENDIENTE DE SOCIO -->
+					</div>
+				</div>`;
+		num++;
+	}
+
+	storageStations();
+
+	$('.container-ss-station').removeClass('d-none');
+
+	setDataResultRequest2('.download-liquidacion-diaria',data);
+
+	return html;
+}
+
+/**
  * Visualizar información estación en Modal
  * @param obj - element t
  * data-typestation: 1 - ventas/market
@@ -3869,6 +4139,50 @@ function searchLiquidacionDiaria(t){ //ACA
 		}else{
 			$('.result-search').html(templateStationsSearchLiquidacionDiaria_(data, data.typeStation, charMode));
 		}					
+	}, 'json');
+}
+
+function searchSaldoSocio(t){
+	$('.container-chart-station').addClass('d-none');
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
+	var paramsRequest = {
+		id: $('#select-station').val(),
+		dateBegin: $('#start-date-request').val(),
+		dateEnd: $('#end-date-request').val(),
+		typeStation: $('#typeStation').val(),
+		
+		/*No sirve en este reporte*/
+		isMarket: $('#data-ismarket').val(),
+		qtySale: $('#qty_sale').val(),
+		typeCost: $('#type_cost').val(),
+		typeResult: 1,
+		/*Cerrar no sirve en este reporte*/  
+
+		socios: $("input[name='socios[]']").map(function(){return $(this).val();}).get(),
+		vales: $('select[name=vales]').val(),
+		vista: $('select[name=vista]').val()
+	}
+	console.log(paramsRequest);
+
+	/*setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
+	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+	$('#normal-modal').modal();*/
+
+	var charMode = $('#chart-mode').val();
+
+	console.log('start: '+paramsRequest.dateBegin+', end: '+paramsRequest.dateEnd);
+	$.post(url+'requests/getSaldoSocio', paramsRequest, function(data) {
+		// console.log('data:', data); //ELIMINAR
+		console.log('data:', JSON.stringify(data)); //ELIMINAR
+		// return; //ELIMINAR
+
+		checkSession(data);
+		$('.btn-search-sale').prop('disabled', false);
+		console.log('Dentro del callback');
+		console.log(data);
+		$('.result-search').html(templateStationsSearchSaldoSocio(data, data.typeStation, charMode));
 	}, 'json');
 }
 

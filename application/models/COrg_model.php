@@ -19,7 +19,8 @@ class COrg_model extends CI_Model {
 	{
 		$type = ($type == 'C') ? '1' : '0';
 
-		$whereOrgs = $this->getWhereOrgsByUser($_SESSION['user_id']);
+		//Condicional de organizaciones por usuario logueado
+		$whereOrgsByUser = $this->getWhereOrgsByUser($_SESSION['user_id']);
 
 		$query = $this->db->query("SELECT
 	co.cnf_org_id as c_org_id,
@@ -29,7 +30,7 @@ FROM
 	cnf_org co
 WHERE
 	co.orgtype = ?
-	$whereOrgs 
+	$whereOrgsByUser 
 ORDER BY co.cnf_org_id ASC;", array($type));
 		return $query->result();
 	}
@@ -38,7 +39,8 @@ ORDER BY co.cnf_org_id ASC;", array($type));
 	{
 		$type = ($type == 'C') ? '1' : '0';
 
-		$whereOrgs = $this->getWhereOrgsByUser($_SESSION['user_id']);		
+		//Condicional de organizaciones por usuario logueado
+		$whereOrgsByUser = $this->getWhereOrgsByUser($_SESSION['user_id']);		
 
 		$query = $this->db->query("SELECT
 	cc.name AS client_name,
@@ -55,12 +57,27 @@ FROM
 WHERE
 	co.orgtype = '$type'
 	AND co.cnf_org_id = ?
-	$whereOrgs
+	$whereOrgsByUser
 ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;", array($id));
 		
 error_log("Query getOrgByTypeAndId");
-error_log("
-	SELECT
+error_log($this->db->last_query());
+
+		return $query->result();
+	}
+
+	public function getOrgByTypeAndIdSelectMultiple($type,$stationsId)
+	{
+		$type = ($type == 'C') ? '1' : '0';
+
+		//Condicional de organizaciones por usuario logueado
+		$whereOrgsByUser = $this->getWhereOrgsByUser($_SESSION['user_id']);
+
+		//Condicional de organizaciones por select multiple
+		$tmp = implode(',', $stationsId);
+		$whereOrgsBySelect = "AND co.cnf_org_id IN ( $tmp )";
+
+		$query = $this->db->query("SELECT
 	cc.name AS client_name,
 	cc.taxid,
 	co.cnf_org_id as c_org_id,
@@ -74,10 +91,12 @@ FROM
 	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
 	co.orgtype = '$type'
-	AND co.cnf_org_id = '$id'
-	$whereOrgs
-ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
-");
+	$whereOrgsBySelect
+	$whereOrgsByUser
+ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;");
+
+error_log("Query getOrgByTypeAndIdSelectMultiple");
+error_log($this->db->last_query());
 
 		return $query->result();
 	}
@@ -85,7 +104,8 @@ ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
 	public function getCOrgByType($type) {
 		$type = ($type == 'C') ? '1' : '0';
 
-		$whereOrgs = $this->getWhereOrgsByUser($_SESSION['user_id']);
+		//Condicional de organizaciones por usuario logueado
+		$whereOrgsByUser = $this->getWhereOrgsByUser($_SESSION['user_id']);
 
 		$query = $this->db->query("SELECT
 	cc.name AS client_name,
@@ -101,28 +121,11 @@ FROM
 	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
 WHERE
 	co.orgtype = ?
-	$whereOrgs
+	$whereOrgsByUser
 ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;", array($type));
 
 error_log("Query getCOrgByType");
-error_log("
-SELECT
-	cc.name AS client_name,
-	cc.taxid,
-	co.cnf_org_id as c_org_id,
-	co.name,
-	co.abbreviation as initials,
-	'' as value,
-	co.ipaddress as ip,
-	co.value as almacen_id
-FROM
-	cnf_org co
-	JOIN cnf_company cc ON (co.cnf_company_id = cc.cnf_company_id)
-WHERE
-	co.orgtype = '$type'
-	$whereOrgs
-ORDER BY cc.cnf_company_id ASC, co.cnf_org_id ASC;
-");
+error_log($this->db->last_query());
 
 		return $query->result();
 	}
@@ -330,7 +333,9 @@ FROM
 	JOIN sec_privilege sp       ON (sup.sec_privilege_id = sp.sec_privilege_id)
 WHERE
 	su.sec_user_id = '$id'
-	AND sp.value = 'OrgReports';
+	AND sp.value = 'OrgReports'
+ORDER BY
+	sup.cnf_org_id;
 			");
 			$result = $query->result();			
 

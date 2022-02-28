@@ -165,7 +165,7 @@ function getMemory($params) {
 function getDescriptionTypeStation($ts, $isReverse = false) {
     $result = '';
     if(!$isReverse) {
-        if($ts == 0 || $ts == 3 || $ts == 4 || $ts == 6 || $ts == 7) {
+        if($ts == 0 || $ts == 3 || $ts == 4 || $ts == 6 || $ts == 7 || $ts == 8) {
             $result = 'C';
         } else if($ts == 1 || $ts == 5) {
             $result = 'M';
