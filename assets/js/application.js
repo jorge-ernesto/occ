@@ -149,6 +149,10 @@ $( document ).ready(function() {
 		downloadLiquidacionDiaria($(this));
 	});
 
+	$(document).on('click', '.download-saldo-socio', function() {
+		downloadSaldoSocio($(this));
+	});
+
 	$(document).on('click', '.btn-money-include, .btn-money-exclude', function() {
 		actionExclude($(this), 0);
 	});

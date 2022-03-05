@@ -2580,6 +2580,15 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 				var sumTotalInicialDolares = 0.00;
 				var sumTotalPagoDolares = 0.00;
 				var sumTotalSaldoDolares = 0.00;
+
+				//VARIABLES PARA SUMAR TOTALES GENERALES
+				var sumTotalGeneralInicialSoles = 0.00;
+				var sumTotalGeneralPagoSoles = 0.00;
+				var sumTotalGeneralSaldoSoles = 0.00;
+
+				var sumTotalGeneralInicialDolares = 0.00;
+				var sumTotalGeneralPagoDolares = 0.00;
+				var sumTotalGeneralSaldoDolares = 0.00;
 				
 				//OBTENEMOS CUENTAS POR COBRAR
 				var dataCuentasCobrar = verificar_data['1_cuentas_por_cobrar'];		
@@ -2602,18 +2611,18 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 					tbody += `<tr class="bg-secondary"><th colspan=11>${key}</th></tr>`;
 
 					//OBTENEMOS CLIENTES
-					var dataClientes = dataCuentasCobrar[key];
+					var dataClientes = dataCuentasCobrar[key]['cuentas_por_cobrar'];
 					
 					//RECORREMOS CLIENTES
 					for (var key2 in dataClientes) {
-						// console.log(dataClientes[key], key);
+						// console.log(dataClientes[key2], key2);
 						elemento = dataClientes[key2];		
 						if(data.vista == "DET"){
 							tbody += `<tr>
-									<td align="center">${elemento['moneda']}</td>
 									<td align="center">${elemento['documento']}</td>
 									<td align="center">${elemento['fechaemision']}</td>
 									<td align="center">${elemento['fechavencimiento']}</td>
+									<td align="center">${elemento['moneda']}</td>
 									<td align="center">${elemento['tipocambio']}</td>										
 									<td align="right">${elemento['importeinicial_dolares']}</td>
 									<td align="right">${elemento['importeinicial_soles']}</td>
@@ -2646,6 +2655,29 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 								sumTotalSaldoDolares 	+= +elemento["saldo_dolares"];
 							}
 						}
+
+						//SUMAMOS TOTALES GENERALES POR CLIENTE
+						if(elemento['moneda'] == 'S/'){ //SOLES
+							if(elemento['tipodocumento'] == '20' || elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+								sumTotalGeneralInicialSoles 	-= +elemento['importeinicial_soles'];
+								sumTotalGeneralPagoSoles 		-= +elemento['pago_soles'];
+								sumTotalGeneralSaldoSoles 	    -= +elemento['saldo_soles'];
+							}else{ //OTROS DOCUMENTOS
+								sumTotalGeneralInicialSoles 	+= +elemento['importeinicial_soles'];
+								sumTotalGeneralPagoSoles 		+= +elemento['pago_soles'];
+								sumTotalGeneralSaldoSoles     	+= +elemento['saldo_soles'];
+							}
+						} else { //DOLARES
+							if(elemento['tipodocumento'] == "20" || elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+								sumTotalGeneralInicialDolares  -= +elemento["importeinicial_dolares"];
+								sumTotalGeneralPagoDolares 	   -= +elemento["pago_dolares"];
+								sumTotalGeneralSaldoDolares    -= +elemento["saldo_dolares"];
+							}else{ //OTROS DOCUMENTOS
+								sumTotalGeneralInicialDolares  += +elemento["importeinicial_dolares"];
+								sumTotalGeneralPagoDolares 	   += +elemento["pago_dolares"];
+								sumTotalGeneralSaldoDolares    += +elemento["saldo_dolares"];
+							}
+						}
 					}
 
 					//MOSTRAMOS TOTALES POR CLIENTES
@@ -2675,10 +2707,10 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 											<th colspan=2 style="text-align:center;">SALDO</th>
 										</tr>
 										<tr class="bg-primary">
-											<th style="text-align:center;">MONEDA</th>
 											<th style="text-align:center;">DOCUMENTO</th>
 											<th style="text-align:center;">F.EMISION</th>
 											<th style="text-align:center;">F.VENCIMIENTO</th>
+											<th style="text-align:center;">MONEDA</th>
 											<th style="text-align:center;">T.CAMBIO</th>											
 											<th style="text-align:center;">DOLARES</th>
 											<th style="text-align:center;">SOLES</th>
@@ -2691,6 +2723,17 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 									<tbody>
 										${tbody}							
 									</tbody>
+									<tfooter>
+										<tr class="bg-secondary">
+											<th style="text-align:right;" colspan=5>TOTAL CLIENTE GENERAL</th>
+											<th style="text-align:right;">${sumTotalGeneralInicialDolares.toFixed(2)}</th>
+											<th style="text-align:right;">${sumTotalGeneralInicialSoles.toFixed(2)}</th>
+											<!-- <th style="text-align:right;">${sumTotalGeneralPagoDolares.toFixed(2)}</th> -->
+											<!-- <th style="text-align:right;">${sumTotalGeneralPagoSoles.toFixed(2)}</th> -->
+											<th style="text-align:right;">${sumTotalGeneralSaldoDolares.toFixed(2)}</th>
+											<th style="text-align:right;">${sumTotalGeneralSaldoSoles.toFixed(2)}</th>														
+										</tr>
+									</tfooter>
 								</table>
 							</div>`;
 			}
@@ -2707,30 +2750,36 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 				//VARIABLES PARA SUMAR TOTALES
 				var sumTotalImporteVales = 0.00;
 
+				//VARIABLES PARA SUMAR TOTALES GENERALES
+				var sumTotalGeneralImporteVales = 0.00;
+
 				//OBTENEMOS CUENTAS POR COBRAR
 				var dataVales = verificar_data['2_vales'];
 				// console.log('dataVales', dataVales);
 
 				//RECORREMOS VALES
 				for (var key3 in dataVales) {
-					// console.log(dataVales[key], key);
+					// console.log(dataVales[key3], key3);
 
 					//LIMPIAMOS TOTALES POR VALES
 					sumTotalImporteVales = 0.00;
 
 					//MOSTRAMOS NOMBRE DE CADA CLIENTE
-					tbody2 += `<tr class="bg-primary"><th colspan=11>${key3}</th></tr>`;
+					tbody2 += `<tr class="bg-primary">
+									<th class="bg-white" colspan=6 width="55%">&nbsp;</th>
+									<th colspan=3>${key3}</th>
+								</tr>`;
 
 					//OBTENEMOS CLIENTES
-					var dataClientes = dataVales[key3];
+					var dataClientes = dataVales[key3]['vales'];
 
 					//RECORREMOS CLIENTES
 					for (var key4 in dataClientes) {
-						// console.log(dataClientes[key], key);
+						// console.log(dataClientes[key4], key4);
 						elemento = dataClientes[key4];
 						if(data.vista == "DET"){
 							tbody2 += `<tr>
-										<th colspan=6 width="60%">&nbsp;</th>
+										<th colspan=6 width="55%">&nbsp;</th>
 										<th>${elemento["documentoval"]}</th>
 										<th>${elemento["fecha"]}</th>
 										<th>${elemento["importeval"]}</th>
@@ -2738,11 +2787,12 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 						}
 
 						sumTotalImporteVales += +elemento["importeval"];
+						sumTotalGeneralImporteVales += +elemento["importeval"];
 					}
 
 					//TOTALIZAMOS VALES
 					tbody2 += `<tr class="table-primary">
-								<th class="bg-white" colspan=6 width="60%">&nbsp;</th>
+								<th class="bg-white" colspan=6 width="55%">&nbsp;</th>
 								<th style="text-align:right;" colspan=2>TOTAL VALES</th>
 								<th>${sumTotalImporteVales.toFixed(2)}</th>																		
 							</tr>
@@ -2756,7 +2806,7 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 								<table class="table table-bordered table-hover table-sm">
 									<thead>
 										<tr class="bg-primary">
-											<th colspan=6>&nbsp;</th>
+											<th class="bg-white" colspan=6 width="55%">&nbsp;</th>
 											<th>NRO.VALE</th>
 											<th>F.EMISION</th>
 											<th>IMPORTE</th>
@@ -2765,6 +2815,13 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 									<tbody>
 										${tbody2}
 									</tbody>
+									<tfooter>
+										<tr class="bg-primary">
+											<th class="bg-white" colspan=6 width="55%">&nbsp;</th>
+											<th style="text-align:right;" colspan=2>TOTAL VALES GENERAL</th>
+											<th>${sumTotalGeneralImporteVales.toFixed(2)}</th>																		
+										</tr>
+									</tfooter>
 								</table>
 							</div>`;
 			}
@@ -2789,7 +2846,7 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 
 	$('.container-ss-station').removeClass('d-none');
 
-	setDataResultRequest2('.download-liquidacion-diaria',data);
+	setDataResultRequest2('.download-saldo-socio',data);
 
 	return html;
 }
@@ -3474,6 +3531,38 @@ function downloadLiquidacionDiaria(t){
 	window.location = url_;
 }
 
+function downloadSaldoSocio(t){
+	console.log(t);
+
+	var dateB = t.attr('data-begindate').split("/");
+	dateB = dateB[0] + '-' + dateB[1] + '-' + dateB[2];
+
+	var dateE = t.attr('data-enddate').split("/");
+	dateE = dateE[0] + '-' + dateE[1] + '-' + dateE[2];
+
+	console.log('dateB: '+dateB+', dateE: '+dateE);
+
+	var datastation = t.attr('data-station');
+	var datasocios = t.attr('data-socios');
+
+	//validaciones
+	var params = {
+		id: ( t.attr('data-station') === undefined || t.attr('data-station') == 'undefined' ) ? 'a' : datastation.replace(/,/g, '-'),
+		beginDate: dateB,
+		endDate: dateE,
+		typeStation: t.attr('data-typestation'),
+		socios: ( t.attr('data-socios') === undefined || t.attr('data-socios') == 'undefined' ) ? 'a' : datasocios.replace(/,/g, '-'),
+		vales: t.attr('data-vales'),
+		vista: t.attr('data-vista'),
+	};
+	console.log('params.beginDate: '+params.beginDate+', params.endDate: '+params.endDate);
+	console.log(params);
+	var url_ = url+'reports/resumeSaldoSocio/'+params.id+'/'+params.beginDate+'/'+params.endDate+'/'+params.typeStation+'/'+params.socios+'/'+params.vales+'/'+params.vista;
+	console.log('url__: '+url_);
+	// return;
+	window.location = url_;
+}
+
 /**
  * Otorgar data obtenida en atributos de solicitud
  * @param string element, obj dfata
@@ -3483,7 +3572,12 @@ function setDataResultRequest(element,data) {
 	console.log('\n\n\n');
 	console.log(data);
 	console.log('\n\n\n');
-	$(element).attr('data-typestation',data.typeStation).attr('data-enddate',data.endDate).attr('data-begindate',data.beginDate).attr('data-station',data.id).attr('data-typecost',data.typeCost).attr('data-qtysale',data.qtySale);
+	$(element).attr('data-typestation',data.typeStation)
+			  	.attr('data-enddate',data.endDate)
+				.attr('data-begindate',data.beginDate)
+				.attr('data-station',data.id)
+				.attr('data-typecost',data.typeCost)
+				.attr('data-qtysale',data.qtySale);
 }
 
 /**
@@ -3499,12 +3593,15 @@ function setDataResultRequest2(element,data) {
 				.attr('data-begindate',data.dateBegin)
 				.attr('data-enddate',data.dateEnd)
 				.attr('data-station',data.id)			  
-				.attr('data-local',data.local)
-				.attr('data-importe',data.importe)
-				.attr('data-modo',data.modo)
-				.attr('data-productos',data.productos)
-				.attr('data-unidadmedida',data.unidadmedida)
-				.attr('data-inventariocombustible',data.inventariocombustible);
+				.attr('data-local',data.local) /* Ventas por Horas */
+				.attr('data-importe',data.importe) /* Ventas por Horas */
+				.attr('data-modo',data.modo) /* Ventas por Horas */
+				.attr('data-productos',data.productos) /* Ventas por Horas */
+				.attr('data-unidadmedida',data.unidadmedida) /* Ventas por Horas */
+				.attr('data-inventariocombustible',data.inventariocombustible) /* Liquidacion Diaria */
+				.attr('data-socios', data.socios) /* Saldo Pendiente Socio */
+				.attr('data-vales', data.vales) /* Saldo Pendiente Socio */
+				.attr('data-vista', data.vista) /* Saldo Pendiente Socio */;
 }
 
 /**

@@ -768,7 +768,7 @@ class Reports extends CI_Controller {
 			// exit;
 			if($this->uri->segment(3) != null && $this->uri->segment(4) != null && $this->uri->segment(5) != null && $this->uri->segment(6) != null) {
 				$id = $this->uri->segment(3) == 'a' ? '*' : $this->uri->segment(3);
-         	$typeStation = $this->uri->segment(6);
+         		$typeStation = $this->uri->segment(6);
 
 				$typeStationDesc = getDescriptionTypeStation($typeStation);
 
@@ -1458,6 +1458,596 @@ class Reports extends CI_Controller {
 					$row++;
 					//CERRAR INVENTARIO COMBUSTIBLE
 				}				
+
+				//GENERACION EXCEL
+				//componer nombre: ocsmanager_TYPEMOD_TYPESTATION_YYYYMMMDD_HHMMSS.xls
+				$comp = date('Ymd_His');
+				$filename='ocsmanager_'.$typeEst.'_'.$comp.'.xls'; //save our workbook as this file name
+				header('Content-Type: application/vnd.ms-excel'); //mime type
+				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+				header('Cache-Control: max-age=0'); //no cache
+
+				//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+				//if you want to save it as .XLSX Excel 2007 format
+				$objWriter = PHPExcel_IOFactory::createWriter($this->calc, 'Excel5');  
+				//force user to download the Excel file without writing it to server's HD
+				$objWriter->save('php://output');
+				//CERRAR GENERACION EXCEL
+			}
+		}
+	}
+
+	public function resumeSaldoSocio()
+	{
+		ini_set('memory_limit','-1');
+
+		$msg = getMemory(array(''));
+		if(checkSession()) {
+			$return = array();
+			// echo '3: '.$this->uri->segment(3).', 4: '.$this->uri->segment(4).', 5: '.$this->uri->segment(5).', 6: '.$this->uri->segment(6);
+			error_log(  json_encode( $this->uri ) );
+			// exit;
+			if($this->uri->segment(3) != null && $this->uri->segment(4) != null && $this->uri->segment(5) != null && $this->uri->segment(6) != null) {
+				$id = $this->uri->segment(3) == 'a' ? '*' : $this->uri->segment(3);
+				$typeStation = $this->uri->segment(6);
+				$socios = $this->uri->segment(7) == 'a' ? '' : $this->uri->segment(7);
+				$vales = $this->uri->segment(8);
+				$vista = $this->uri->segment(9);	
+
+				$typeStationDesc = getDescriptionTypeStation($typeStation);
+
+				$mod = '';
+				$typeEst = '';
+				if($typeStation == 8) {
+					$mod = 'TOTALS_SALDO_SOCIO';
+					$typeEst = 'saldoSocio';
+					$titleDocument = 'Saldo Pendiente de Socio';
+				} else {
+					$mod = 'ERR';
+				}
+				$return['mode'] = $mod;
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
+
+				$dateBegin = $this->uri->segment(4);
+				$dateEnd = $this->uri->segment(5);
+
+				/*Obtenemos fecha en formato correcto*/
+				$porcionesDateBegin = explode("-", $dateBegin);
+				$dateBegin_ = $porcionesDateBegin[0] . "/" . $porcionesDateBegin[1] . "/" . $porcionesDateBegin[2];
+				$porcionesDateEnd = explode("-", $dateEnd);
+				$dateEnd_ = $porcionesDateEnd[0] . "/" . $porcionesDateEnd[1] . "/" . $porcionesDateEnd[2];
+				/*Cerrar Obtenemos fecha en formato correcto*/
+
+				/* Obtenemos Codigos de Socios */
+				$socios_ = explode('-',$socios);
+				$codigos_socios = implode("|", $socios_);
+				error_log("Codigos de Socios");
+				error_log(json_encode($socios_));
+				error_log(json_encode($codigos_socios));
+				/* Cerrar */
+
+				$formatDateBegin = formatDateCentralizer($dateBegin,2);
+				$formatDateEnd = formatDateCentralizer($dateEnd,2);
+
+				$qty_sale = 0;
+				$type_cost = 0;
+
+
+				$totalQty = 0;
+				$totalSale = 0;
+
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				$stationsIdSelectMultiple = explode('-',$id);
+				error_log("IDs de las estaciones seleccionadas en select multiple");
+				error_log(json_encode($stationsIdSelectMultiple));
+				if($id != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndIdSelectMultiple($typeStationDesc == 'MP' ? 'C' : $typeStationDesc,$stationsIdSelectMultiple);
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStationDesc == 'MP' ? 'C' : $typeStationDesc);
+					}
+				}
+				error_log("Estaciones cargadas");
+				error_log(json_encode($dataStations));
+				
+				$index = 0;
+			
+				/*
+				//load our new PHPExcel library
+				$this->load->library('calc');
+
+				$this->calc->setActiveSheetIndex(0);
+				$this->calc->getActiveSheet()->setTitle($titleDocument);
+				$this->calc->getActiveSheet()->setCellValue('A1', appName());
+				$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
+				$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+				$this->calc->getActiveSheet()->mergeCells('A1:F1');
+				$this->calc->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->calc->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+
+				$this->calc->getActiveSheet()->setCellValue('A3', 'Fechas');
+				$this->calc->getActiveSheet()->setCellValue('B3', '-');
+				$this->calc->getActiveSheet()->setCellValue('C3', $dateEnd);
+	
+				$this->calc->getActiveSheet()->setCellValue('A4', 'Empresa');
+	
+				//$this->calc->getActiveSheet()->setCellValue('B4', $msg['memory']);
+			
+				$row = 7;
+
+				//Formatemos tamaño de columnas
+				$this->calc->getActiveSheet()->getColumnDimension('A')->setWidth('24');
+				$this->calc->getActiveSheet()->getColumnDimension('B')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('C')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('D')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('E')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('F')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('G')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('H')->setWidth('16');
+				$this->calc->getActiveSheet()->getColumnDimension('I')->setWidth('16');
+				//Cerrar Formateamos tamaño de columnas
+				*/
+
+				error_log("****** Recorremos estaciones cargadas ******");
+				foreach($dataStations as $key => $dataStation) {
+					if($isAllStations) {
+						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
+						$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation->almacen_id.'&desde='.$dateBegin_.'&hasta='.$dateEnd_.'&socios='.$codigos_socios.'&vales='.$vales.'&vista='.$vista;
+						error_log("Url de la estacion cargada");
+						error_log($curl);
+						$dataRemoteStations = getUncompressData($curl);
+					}
+					error_log("Data de la estacion cargada");
+					error_log(json_encode($dataRemoteStations));
+
+					$data = array();
+					$dataRemoteStations = json_decode($dataRemoteStations[0], true);
+
+					//GENERAMOS ARRAY DE LA INFORMACION DE CUENTAS POR COBRAR Y VALES POR CLIENTE
+					if($dataRemoteStations != false) {							
+						error_log("****");
+						error_log(json_encode($dataRemoteStations));
+
+						foreach ($dataRemoteStations["1_cuentas_por_cobrar"] as $key => $cuenta) {
+							$data["1_cuentas_por_cobrar"][ TRIM($cuenta['cliente']) . " - " . TRIM($cuenta['razonsocial']) ]['cuentas_por_cobrar'][] = $cuenta;
+						}
+						foreach ($dataRemoteStations["2_vales"] as $key => $vale) {
+							$data["2_vales"][ TRIM($vale['cliente']) . " - " . TRIM($vale['razonsocial']) ]['vales'][] = $vale;
+						}
+
+						//POR SI FUERA NECESARIO SE REALIZO ESTO
+						// $data["merge"] = array_merge_recursive( $data["1_cuentas_por_cobrar"], $data["2_vales"] );
+					}else{
+						//NO HACE NADA
+					}
+
+					//load our new PHPExcel library
+					$this->load->library('calc');
+
+					$this->calc->createSheet($index);//creamos la pestaña
+					$this->calc->setActiveSheetIndex($index);//seteamos pestaña
+					$this->calc->getActiveSheet()->setTitle($dataStation->name);
+					$this->calc->getActiveSheet()->setCellValue('A1', appName());
+					$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
+					$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+					$this->calc->getActiveSheet()->mergeCells('A1:F1');
+					$this->calc->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+					$this->calc->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+
+					$this->calc->getActiveSheet()->setCellValue('A3', 'Fechas');
+					$this->calc->getActiveSheet()->setCellValue('B3', '-');
+					$this->calc->getActiveSheet()->setCellValue('C3', $dateEnd);
+		
+					$this->calc->getActiveSheet()->setCellValue('A4', 'Empresa');
+		
+					//$this->calc->getActiveSheet()->setCellValue('B4', $msg['memory']);
+				
+					$row = 7;
+
+					//Formatemos tamaño de columnas
+					$this->calc->getActiveSheet()->getColumnDimension('A')->setWidth('24');
+					$this->calc->getActiveSheet()->getColumnDimension('B')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('C')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('D')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('E')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('F')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('G')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('H')->setWidth('18'); //16
+					$this->calc->getActiveSheet()->getColumnDimension('I')->setWidth('18'); //16
+					//Cerrar Formateamos tamaño de columnas
+
+					//DATOS PARA MOSTRAR EN EXCEL
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, $dataStation->client_name);
+					$this->calc->getActiveSheet()->getStyle('A'.$row)->getFont()->setBold(true);
+					$this->calc->getActiveSheet()->setCellValue('B'.$row, $dataStation->name);
+					$this->calc->getActiveSheet()->getStyle('B'.$row)->getFont()->setBold(true);
+					$this->calc->getActiveSheet()->mergeCells('B'.$row.':C'.$row);
+					// $this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(20);
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '7952b3')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+
+					/**************************************************************** REPORTE CUENTAS POR COBRAR ****************************************************************/
+					//Inicio de cabecera (tabla)
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+					$this->calc->getActiveSheet()->setCellValue('F'.$row, 'IMPORTE TOTAL');
+					$this->calc->getActiveSheet()->setCellValue('H'.$row, 'SALDO');
+					
+					$this->calc->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+					$this->calc->getActiveSheet()->mergeCells('F'.$row.':G'.$row);
+					$this->calc->getActiveSheet()->mergeCells('H'.$row.':I'.$row);
+					$this->calc->getActiveSheet()->getStyle('F'.$row.':H'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(20);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '337ab7')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, 'DOCUMENTO');
+					$this->calc->getActiveSheet()->setCellValue('B'.$row, 'F.EMISION');
+					$this->calc->getActiveSheet()->setCellValue('C'.$row, 'F.VENCIMIENTO');
+					$this->calc->getActiveSheet()->setCellValue('D'.$row, 'MONEDA');
+					$this->calc->getActiveSheet()->setCellValue('E'.$row, 'T.CAMBIO');
+					$this->calc->getActiveSheet()->setCellValue('F'.$row, 'DOLARES');
+					$this->calc->getActiveSheet()->setCellValue('G'.$row, 'SOLES');
+					$this->calc->getActiveSheet()->setCellValue('H'.$row, 'DOLARES');
+					$this->calc->getActiveSheet()->setCellValue('I'.$row, 'SOLES');
+					
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);				
+					
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '337ab7')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);				
+					$row++;		
+					//Fin de cabecera (tabla)
+
+					$verificar_data = $data;
+
+					//VARIABLES PARA SUMAR TOTALES		
+					$sumTotalInicialSoles = 0.00;
+					$sumTotalPagoSoles = 0.00;
+					$sumTotalSaldoSoles = 0.00;
+
+					$sumTotalInicialDolares = 0.00;
+					$sumTotalPagoDolares = 0.00;
+					$sumTotalSaldoDolares = 0.00;
+					
+					//VARIABLES PARA SUMAR TOTALES GENERALES
+					$sumTotalGeneralInicialSoles = 0.00;
+					$sumTotalGeneralPagoSoles = 0.00;
+					$sumTotalGeneralSaldoSoles = 0.00;
+
+					$sumTotalGeneralInicialDolares = 0.00;
+					$sumTotalGeneralPagoDolares = 0.00;
+					$sumTotalGeneralSaldoDolares = 0.00;
+
+					//OBTENEMOS CUENTAS POR COBRAR
+					$dataCuentasCobrar = $verificar_data["1_cuentas_por_cobrar"];
+
+					//RECORREMOS CUENTAS POR COBRAR
+					foreach ($dataCuentasCobrar as $key => $value) {
+						//LIMPIAMOS TOTALES POR CLIENTE
+						$sumTotalInicialSoles = 0.00;
+						$sumTotalPagoSoles = 0.00;
+						$sumTotalSaldoSoles = 0.00;
+
+						$sumTotalInicialDolares = 0.00;
+						$sumTotalPagoDolares = 0.00;
+						$sumTotalSaldoDolares = 0.00;
+
+						//MOSTRAMOS NOMBRE DE CADA CLIENTE
+						$this->calc->getActiveSheet()->setCellValue('A'.$row, $key);
+						$this->calc->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+						$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => 'FF7F32')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+
+						//OBTENEMOS CLIENTES
+						$dataClientes = $dataCuentasCobrar[$key]['cuentas_por_cobrar'];
+
+						//RECORREMOS CLIENTES
+						foreach ($dataClientes as $key2 => $value2) {
+							$elemento = $dataClientes[$key2];
+							if($vista == "DET"){
+								$this->calc->getActiveSheet()->setCellValue('A'.$row, $elemento['documento']);
+								$this->calc->getActiveSheet()->setCellValue('B'.$row, $elemento['fechaemision']);
+								$this->calc->getActiveSheet()->setCellValue('C'.$row, $elemento['fechavencimiento']);
+								$this->calc->getActiveSheet()->setCellValue('D'.$row, $elemento['moneda']);
+								$this->calc->getActiveSheet()->setCellValue('E'.$row, $elemento['tipocambio']);
+								$this->calc->getActiveSheet()->setCellValue('F'.$row, $elemento['importeinicial_dolares']);
+								$this->calc->getActiveSheet()->setCellValue('G'.$row, $elemento['importeinicial_soles']);
+								$this->calc->getActiveSheet()->setCellValue('H'.$row, $elemento['saldo_dolares']);
+								$this->calc->getActiveSheet()->setCellValue('I'.$row, $elemento['saldo_soles']);
+								
+								$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+								$row++;
+							}
+
+							//SUMAMOS TOTALES POR CLIENTE
+							if($elemento['moneda'] == 'S/'){ //SOLES
+								if($elemento['tipodocumento'] == '20' || $elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+									$sumTotalInicialSoles 	-= $elemento['importeinicial_soles'];
+									$sumTotalPagoSoles 		-= $elemento['pago_soles'];
+									$sumTotalSaldoSoles 	-= $elemento['saldo_soles'];
+								}else{ //OTROS DOCUMENTOS
+									$sumTotalInicialSoles 	+= $elemento['importeinicial_soles'];
+									$sumTotalPagoSoles 		+= $elemento['pago_soles'];
+									$sumTotalSaldoSoles     += $elemento['saldo_soles'];
+								}
+							} else { //DOLARES
+								if($elemento['tipodocumento'] == "20" || $elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+									$sumTotalInicialDolares -= $elemento["importeinicial_dolares"];
+									$sumTotalPagoDolares 	-= $elemento["pago_dolares"];
+									$sumTotalSaldoDolares 	-= $elemento["saldo_dolares"];
+								}else{ //OTROS DOCUMENTOS
+									$sumTotalInicialDolares += $elemento["importeinicial_dolares"];
+									$sumTotalPagoDolares 	+= $elemento["pago_dolares"];
+									$sumTotalSaldoDolares 	+= $elemento["saldo_dolares"];
+								}
+							}
+
+							//SUMAMOS TOTALES GENERALES POR CLIENTE
+							if($elemento['moneda'] == 'S/'){ //SOLES
+								if($elemento['tipodocumento'] == '20' || $elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+									$sumTotalGeneralInicialSoles 	-= $elemento['importeinicial_soles'];
+									$sumTotalGeneralPagoSoles 		-= $elemento['pago_soles'];
+									$sumTotalGeneralSaldoSoles 		-= $elemento['saldo_soles'];
+								}else{ //OTROS DOCUMENTOS
+									$sumTotalGeneralInicialSoles 	+= $elemento['importeinicial_soles'];
+									$sumTotalGeneralPagoSoles 		+= $elemento['pago_soles'];
+									$sumTotalGeneralSaldoSoles    	+= $elemento['saldo_soles'];
+								}
+							} else { //DOLARES
+								if($elemento['tipodocumento'] == "20" || $elemento['tipodocumento'] == '21'){ //ES NC Y ANTICIPO
+									$sumTotalGeneralInicialDolares 	-= $elemento["importeinicial_dolares"];
+									$sumTotalGeneralPagoDolares 	-= $elemento["pago_dolares"];
+									$sumTotalGeneralSaldoDolares 	-= $elemento["saldo_dolares"];
+								}else{ //OTROS DOCUMENTOS
+									$sumTotalGeneralInicialDolares 	+= $elemento["importeinicial_dolares"];
+									$sumTotalGeneralPagoDolares 	+= $elemento["pago_dolares"];
+									$sumTotalGeneralSaldoDolares 	+= $elemento["saldo_dolares"];
+								}
+							}
+						}
+
+						//MOSTRAMOS TOTALES POR CLIENTES
+						$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL CLIENTE");
+						$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+						$this->calc->getActiveSheet()->setCellValue('F'.$row, $sumTotalInicialDolares);
+						$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalInicialSoles);
+						$this->calc->getActiveSheet()->setCellValue('H'.$row, $sumTotalSaldoDolares);
+						$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalSaldoSoles);						
+						$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						$this->calc->getActiveSheet()->getStyle('E'.$row.':I'.$row)->applyFromArray(
+							array(
+								// 'fill' => array(
+								// 	'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								// 	'color' => array('rgb' => 'fceec9')
+								// ),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => '000'),
+									'size'  => 11,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+						$row++;
+					}
+
+					//MOSTRAMOS TOTALES GENERALES POR CLIENTES
+					$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL CLIENTE GENERAL");
+					$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+					$this->calc->getActiveSheet()->setCellValue('F'.$row, $sumTotalGeneralInicialDolares);
+					$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalGeneralInicialSoles);
+					$this->calc->getActiveSheet()->setCellValue('H'.$row, $sumTotalGeneralSaldoDolares);
+					$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalGeneralSaldoSoles);						
+					$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => 'FF7F32')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+					$row++;
+
+					/**************************************************************** REPORTE VALES ****************************************************************/
+					if($vales == 1){
+						//Inicio de cabecera (tabla)
+						$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+						$this->calc->getActiveSheet()->setCellValue('G'.$row, 'NRO.VALES');
+						$this->calc->getActiveSheet()->setCellValue('H'.$row, 'F.EMISION');
+						$this->calc->getActiveSheet()->setCellValue('I'.$row, 'IMPORTE');
+						
+						$this->calc->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+						$this->calc->getActiveSheet()->getStyle('G'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);				
+						
+						$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+						$this->calc->getActiveSheet()->getStyle('G'.$row.':I'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => '337ab7')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);				
+						$row++;		
+						//Fin de cabecera (tabla)					
+
+						$verificar_data = $data;
+
+						//VARIABLES PARA SUMAR TOTALES		
+						$sumTotalImporteVales = 0.00;
+
+						//VARIABLES PARA SUMAR TOTALES GENERALES		
+						$sumTotalGeneralImporteVales = 0.00;
+
+						//OBTENEMOS CUENTAS POR COBRAR
+						$dataVales = $verificar_data["2_vales"];
+
+						//RECORREMOS VALES
+						foreach ($dataVales as $key3 => $value3) {
+							//LIMPIAMOS TOTALES POR VALES
+							$sumTotalImporteVales = 0.00;
+
+							//MOSTRAMOS NOMBRE DE CADA CLIENTE
+							$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+							$this->calc->getActiveSheet()->setCellValue('G'.$row, $key3);
+							$this->calc->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+							$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+							$this->calc->getActiveSheet()->getStyle('G'.$row.':I'.$row)->applyFromArray(
+								array(
+									'fill' => array(
+										'type' => PHPExcel_Style_Fill::FILL_SOLID,
+										'color' => array('rgb' => '337ab7')
+									),
+									'font' => array(
+										'bold'  => true,
+										'color' => array('rgb' => 'FFFFFF'),
+										'size'  => 12,
+										//'name'  => 'Verdana'
+									)
+								)
+							);
+							$row++;
+
+							//OBTENEMOS CLIENTES
+							$dataClientes = $dataVales[$key3]['vales'];
+
+							//RECORREMOS CLIENTES
+							foreach ($dataClientes as $key4 => $value4) {
+								$elemento = $dataClientes[$key4];
+								if($vista == "DET"){
+									$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+									$this->calc->getActiveSheet()->setCellValue('G'.$row, $elemento['documentoval']);
+									$this->calc->getActiveSheet()->setCellValue('H'.$row, $elemento['fecha']);
+									$this->calc->getActiveSheet()->setCellValue('I'.$row, $elemento['importeval']);
+									
+									$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+									$row++;
+								}
+
+								$sumTotalImporteVales += $elemento['importeval'];
+								$sumTotalGeneralImporteVales += $elemento['importeval'];
+							}
+
+							//TOTALIZAMOS VALES
+							$this->calc->getActiveSheet()->setCellValue('H'.$row, "TOTAL VALES");
+							$this->calc->getActiveSheet()->getStyle('H'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);												
+							$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalImporteVales);						
+							$this->calc->getActiveSheet()->getStyle('I'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+							$this->calc->getActiveSheet()->getStyle('H'.$row.':I'.$row)->applyFromArray(
+								array(
+									// 'fill' => array(
+									// 	'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									// 	'color' => array('rgb' => 'fceec9')
+									// ),
+									'font' => array(
+										'bold'  => true,
+										'color' => array('rgb' => '000'),
+										'size'  => 11,
+										//'name'  => 'Verdana'
+									)
+								)
+							);
+							$row++;						
+							$row++;
+						}					
+
+						//TOTALIZAMOS VALES GENERALES
+						$this->calc->getActiveSheet()->setCellValue('H'.$row, "TOTAL VALES GENERAL");
+						$this->calc->getActiveSheet()->getStyle('H'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);												
+						$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalGeneralImporteVales);						
+						$this->calc->getActiveSheet()->getStyle('I'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						$this->calc->getActiveSheet()->getStyle('G'.$row.':I'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => '337ab7')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+						$row++;
+					}
+					$index++;
+				}
 
 				//GENERACION EXCEL
 				//componer nombre: ocsmanager_TYPEMOD_TYPESTATION_YYYYMMMDD_HHMMSS.xls

@@ -1005,6 +1005,8 @@ class Requests extends CI_Controller {
 
 	public function getSaldoSocio()
 	{
+		ini_set('memory_limit','-1');
+
 		// Verificamos datos enviados por POST
 		error_log('getSaldoSocio');
 		error_log(json_encode($this->input->post()));
@@ -1091,11 +1093,14 @@ class Requests extends CI_Controller {
 						error_log(json_encode($dataRemoteStations));
 
 						foreach ($dataRemoteStations["1_cuentas_por_cobrar"] as $key => $cuenta) {
-							$data["1_cuentas_por_cobrar"][$cuenta['cliente'] . " - " . $cuenta['razonsocial']][] = $cuenta;
+							$data["1_cuentas_por_cobrar"][ TRIM($cuenta['cliente']) . " - " . TRIM($cuenta['razonsocial']) ]['cuentas_por_cobrar'][] = $cuenta;
 						}
 						foreach ($dataRemoteStations["2_vales"] as $key => $vale) {
-							$data["2_vales"][$vale['cliente'] . " - " . $vale['razonsocial']][] = $vale;
+							$data["2_vales"][ TRIM($vale['cliente']) . " - " . TRIM($vale['razonsocial']) ]['vales'][] = $vale;
 						}
+
+						//POR SI FUERA NECESARIO SE REALIZO ESTO
+						// $data["merge"] = array_merge_recursive( $data["1_cuentas_por_cobrar"], $data["2_vales"] );
 					}else{
 						$return['status'] = 4;
 					}

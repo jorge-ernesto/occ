@@ -32,7 +32,7 @@
                 </div>
                 <br>
                 <div class="container-ss-station d-none">
-                    <button class="btn btn-primary btn-block btn-lg download-liquidacion-diaria" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>
+                    <button class="btn btn-primary btn-block btn-lg download-saldo-socio" title="Generar información en Hoja de Cálculo"><span class="glyphicon glyphicon-download-alt"></span> Hoja de Cálculo</button>
                 </div>               
                 <div class="row">&nbsp;</div>
                 
