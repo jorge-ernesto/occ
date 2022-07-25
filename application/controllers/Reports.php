@@ -1620,7 +1620,9 @@ class Reports extends CI_Controller {
 						}
 
 						//POR SI FUERA NECESARIO SE REALIZO ESTO
-						// $data["merge"] = array_merge_recursive( $data["1_cuentas_por_cobrar"], $data["2_vales"] );
+						$data["1_cuentas_por_cobrar"] = empty($data["1_cuentas_por_cobrar"]) ? array() : $data["1_cuentas_por_cobrar"];
+						$data["2_vales"]              = empty($data["2_vales"])              ? array() : $data["2_vales"];
+						$data["cuentas_vales"] = array_merge_recursive( $data["1_cuentas_por_cobrar"], $data["2_vales"] );
 					}else{
 						//NO HACE NADA
 					}
@@ -1684,7 +1686,7 @@ class Reports extends CI_Controller {
 					);
 					$row++;
 
-					/**************************************************************** REPORTE CUENTAS POR COBRAR ****************************************************************/
+					/**************************************************************** REPORTE CUENTAS POR COBRAR Y VALES ****************************************************************/
 					//Inicio de cabecera (tabla)
 					$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
 					$this->calc->getActiveSheet()->setCellValue('F'.$row, 'IMPORTE TOTAL');
@@ -1742,9 +1744,23 @@ class Reports extends CI_Controller {
 					$row++;		
 					//Fin de cabecera (tabla)
 
+					//VISTA
+					$vista_documentos;
+					$vista_vales;
+					if($vista == "DETDOC_RESVAL"){
+						$vista_documentos = true;
+						$vista_vales = false;
+					}else if($vista == "DET"){
+						$vista_documentos = true;
+						$vista_vales = true;
+					}else if($vista == "RES"){
+						$vista_documentos = false;
+						$vista_vales = false;
+					}
+
 					$verificar_data = $data;
 
-					//VARIABLES PARA SUMAR TOTALES		
+					//VARIABLES PARA SUMAR TOTALES  CUENTAS POR COBRAR	
 					$sumTotalInicialSoles = 0.00;
 					$sumTotalPagoSoles = 0.00;
 					$sumTotalSaldoSoles = 0.00;
@@ -1753,7 +1769,7 @@ class Reports extends CI_Controller {
 					$sumTotalPagoDolares = 0.00;
 					$sumTotalSaldoDolares = 0.00;
 					
-					//VARIABLES PARA SUMAR TOTALES GENERALES
+					//VARIABLES PARA SUMAR TOTALES GENERALES  CUENTAS POR COBRAR
 					$sumTotalGeneralInicialSoles = 0.00;
 					$sumTotalGeneralPagoSoles = 0.00;
 					$sumTotalGeneralSaldoSoles = 0.00;
@@ -1762,11 +1778,17 @@ class Reports extends CI_Controller {
 					$sumTotalGeneralPagoDolares = 0.00;
 					$sumTotalGeneralSaldoDolares = 0.00;
 
-					//OBTENEMOS CUENTAS POR COBRAR
-					$dataCuentasCobrar = $verificar_data["1_cuentas_por_cobrar"];
+					//VARIABLES PARA SUMAR TOTALES VALES
+					$sumTotalImporteVales = 0.00;
 
-					//RECORREMOS CUENTAS POR COBRAR
-					foreach ($dataCuentasCobrar as $key => $value) {
+					//VARIABLES PARA SUMAR TOTALES GENERALES VALES
+					$sumTotalGeneralImporteVales = 0.00;
+
+					//OBTENEMOS CUENTAS POR COBRAR Y VALES
+					$dataCuentasVales = $verificar_data["cuentas_vales"];
+
+					//RECORREMOS CUENTAS POR COBRAR Y VALES
+					foreach ($dataCuentasVales as $key => $value) {
 						//LIMPIAMOS TOTALES POR CLIENTE
 						$sumTotalInicialSoles = 0.00;
 						$sumTotalPagoSoles = 0.00;
@@ -1797,12 +1819,13 @@ class Reports extends CI_Controller {
 						$row++;
 
 						//OBTENEMOS CLIENTES
-						$dataClientes = $dataCuentasCobrar[$key]['cuentas_por_cobrar'];
+						$dataClientesCuentas = $dataCuentasVales[$key]['cuentas_por_cobrar'];
+						$dataClientesVales = $dataCuentasVales[$key]['vales'];
 
 						//RECORREMOS CLIENTES
-						foreach ($dataClientes as $key2 => $value2) {
-							$elemento = $dataClientes[$key2];
-							if($vista == "DET"){
+						foreach ($dataClientesCuentas as $key2 => $value2) {
+							$elemento = $dataClientesCuentas[$key2];
+							if($vista_documentos == true){
 								$this->calc->getActiveSheet()->setCellValue('A'.$row, $elemento['documento']);
 								$this->calc->getActiveSheet()->setCellValue('B'.$row, $elemento['fechaemision']);
 								$this->calc->getActiveSheet()->setCellValue('C'.$row, $elemento['fechavencimiento']);
@@ -1865,19 +1888,94 @@ class Reports extends CI_Controller {
 						}
 
 						//MOSTRAMOS TOTALES POR CLIENTES
-						$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL CLIENTE");
+						$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL DOCUMENTOS");
 						$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 						$this->calc->getActiveSheet()->setCellValue('F'.$row, $sumTotalInicialDolares);
 						$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalInicialSoles);
 						$this->calc->getActiveSheet()->setCellValue('H'.$row, $sumTotalSaldoDolares);
 						$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalSaldoSoles);						
 						$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-						$this->calc->getActiveSheet()->getStyle('E'.$row.':I'.$row)->applyFromArray(
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
 							array(
-								// 'fill' => array(
-								// 	'type' => PHPExcel_Style_Fill::FILL_SOLID,
-								// 	'color' => array('rgb' => 'fceec9')
-								// ),
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => 'F8CBAD')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => '000'),
+									'size'  => 11,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+
+						//LIMPIAMOS TOTALES POR VALES
+						$sumTotalImporteVales = 0.00;
+
+						if($vales == 1){
+							//RECORREMOS CLIENTES
+							foreach ($dataClientesVales as $key4 => $value4) {
+								$elemento = $dataClientesVales[$key4];
+								if($vista_vales == true){
+									$this->calc->getActiveSheet()->setCellValue('A'.$row, $elemento['documentoval']);
+									$this->calc->getActiveSheet()->setCellValue('B'.$row, $elemento['fecha']);
+									$this->calc->getActiveSheet()->setCellValue('C'.$row, "-");
+									$this->calc->getActiveSheet()->setCellValue('D'.$row, "S/.");
+									$this->calc->getActiveSheet()->setCellValue('E'.$row, "-");
+									$this->calc->getActiveSheet()->setCellValue('F'.$row, "-");
+									$this->calc->getActiveSheet()->setCellValue('G'.$row, $elemento['importeval']);								
+									$this->calc->getActiveSheet()->setCellValue('H'.$row, "-");
+									$this->calc->getActiveSheet()->setCellValue('I'.$row, $elemento['importeval']);
+									
+									$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+									$row++;
+								}
+
+								$sumTotalImporteVales += $elemento['importeval'];
+								$sumTotalGeneralImporteVales += $elemento['importeval'];
+							}
+
+							//TOTALIZAMOS VALES
+							$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL VALES");
+							$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);												
+							$this->calc->getActiveSheet()->setCellValue('F'.$row, "-");
+							$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalImporteVales);
+							$this->calc->getActiveSheet()->setCellValue('H'.$row, "-");
+							$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalImporteVales);
+							$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+							$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+								array(
+									'fill' => array(
+										'type' => PHPExcel_Style_Fill::FILL_SOLID,
+										'color' => array('rgb' => 'F8CBAD')
+									),
+									'font' => array(
+										'bold'  => true,
+										'color' => array('rgb' => '000'),
+										'size'  => 11,
+										//'name'  => 'Verdana'
+									)
+								)
+							);
+							$row++;
+						}
+
+						//TOTALIZAMOS CLIENTES
+						$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL CLIENTES");
+						$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);												
+						$this->calc->getActiveSheet()->setCellValue('F'.$row, $sumTotalInicialDolares);
+						$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalInicialSoles + $sumTotalImporteVales);
+						$this->calc->getActiveSheet()->setCellValue('H'.$row, $sumTotalSaldoDolares);
+						$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalSaldoSoles + $sumTotalImporteVales);
+						$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => 'F8CBAD')
+								),
 								'font' => array(
 									'bold'  => true,
 									'color' => array('rgb' => '000'),
@@ -1888,10 +1986,11 @@ class Reports extends CI_Controller {
 						);
 						$row++;
 						$row++;
+						$row++;
 					}
 
-					//MOSTRAMOS TOTALES GENERALES POR CLIENTES
-					$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL CLIENTE GENERAL");
+					//MOSTRAMOS TOTALES GENERALES POR DOCUMENTOS
+					$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL DOCUMENTOS GENERAL");
 					$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 					$this->calc->getActiveSheet()->setCellValue('F'.$row, $sumTotalGeneralInicialDolares);
 					$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalGeneralInicialSoles);
@@ -1913,9 +2012,61 @@ class Reports extends CI_Controller {
 						)
 					);
 					$row++;
+
+					if($vales == 1){
+						//MOSTRAMOS TOTALES GENERALES POR VALES
+						$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL VALES GENERAL");
+						$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+						$this->calc->getActiveSheet()->setCellValue('F'.$row, "-");
+						$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalGeneralImporteVales);
+						$this->calc->getActiveSheet()->setCellValue('H'.$row, "-");
+						$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalGeneralImporteVales);						
+						$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => 'FF7F32')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+					}
+
+					//MOSTRAMOS TOTALES GENERALES POR CLIENTES
+					$this->calc->getActiveSheet()->setCellValue('E'.$row, "TOTAL CLIENTES GENERAL");
+					$this->calc->getActiveSheet()->getStyle('E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+					$this->calc->getActiveSheet()->setCellValue('F'.$row, $sumTotalGeneralInicialDolares);
+					$this->calc->getActiveSheet()->setCellValue('G'.$row, $sumTotalGeneralInicialSoles + $sumTotalGeneralImporteVales);
+					$this->calc->getActiveSheet()->setCellValue('H'.$row, $sumTotalGeneralSaldoDolares);
+					$this->calc->getActiveSheet()->setCellValue('I'.$row, $sumTotalGeneralSaldoSoles + $sumTotalGeneralImporteVales);						
+					$this->calc->getActiveSheet()->getStyle('F'.$row.':I'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':I'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => 'FF7F32')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+					$row++;
 					$row++;
 
 					/**************************************************************** REPORTE VALES ****************************************************************/
+					/*
 					if($vales == 1){
 						//Inicio de cabecera (tabla)
 						$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
@@ -2046,6 +2197,7 @@ class Reports extends CI_Controller {
 						$row++;
 						$row++;
 					}
+					*/
 					$index++;
 				}
 

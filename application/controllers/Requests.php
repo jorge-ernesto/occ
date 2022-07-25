@@ -1100,7 +1100,9 @@ class Requests extends CI_Controller {
 						}
 
 						//POR SI FUERA NECESARIO SE REALIZO ESTO
-						// $data["merge"] = array_merge_recursive( $data["1_cuentas_por_cobrar"], $data["2_vales"] );
+						$data["1_cuentas_por_cobrar"] = empty($data["1_cuentas_por_cobrar"]) ? array() : $data["1_cuentas_por_cobrar"];
+						$data["2_vales"]              = empty($data["2_vales"])              ? array() : $data["2_vales"];
+						$data["cuentas_vales"] = array_merge_recursive( $data["1_cuentas_por_cobrar"], $data["2_vales"] );
 					}else{
 						$return['status'] = 4;
 					}

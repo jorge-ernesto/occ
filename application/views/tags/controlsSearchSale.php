@@ -176,6 +176,7 @@ if ($typeStation == 0) {
                     <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
                         <label for="">Vista:</label>
                         <select name="vista" class="form-control">
+                            <option value="DETDOC_RESVAL">Detallada Documentos / Resumida Vales</option>
                             <option value="DET">Detallada</option>
                             <option value="RES">Resumida</option>
                         </select>

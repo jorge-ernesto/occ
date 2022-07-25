@@ -1,3 +1,3 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="<?php echo base_url() ?>assets/plugins/bootstrap-select/bootstrap-select.min.js"></script>
+<script src="<?php echo base_url() ?>assets/plugins/sweetalert/sweetalert2@11.js"></script>
 <script src="https://cdn.opensysperu.com/js/clientes.js"></script>

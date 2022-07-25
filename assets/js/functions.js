@@ -2563,16 +2563,30 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 							<div class="card shadow mb-4">`;
 		}
 
+		//VISTA
+		var vista_documentos;
+		var vista_vales;
+		if(data.vista == "DETDOC_RESVAL"){
+			vista_documentos = true;
+			vista_vales = false;
+		}else if(data.vista == "DET"){
+			vista_documentos = true;
+			vista_vales = true;
+		}else if(data.vista == "RES"){
+			vista_documentos = false;
+			vista_vales = false;
+		}
+
 		verificar_data = detail[i].data;
 
 		var tabla = '';
 		if(mostrar == true){
-			//REPORTE CUENTAS POR COBRAR
-			var mostrar_cuentas = ( typeof verificar_data['1_cuentas_por_cobrar'] == "undefined" || verificar_data['1_cuentas_por_cobrar'] == null ) ? false : true;
+			//REPORTE CUENTAS POR COBRAR Y VALES
+			var mostrar_cuentas = ( typeof verificar_data['cuentas_vales'] == "undefined" || verificar_data['cuentas_vales'] == null ) ? false : true;
 			if(mostrar_cuentas) {
 				var tbody = '';
 
-				//VARIABLES PARA SUMAR TOTALES		
+				//VARIABLES PARA SUMAR TOTALES CUENTAS POR COBRAR
 				var sumTotalInicialSoles = 0.00;
 				var sumTotalPagoSoles = 0.00;
 				var sumTotalSaldoSoles = 0.00;
@@ -2581,7 +2595,7 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 				var sumTotalPagoDolares = 0.00;
 				var sumTotalSaldoDolares = 0.00;
 
-				//VARIABLES PARA SUMAR TOTALES GENERALES
+				//VARIABLES PARA SUMAR TOTALES GENERALES CUENTAS POR COBRAR
 				var sumTotalGeneralInicialSoles = 0.00;
 				var sumTotalGeneralPagoSoles = 0.00;
 				var sumTotalGeneralSaldoSoles = 0.00;
@@ -2589,14 +2603,20 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 				var sumTotalGeneralInicialDolares = 0.00;
 				var sumTotalGeneralPagoDolares = 0.00;
 				var sumTotalGeneralSaldoDolares = 0.00;
-				
-				//OBTENEMOS CUENTAS POR COBRAR
-				var dataCuentasCobrar = verificar_data['1_cuentas_por_cobrar'];		
-				// console.log('dataCuentasCobrar', dataCuentasCobrar);	
 
-				//RECORREMOS CUENTAS POR COBRAR
-				for (var key in dataCuentasCobrar) {
-					// console.log(dataCuentasCobrar[key], key);
+				//VARIABLES PARA SUMAR TOTALES VALES
+				var sumTotalImporteVales = 0.00;
+
+				//VARIABLES PARA SUMAR TOTALES GENERALES VALES
+				var sumTotalGeneralImporteVales = 0.00;
+				
+				//OBTENEMOS CUENTAS POR COBRAR Y VALES
+				var dataCuentasVales = verificar_data['cuentas_vales'];		
+				// console.log('dataCuentasVales', dataCuentasVales);	
+
+				//RECORREMOS CUENTAS POR COBRAR Y VALES
+				for (var key in dataCuentasVales) {
+					// console.log(dataCuentasVales[key], key);
 
 					//LIMPIAMOS TOTALES POR CLIENTE
 					sumTotalInicialSoles = 0.00;
@@ -2611,13 +2631,14 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 					tbody += `<tr class="bg-secondary"><th colspan=11>${key}</th></tr>`;
 
 					//OBTENEMOS CLIENTES
-					var dataClientes = dataCuentasCobrar[key]['cuentas_por_cobrar'];
+					var dataClientesCuentas = dataCuentasVales[key]['cuentas_por_cobrar'];
+					var dataClientesVales = dataCuentasVales[key]['vales'];
 					
 					//RECORREMOS CLIENTES
-					for (var key2 in dataClientes) {
+					for (var key2 in dataClientesCuentas) {
 						// console.log(dataClientes[key2], key2);
-						elemento = dataClientes[key2];		
-						if(data.vista == "DET"){
+						elemento = dataClientesCuentas[key2];		
+						if(vista_documentos == true){
 							tbody += `<tr>
 									<td align="center">${elemento['documento']}</td>
 									<td align="center">${elemento['fechaemision']}</td>
@@ -2682,19 +2703,71 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 
 					//MOSTRAMOS TOTALES POR CLIENTES
 					tbody += `<tr class="table-warning">
-								<th style="text-align:right;" colspan=5>TOTAL CLIENTE</th>
+								<th style="text-align:right;" colspan=5>TOTAL DOCUMENTOS</th>
 								<th style="text-align:right;">${sumTotalInicialDolares.toFixed(2)}</th>
 								<th style="text-align:right;">${sumTotalInicialSoles.toFixed(2)}</th>
 								<!-- <th style="text-align:right;">${sumTotalPagoDolares.toFixed(2)}</th> -->
 								<!-- <th style="text-align:right;">${sumTotalPagoSoles.toFixed(2)}</th> -->
 								<th style="text-align:right;">${sumTotalSaldoDolares.toFixed(2)}</th>
 								<th style="text-align:right;">${sumTotalSaldoSoles.toFixed(2)}</th>														
+							</tr>`;
+
+					// console.log(dataCuentasVales[key], key);
+
+					//LIMPIAMOS TOTALES POR VALES
+					sumTotalImporteVales = 0.00;
+
+					if(mostrar == true && data.vales == 1){						
+						//RECORREMOS CLIENTES
+						for (var key4 in dataClientesVales) {
+							// console.log(dataClientes[key4], key4);
+							elemento = dataClientesVales[key4];
+							if(vista_vales == true){
+								tbody += `<tr>
+											<td align="center">${elemento["documentoval"]}</td>
+											<td align="center">${elemento['fecha']}</td>
+											<td align="center">-</td>
+											<td align="center">S/.</td>
+											<td align="center">-</td>										
+											<td align="right">-</td>
+											<td align="right">${elemento['importeval']}</td>
+											<!-- <th></th> -->
+											<!-- <th></th> -->
+											<td align="right">-</td>
+											<td align="right">${elemento['importeval']}</td>	
+										</tr>`;
+							}
+
+							sumTotalImporteVales += +elemento["importeval"];
+							sumTotalGeneralImporteVales += +elemento["importeval"];
+						}
+
+						//TOTALIZAMOS VALES
+						tbody += `<tr class="table-warning">							
+									<th style="text-align:right;" colspan=5>TOTAL VALES</th>
+									<th style="text-align:right;">-</th>
+									<th style="text-align:right;">${sumTotalImporteVales.toFixed(2)}</th>
+									<!-- <th></th> -->
+									<!-- <th></th> -->
+									<th style="text-align:right;">-</th>
+									<th style="text-align:right;">${sumTotalImporteVales.toFixed(2)}</th>		
+								</tr>`;
+					}
+
+					//TOTALIZAMOS CLIENTES
+					tbody += `<tr class="table-warning">							
+								<th style="text-align:right;" colspan=5>TOTAL CLIENTES</th>
+								<th style="text-align:right;">${sumTotalInicialDolares.toFixed(2)}</th>
+								<th style="text-align:right;">${(sumTotalInicialSoles + sumTotalImporteVales).toFixed(2)}</th>
+								<!-- <th></th> -->
+								<!-- <th></th> -->
+								<th style="text-align:right;">${sumTotalSaldoDolares.toFixed(2)}</th>
+								<th style="text-align:right;">${(sumTotalSaldoSoles + sumTotalImporteVales).toFixed(2)}</th>		
 							</tr>
 							<tr><th colspan=9>&nbsp;</th></tr>`;
-
 				}
 
-				//RENDERIZAMOS INFORMACION DE CUENTAS POR COBRAR
+				//RENDERIZAMOS INFORMACION DE CUENTAS POR COBRAR Y VALES
 				tabla += `  <br>
 							<br>
 							<div class="table-responsive">
@@ -2725,21 +2798,44 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 									</tbody>
 									<tfooter>
 										<tr class="bg-secondary">
-											<th style="text-align:right;" colspan=5>TOTAL CLIENTE GENERAL</th>
+											<th style="text-align:right;" colspan=5>TOTAL DOCUMENTOS GENERAL</th>
 											<th style="text-align:right;">${sumTotalGeneralInicialDolares.toFixed(2)}</th>
 											<th style="text-align:right;">${sumTotalGeneralInicialSoles.toFixed(2)}</th>
 											<!-- <th style="text-align:right;">${sumTotalGeneralPagoDolares.toFixed(2)}</th> -->
 											<!-- <th style="text-align:right;">${sumTotalGeneralPagoSoles.toFixed(2)}</th> -->
 											<th style="text-align:right;">${sumTotalGeneralSaldoDolares.toFixed(2)}</th>
 											<th style="text-align:right;">${sumTotalGeneralSaldoSoles.toFixed(2)}</th>														
+										</tr>`;
+				if(data.vales == 1){
+				tabla += `
+										<tr class="bg-secondary">
+											<th style="text-align:right;" colspan=5>TOTAL VALES GENERAL</th>
+											<th style="text-align:right;">-</th>
+											<th style="text-align:right;">${sumTotalGeneralImporteVales.toFixed(2)}</th>
+											<!-- <th></th> -->
+											<!-- <th></th> -->
+											<th style="text-align:right;">-</th>
+											<th style="text-align:right;">${sumTotalGeneralImporteVales.toFixed(2)}</th>																
+										</tr>`;
+				}
+				tabla += `		
+										<tr class="bg-secondary">
+											<th style="text-align:right;" colspan=5>TOTAL CLIENTES GENERAL</th>
+											<th style="text-align:right;">${sumTotalGeneralInicialDolares.toFixed(2)}</th>
+											<th style="text-align:right;">${(sumTotalGeneralInicialSoles + sumTotalGeneralImporteVales).toFixed(2)}</th>
+											<!-- <th></th> -->
+											<!-- <th></th> -->
+											<th style="text-align:right;">${sumTotalGeneralSaldoDolares.toFixed(2)}</th>
+											<th style="text-align:right;">${(sumTotalGeneralSaldoSoles + sumTotalGeneralImporteVales).toFixed(2)}</th>																
 										</tr>
 									</tfooter>
 								</table>
 							</div>`;
 			}
-			//CERRAR REPORTE CUENTAS POR COBRAR
+			//CERRAR REPORTE CUENTAS POR COBRAR Y VALES
 		}
 		
+		/*
 		var tabla2 = '';
 		if(mostrar == true && data.vales == 1){
 			//REPORTE VALES NO LIQUIDADOS
@@ -2827,6 +2923,7 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 			}
 			//CERRAR REPORTE VALES NO LIQUIDADOS
 		}
+		*/
 
 		html += `<div class="card-body" data-station="${detail[i].id}" 
 						data-begindate="${data.beginDate}" data-enddate="${data.endDate}" data-typestation="${data.typeStation}"
@@ -2835,7 +2932,6 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 
 						<!-- REPORTE SALDO PENDIENTE DE SOCIO -->
 						${tabla}
-						${tabla2}
 						<!-- REPORTE SALDO PENDIENTE DE SOCIO -->
 					</div>
 				</div>`;
