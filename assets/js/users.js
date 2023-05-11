@@ -14,7 +14,7 @@ function listar() {
         "serverSide": false,
         ajax: {
             method: 'post',
-            url: url+'users/list',
+            url: url+'users/list_',
             dataType: 'json',
             error: function(e) {
                 console.log(e.responseText);

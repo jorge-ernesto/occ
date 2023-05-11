@@ -68,6 +68,9 @@ function converterUM($data) {
 }
 
 function getUncompressData($url) {
+    // error_log("Url");
+    // error_log($url);
+
     $old = ini_set('default_socket_timeout', 40);//considerar menos(inicial 120)
     //$old = ini_set('default_socket_timeout', 5);
     $fh = fopen($url, 'rb');

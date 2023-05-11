@@ -52,7 +52,7 @@ class Users extends CI_Controller {
 		}
 	}
 
-	public function list(){
+	public function list_(){
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
