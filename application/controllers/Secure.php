@@ -89,6 +89,7 @@ class Secure extends CI_Controller {
 	public function logout()
 	{
 		session_destroy();
+		unset($_SESSION);
 		redirect('secure/login', 'location');
 	}
 
