@@ -894,7 +894,7 @@ class Requests extends CI_Controller {
 		unset($return);	
 	}
 
-	public function getLiquidacionDiaria()
+	public function getLiquidacionDiaria() //LIQ
 	{		
 		$return = array();
 		$return['memory'][] = getMemory(array('start function'));
@@ -1003,7 +1003,7 @@ class Requests extends CI_Controller {
 		unset($return);		
 	}
 
-	public function getSaldoSocio()
+	public function getSaldoSocio() //SALDO SOCIO
 	{
 		ini_set('memory_limit','-1');
 

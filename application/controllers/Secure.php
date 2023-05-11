@@ -101,4 +101,43 @@ class Secure extends CI_Controller {
 			redirect('home', 'location');
 		}
 	}
+
+	public function postIdentity()
+	{
+		$ip = $_SERVER["REMOTE_ADDR"];
+		$captcha = $_POST['g_recaptcha_response'];
+		$secretKey = '6Leams0eAAAAAPYOquTri7bLq0zyuFMq7FfMooka';
+
+		$response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$captcha}&remoteip={$ip}");
+    	$atributos = json_decode($response, TRUE);
+
+		$return = array();
+		if($atributos['success'] == true){ //Si se verifico el captcha
+			if($this->input->post('email') != null) {
+				$this->load->model('ADUser_model');
+				$data = array(
+					'loginname' => $this->input->post('email')
+				);
+				$return['check_user'] = $this->ADUser_model->checkUser($data);
+				if(count($return['check_user'])) {
+					$return['status'] = 1;
+
+					//op
+					mail("jlachira@opensysperu.com,jlachira@opensysperu.com","Restablecer Contraseña","Enlace TOKEN");
+				} else {
+					$return['status'] = 2;
+					$return['message'] = 'El usuario no es válido';
+				}
+			} else {
+				$return['status'] = 100;
+				$return['message'] = 'Error al enviar datos.';
+			}
+		} else { //Si no se verifico el captcha
+			$return['status'] = 500;
+			$return['message'] = 'Verifica el captcha.';
+		}
+		$return['captcha'] = $atributos;
+
+		echo json_encode($return);
+	}
 }

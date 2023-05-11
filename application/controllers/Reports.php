@@ -325,7 +325,7 @@ class Reports extends CI_Controller {
 		}
 	}
 
-	public function resumeSalesForHours() //EDITAR
+	public function resumeSalesForHours() //EDITAR //SALES
 	{
 		$msg = getMemory(array(''));
 		if(checkSession()) {
@@ -758,7 +758,7 @@ class Reports extends CI_Controller {
 		}
 	}
 
-	public function resumeLiquidacionDiaria() //EDITAR
+	public function resumeLiquidacionDiaria() //EDITAR //LIQ
 	{
 		$msg = getMemory(array(''));
 		if(checkSession()) {

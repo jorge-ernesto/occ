@@ -55,7 +55,31 @@ function login() {
  * Funcion para restablecer contraseña
  */
 function identity() {
-	$('.msg-identity').html(_alert('success', 'Se envio enlace a su correo electronico'));
+	$('.msg-login').html(loading());
+	console.log('email: '+$('#email').val());
+	if(empty($('#email').val()) || validarEmail($('#email').val())) {
+		$('#email').focus();
+		$('.msg-identity').html(_alert('warning', 'Debe ingresar Email'));
+		return false;
+	}
+
+	var params = {
+		g_recaptcha_response: $('#g-recaptcha-response').val(),
+		email: $('#email').val()
+	};
+
+	$.post(url+'secure/postIdentity', params, function(data) {
+		console.log(data);
+		if(data.status == 1) {
+			$('.msg-identity').html(_alert('success', 'Se envio enlace a su correo electronico'));
+		} else if(data.status == 2) {
+			$('.msg-identity').html(_alert('warning', data.message));
+		}  else if(data.status == 100) {
+			$('.msg-identity').html(_alert('warning', data.message));
+		} else if(data.status == 500) {
+			$('.msg-identity').html(_alert('warning', data.message));			
+		}
+	}, 'json');
 }
 
 /**
@@ -3362,6 +3386,21 @@ function empty(input) {
 	} else {
 		return false;
 	}
+}
+
+/**
+ * Comprobar si es email
+ * @param string input
+ * @return boolean
+ */
+function validarEmail(valor) {
+	var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+
+    if (regex.test(valor.trim())) {
+		return false
+    } else {
+        return true
+    }
 }
 
 /**

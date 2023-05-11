@@ -16,9 +16,12 @@
 							
 							<form class="user">
 								<div class="form-group">
-									<input type="email" name="email" id="email" class="form-control form-control-user keypress" placeholder="Email" autofocus required />
+									<input type="email" name="email" id="email" class="form-control form-control-user keypressIdentity" placeholder="Email" autofocus required />
 								</div>
 								<div class="msg-identity"></div>
+								<div class="mb-3">
+									<div class="g-recaptcha" data-sitekey="6Leams0eAAAAAFDOBmNTbYHOGGOd4b2cl25jd87o"></div>
+								</div>
 								<button type="button" class="btn btn-primary btn-user btn-block btn-identity">Restablecer contrase&ntilde;a</button>
 							</form>
 							

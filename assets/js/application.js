@@ -38,9 +38,10 @@ $( document ).ready(function() {
 	$(document).on('click', '.btn-identity', function() {
 		identity();
 	});
-	$('.keypress').keypress(function( event ) {
+	$('.keypressIdentity').keypress(function( event ) {
 		if ( event.which == 13 ) {
-			identity();
+			$('.btn-identity').focus();
+			event.preventDefault();
 		}
 	});
 

@@ -14,7 +14,7 @@
 							
 							<form class="user">
 								<div class="form-group">
-									<input type="email" name="username" id="username" class="form-control form-control-user keypress" placeholder="Email" autofocus required />
+									<input type="email" name="username" id="username" class="form-control form-control-user keypress" placeholder="Usuario" autofocus required />
 								</div>
 								<div class="form-group">
 									<input type="password" name="password" id="password" class="form-control form-control-user keypress" placeholder="Contrase&ntilde;a" required />
