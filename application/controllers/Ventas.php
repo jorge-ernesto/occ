@@ -10,6 +10,7 @@ class Ventas extends CI_Controller {
 		$this->load->library('session');
 		$this->load->helper('url');
 		$this->load->model('COrg_model');
+		$this->load->model('CProd_model');
 		$this->load->helper('functions');
 	}
 
@@ -168,6 +169,33 @@ class Ventas extends CI_Controller {
 
 				error_log(json_encode($data));
 				$this->load->view('ventas/saldo_socio',$data);
+			}
+		}
+	}
+
+	public function sobrantes_faltantes()
+	{
+		error_log("Sobrantes y Faltantes");		
+
+		if (!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				$this->error_404();
+			}else{
+				$data['title'] = 'Ventas > Sobrantes y Faltantes';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');			
+
+				$data['result_c_product'] = $this->CProd_model->getAllActiveCProd();
+
+				$data['typeStation'] = 9;
+
+				error_log(json_encode($data));
+				$this->load->view('ventas/sobrantes_faltantes',$data);
 			}
 		}
 	}

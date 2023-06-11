@@ -237,14 +237,14 @@ function templateStationsSearch(data,t,cm) {
 									<div class="row">
 										<div class="col-md-6">
 											<div class="mid">
-												<b>Venta: S/ ${numeral(detail[i].total_venta).format('0,0')}</b>
+												<b>Venta (Con IGV): S/ ${numeral(detail[i].total_venta).format('0,0')}</b>
 											</div>
 											<div class="mid">
 												<b>${numeral(detail[i].total_cantidad).format('0,0')} ${unit}</b>
 											</div>
 										</div>
 										<div class="col-md-6">
-											<div class="mid"><b>Costo: S/ ${numeral(detail[i].total_costo).format('0,0')}</b></div>
+											<div class="mid"><b>Costo (Sin IGV): S/ ${numeral(detail[i].total_costo).format('0,0')}</b></div>
 											<div class="mid"><b>Margen: S/ ${numeral(detail[i].total_utilidad).format('0,0')}</b></div>
 										</div>
 									</div>
@@ -285,7 +285,7 @@ function templateStationsSearch(data,t,cm) {
 						<div class="row">
 							<div class="col-md-6">
 								<div class="mid">
-									<b>Venta: S/ ${numeral(gran_total).format('0,0')}</b>
+									<b>Venta (con IGV): S/ ${numeral(gran_total).format('0,0')}</b>
 								</div>
 								<div class="mid">
 									<b>${numeral(gran_qty).format('0,0')} ${unit}</b>
@@ -293,7 +293,7 @@ function templateStationsSearch(data,t,cm) {
 							</div>
 							<div class="col-md-6">
 								<div class="mid">
-									<b>Costo: S/ ${numeral(gran_cost).format('0,0')}</b>
+									<b>Costo (Sin IGV): S/ ${numeral(gran_cost).format('0,0')}</b>
 								</div>
 								<div class="mid">
 									<b>Margen: S/ ${numeral(gran_util).format('0,0')}</b>
@@ -462,45 +462,45 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 
 		var tabla = "";
 		if(mostrar == true){
-			tabla += `  <br>
-							<br>
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover">
-									<thead>
-										<tr class="bg-primary">
-											<th>Horas</th>
-											<th>00</th>
-											<th>01</th>
-											<th>02</th>
-											<th>03</th>
-											<th>04</th>
-											<th>05</th>
-											<th>06</th>
-											<th>07</th>
-											<th>08</th>
-											<th>09</th>
-											<th>10</th>
-											<th>11</th>
-											<th>12</th>
-											<th>13</th>
-											<th>14</th>
-											<th>15</th>
-											<th>16</th>
-											<th>17</th>
-											<th>18</th>
-											<th>19</th>
-											<th>20</th>
-											<th>21</th>
-											<th>22</th>
-											<th>23</th>
-											<th>Total</th>
-											<th>Promedio</th>
-										</tr>
-									</thead>
-									${tbody}	
-								</table>
-							</div>
-						</div>`;
+			tabla += `  <br />
+						<br />
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover">
+								<thead>
+									<tr class="bg-primary">
+										<th>Horas</th>
+										<th>00</th>
+										<th>01</th>
+										<th>02</th>
+										<th>03</th>
+										<th>04</th>
+										<th>05</th>
+										<th>06</th>
+										<th>07</th>
+										<th>08</th>
+										<th>09</th>
+										<th>10</th>
+										<th>11</th>
+										<th>12</th>
+										<th>13</th>
+										<th>14</th>
+										<th>15</th>
+										<th>16</th>
+										<th>17</th>
+										<th>18</th>
+										<th>19</th>
+										<th>20</th>
+										<th>21</th>
+										<th>22</th>
+										<th>23</th>
+										<th>Total</th>
+										<th>Promedio</th>
+									</tr>
+								</thead>
+								${tbody}
+							</table>
+						</div>
+					</div>`;
 		}
 		
 		html += `<div class="card-body" data-station="${detail[i].id}" 
@@ -510,9 +510,10 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 
 						<!-- REPORTE VENTAS POR HORAS -->
 						${tabla}
-						<!-- CERRRAR REPORTE VENTAS POR HORAS -->
+						<!-- CERRAR -->
 					</div>
-				</div>`;
+				</div>
+			</div>`;
 		num++;
 	}
 
@@ -662,7 +663,7 @@ function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
 						data-typestation="${data.typeStation}">
 						<!-- REPORTE VENTAS POR HORAS -->
 							${tabla_total_general}
-						<!-- CERRRAR REPORTE VENTAS POR HORAS -->
+						<!-- CERRAR -->
 					</div>
 				</div>`;
 	//CERRAR CUADRO FINAL Y TOTAL
@@ -2459,10 +2460,11 @@ function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
 					</div>
 					
 					<div class="card-body">
+						<!-- REPORTE LIQUIDACION DIARIA -->
 						${table}						
 						${table_inv}
+						<!-- CERRAR -->
 					</div>
-
 				</div>
 			</div>`;
 		num++;
@@ -2582,7 +2584,7 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 								</div>`;
 
 			mostrar = false;
-		} else {
+		} else { //Si hay conexion y hay datos
 			html += `<div class="">
 							<div class="card shadow mb-4">`;
 		}
@@ -2956,9 +2958,10 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 
 						<!-- REPORTE SALDO PENDIENTE DE SOCIO -->
 						${tabla}
-						<!-- REPORTE SALDO PENDIENTE DE SOCIO -->
+						<!-- CERRAR -->
 					</div>
-				</div>`;
+				</div>
+			</div>`;
 		num++;
 	}
 
@@ -2967,6 +2970,225 @@ function templateStationsSearchSaldoSocio(data,t,cm) {
 	$('.container-ss-station').removeClass('d-none');
 
 	setDataResultRequest2('.download-saldo-socio',data);
+
+	return html;
+}
+
+/**
+ * Plantilla de estaciones buscadas para Ventas - Sobrantes y Faltantes
+ * @param obj data, int t(typo estacion), int cm(chart mode)
+ * @return string html
+ */
+function templateStationsSearchSobrantesFaltantes(data,t,cm) {
+	console.log('data en templateStationsSearchSobrantesFaltantes:', data);
+
+	clearStations();
+	var html = '<br>';
+	var detail = data.stations;
+	if (typeof detail == "undefined") {
+		return '<div class="alert alert-info">No existe información</div>';
+	}
+	var count = detail.length;
+	gran_total = 0.0;
+	gran_qty = 0.0;
+	gran_util = 0.0;
+	gran_cost = 0.0;
+	var num = 1;
+	var unit = t == 0 ? 'Gln' : '';
+
+	var color_id, taxid;
+	for(var i = 0; i<count; i++) {
+		color_id = getRandomColor();
+		if(taxid != detail[i].group.taxid) {
+			html += (i != 0 ? '<hr>' : '');
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
+			taxid = detail[i].group.taxid;
+		}
+
+		var mostrar = true;
+		if(!detail[i].isConnection) { //Si no hay conexion
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
+
+			mostrar = false;
+		} else {			
+			verificar_data = detail[i].data;
+			
+			let todosNull = true;
+			for(let indice in verificar_data){
+				if(verificar_data[indice] !== null){
+					todosNull = false;
+					break; // si al menos un valor no es null, se sale del bucle
+				}
+			}
+			if(todosNull){ //Si hay conexion pero datos vacios
+				html += `<div class="">
+								<div class="card shadow mb-4">
+									<div class="card-header bg-danger text-white d-none"> <!-- Quitar d-none, si quieremos que se muestre -->
+										<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>No hay informacion.</strong>
+									</div>`;
+
+				mostrar = false;
+			}else{ //Si hay conexion y hay datos
+				html += `<div class="">
+								<div class="card shadow mb-4">`;
+			}			
+		}
+
+		var tabla = "";
+		if(mostrar == true){
+			// REPORTE SOBRANTES Y FALTANTES
+			REPSOB = detail[i].data
+
+			for (let key in REPSOB) {
+				REP = REPSOB[key];
+
+				tabla += `<br />`;
+				tabla += `<h2 align="center" style="font-family: Verdana,Arial,Helvetica,sans-serif;font-size: 18px;line-height: 14px;color: #336699;"><b>Combustible ${key}</b></h2>`
+				tabla += `<br />`;
+				tabla += `<div class="table-responsive">
+							<table class="text-center table table-bordered table-hover table-striped table-sm">
+								<thead>
+									<tr class="bg-primary">
+										<th colspan="5">&nbsp;</td>
+										<th colspan="2">TRANSFERENCIAS</td>
+										<th colspan="2">&nbsp;</td>
+										<th colspan="2">DIFERENCIA</td>
+									</tr>
+									<tr class="bg-primary">
+										<th>FECHA</td>
+										<th>SALDO<br>(+)</td>
+										<th>COMPRA<br>(+)</td>
+										<th>AFERICIÓN<br>(+)</td>
+										<th>VENTA<br>(-)</td>
+										<th>INGRESO<br>(+)</td>
+										<th>SALIDA<br>(-)</td>
+										<th>PARTE</td>
+										<th>VARILLA</td>
+										<th>DIARIA</td>
+										<th>ACUMULADA</td>
+									</tr>
+								</thead>`;
+
+				TOT_SALDO 		= 0.00;
+				TOT_COMPRA 		= 0.00;
+				TOT_MEDICION 	= 0.00;
+				TOT_VENTA 		= 0.00;
+				TOT_INGRESO 	= 0.00;
+				TOT_SALIDA 		= 0.00;
+				TOT_PARTE 		= 0.00;
+				TOT_VARILLA 	= 0.00;
+				TOT_DIARIA 		= 0.00;
+				TOT_ACUMULADA 	= 0.00;
+
+				tabla += `<tbody>`;
+				for (let i in REP) {
+					REP[i][1] = parseFloat(REP[i][1]);
+					REP[i][2] = parseFloat(REP[i][2]);
+					REP[i][3] = parseFloat(REP[i][3]);
+					REP[i][4] = parseFloat(REP[i][4]);
+					REP[i][5] = parseFloat(REP[i][5]);
+					REP[i][6] = parseFloat(REP[i][6]);
+					REP[i][7] = parseFloat(REP[i][7]);
+					REP[i][8] = parseFloat(REP[i][8]);
+					REP[i][9] = parseFloat(REP[i][9]);
+					REP[i][10] = parseFloat(REP[i][10]);					
+
+					TOT_SALDO 		= 	TOT_SALDO + REP[i][1];
+					TOT_COMPRA 		= 	TOT_COMPRA + REP[i][2];
+					TOT_MEDICION 	= 	TOT_MEDICION + REP[i][3];
+					TOT_VENTA 		= 	TOT_VENTA + REP[i][4];
+					TOT_INGRESO 	= 	TOT_INGRESO + REP[i][5];
+					TOT_SALIDA 		= 	TOT_SALIDA + REP[i][6];
+					TOT_PARTE 		= 	TOT_PARTE + REP[i][7];
+					TOT_VARILLA 	= 	TOT_VARILLA + REP[i][8];
+					TOT_DIARIA 		= 	TOT_DIARIA + REP[i][9];
+					TOT_ACUMULADA 	= 	TOT_ACUMULADA + REP[i][10];
+	
+					if (data.checkDetallado === "true") {
+						tabla += `<tr>
+									<td>${REP[i][0]}</td>
+									<td>${REP[i][1].toFixed(3)}</td>
+									<td>${REP[i][2].toFixed(3)}</td>
+									<td>${REP[i][3].toFixed(3)}</td>
+									<td>${REP[i][4].toFixed(3)}</td>
+									<td>${REP[i][5].toFixed(3)}</td>
+									<td>${REP[i][6].toFixed(2)}</td>
+									<td>${REP[i][7].toFixed(2)}</td>
+									<td>${REP[i][8].toFixed(3)}</td>
+									<td>${REP[i][9].toFixed(3)}</td>
+									<td>${REP[i][10].toFixed(3)}</td>
+								</tr>`;
+					}					
+				}
+
+				if (data.checkDetallado === "true") {
+					tabla += `<tr class="bg-secondary">
+								<th colspan="2" class="text-right">TOTALES:</th>
+								<th>${TOT_COMPRA.toFixed(2)}</th>
+								<th>${TOT_MEDICION.toFixed(3)}</th>
+								<th>${TOT_VENTA.toFixed(3)}</th>
+								<th>${TOT_INGRESO.toFixed(2)}</th>
+								<th>${TOT_SALIDA.toFixed(2)}</th>
+								<th>${TOT_PARTE.toFixed(2)}</th>
+								<th>${TOT_VARILLA.toFixed(3)}</th>
+								<th class="text-right">${TOT_DIARIA.toFixed(3)}</th>
+								<th class="text-right">${TOT_DIARIA.toFixed(3)}</th>
+							</tr>`;
+				} else if (data.checkResumido === "true") {
+					// Informacion para vista resumida
+					let saldo_fecha_desde = REP[0][1];
+					let varilla_fecha_hasta = REP[(REP.length - 1)][8];
+					// PARTE: SALDO + COMPRA + AFERICION - VENTA + INGRESO - SALIDA
+					let parte_vista_resumido = saldo_fecha_desde + TOT_COMPRA + TOT_MEDICION - TOT_VENTA + TOT_INGRESO - TOT_SALIDA
+
+					tabla += `<tr class="bg-secondary">
+								<th></th>
+								<th>${saldo_fecha_desde.toFixed(3)}</th>
+								<th>${TOT_COMPRA.toFixed(2)}</th>
+								<th>${TOT_MEDICION.toFixed(3)}</th>
+								<th>${TOT_VENTA.toFixed(3)}</th>
+								<th>${TOT_INGRESO.toFixed(2)}</th>
+								<th>${TOT_SALIDA.toFixed(2)}</th>
+								<th>${parte_vista_resumido.toFixed(3)}</th>
+								<th>${varilla_fecha_hasta.toFixed(3)}</th>
+								<th class="text-right">${TOT_DIARIA.toFixed(3)}</th>
+								<th class="text-right">${TOT_DIARIA.toFixed(3)}</th>
+							</tr>`;
+				}
+
+				tabla += `</tbody>
+					</table>
+				</div>`;
+			}
+		}
+
+		html += `<div class="card-header bg-primary text-white">
+						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num}. ${detail[i].name} 
+					</div>
+		
+					<div class="card-body">
+						<!-- REPORTE SOBRANTES Y FALTANTES -->
+						${tabla}
+						<!-- CERRAR -->
+					</div>
+				</div>
+			</div>`;
+		num++;
+	}	
+
+	storageStations();
+
+	$('.container-ss-station').removeClass('d-none');
+
+	setDataResultRequest2('.download-sobrantes-faltantes',data);
 
 	return html;
 }
@@ -3013,7 +3235,7 @@ function templateDetailStation(data, type) { //DETALLE COMBUSTIBLE / MARKET
 	if(!data.stations[0].isConnection) {
 		html += '<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong></div>';
 	}
-	html += '<div class="table-responsive"><table class="table table-bordered"> <thead> <tr> <th>Producto</th> <th align="right">Cantidad</th> <th align="right">Venta</th> <th align="right">Costo</th> <th align="right">Margen</th> </tr> </thead> <tbody>';
+	html += '<div class="table-responsive"><table class="table table-bordered"> <thead> <tr> <th>Producto</th> <th align="right">Cantidad</th> <th align="right">Venta (Con IGV)</th> <th align="right">Costo (Sin IGV)</th> <th align="right">Margen</th> </tr> </thead> <tbody>';
 
 	var detail = data.stations[0].data;
 	var count = detail.length;
@@ -3698,6 +3920,34 @@ function downloadSaldoSocio(t){
 	window.location = url_;
 }
 
+function downloadSobrantesFaltantes(t){
+	console.log(t);
+
+	var dateB = t.attr('data-begindate').split("/");
+	dateB = dateB[0] + '-' + dateB[1] + '-' + dateB[2];
+
+	var dateE = t.attr('data-enddate').split("/");
+	dateE = dateE[0] + '-' + dateE[1] + '-' + dateE[2];
+
+	console.log('dateB: '+dateB+', dateE: '+dateE);
+
+	//validaciones
+	var params = {
+		id: t.attr('data-station') == '*' ? 'a' : t.attr('data-station'),
+		beginDate: dateB,
+		endDate: dateE,
+		typeStation: t.attr('data-typestation'),
+		productos: t.attr('data-productos') == '*' ? 'a' : t.attr('data-productos'),
+		unidadmedida: t.attr('data-unidadmedida'),
+		checkDetallado: t.attr('data-checkDetallado'),
+		checkResumido: t.attr('data-checkResumido'),
+	};
+	console.log('params.beginDate: '+params.beginDate+', params.endDate: '+params.endDate);
+	var url_ = url+'reports/resumeSobrantesFaltantes/'+params.id+'/'+params.beginDate+'/'+params.endDate+'/'+params.typeStation+'/'+params.productos+'/'+params.unidadmedida+'/'+params.checkDetallado+'/'+params.checkResumido;
+	console.log('url__: '+url_);
+	window.location = url_;
+}
+
 /**
  * Otorgar data obtenida en atributos de solicitud
  * @param string element, obj dfata
@@ -3736,7 +3986,11 @@ function setDataResultRequest2(element,data) {
 				.attr('data-inventariocombustible',data.inventariocombustible) /* Liquidacion Diaria */
 				.attr('data-socios', data.socios) /* Saldo Pendiente Socio */
 				.attr('data-vales', data.vales) /* Saldo Pendiente Socio */
-				.attr('data-vista', data.vista) /* Saldo Pendiente Socio */;
+				.attr('data-vista', data.vista) /* Saldo Pendiente Socio */
+				.attr('data-productos', data.productos) /* Sobrantes y Faltantes */
+				.attr('data-unidadmedida', data.unidadmedida) /* Sobrantes y Faltantes */
+				.attr('data-checkDetallado', data.checkDetallado) /* Sobrantes y Faltantes */
+				.attr('data-checkResumido', data.checkResumido) /* Sobrantes y Faltantes */;
 }
 
 /**
@@ -4258,17 +4512,17 @@ function searchSumarySales(t) {
 		$('.result-search').html(html);
 
 		$('.money-include').html(templateTableSumarySales(data, 'money-include'));
-		renderGraphicResume('money-include',paramsRequest);//0
+		renderGraphicResume('money-include',paramsRequest,data);//0
 		clearDataResumen();
 		$('.quantity-include').html(templateTableSumarySales(data, 'quantity-include'));
-		renderGraphicResume('quantity-include',paramsRequest);//1
+		renderGraphicResume('quantity-include',paramsRequest,data);//1
 		clearDataResumen();
 
 		$('.money-exclude').html(templateTableSumarySales(data, 'money-exclude'));
-		renderGraphicResume('money-exclude',paramsRequest);//2
+		renderGraphicResume('money-exclude',paramsRequest,data);//2
 		clearDataResumen();
 		$('.quantity-exclude').html(templateTableSumarySales(data, 'quantity-exclude'));
-		renderGraphicResume('quantity-exclude',paramsRequest);//3
+		renderGraphicResume('quantity-exclude',paramsRequest,data);//3
 		clearDataResumen();
 
 		$('.btn-search-sale').prop('disabled', false);
@@ -4418,6 +4672,51 @@ function searchSaldoSocio(t){
 	}, 'json');
 }
 
+function searchSobrantesFaltantes(t){
+	$('.container-chart-station').addClass('d-none');
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
+	var paramsRequest = {
+		id: $('#select-station').val(),
+		dateBegin: $('#start-date-request').val(),
+		dateEnd: $('#end-date-request').val(),
+		typeStation: $('#typeStation').val(),
+		
+		/*No sirve en este reporte*/
+		isMarket: $('#data-ismarket').val(),
+		qtySale: $('#qty_sale').val(),
+		typeCost: $('#type_cost').val(),
+		typeResult: 1,
+		/*Cerrar no sirve en este reporte*/  
+
+		productos: $('select[name=productos]').val(),
+		unidadmedida: $('select[name=unidadmedida]').val(),
+		checkResumido: $('#checkResumido').prop('checked'),
+		checkDetallado: $('#checkDetallado').prop('checked'),
+	}
+	console.log(paramsRequest);
+
+	/*setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
+	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+	$('#normal-modal').modal();*/
+
+	var charMode = $('#chart-mode').val();
+
+	console.log('start: '+paramsRequest.dateBegin+', end: '+paramsRequest.dateEnd);
+	$.post(url+'requests/getSobrantesFaltantes', paramsRequest, function(data) {
+		// console.log('data:', data); //ELIMINAR
+		console.log('data:', JSON.stringify(data)); //ELIMINAR
+		// return; //ELIMINAR
+
+		checkSession(data);
+		$('.btn-search-sale').prop('disabled', false);
+		console.log('Dentro del callback');
+		console.log(data);
+		$('.result-search').html(templateStationsSearchSobrantesFaltantes(data, data.typeStation, charMode));
+	}, 'json');
+}
+
 function templateTableSumarySales(data, type) {
 	//limpiar arrays
 	/*
@@ -4442,13 +4741,13 @@ function templateTableSumarySales(data, type) {
 	+'</tr>'
 	+'<tr class="bg-primary text-white">'
 	+'<th>Estación</th>'
-	+'<th style="text-align: right;">84</th>'
-	+'<th style="text-align: right;">90</th>'
-	+'<th style="text-align: right;">95</th>'
-	+'<th style="text-align: right;">97</th>'
-	+'<th style="text-align: right;">D2</th>'
-	+'<th style="text-align: right;">GLP</th>'
-	+'<th style="text-align: right;">GNV</th>'
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620301]['abbreviation'] +'</th>' //84
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620302]['abbreviation'] +'</th>' //90
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620305]['abbreviation'] +'</th>' //95
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620303]['abbreviation'] +'</th>' //97
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620304]['abbreviation'] +'</th>' //D2
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620307]['abbreviation'] +'</th>' //GLP
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620308]['abbreviation'] +'</th>' //GNV
 	+'<th style="text-align: right;">Total</th>'
 	+'</tr>'
 	+'</thead>'
@@ -4701,7 +5000,19 @@ function templateTableSumarySales(data, type) {
 	return html;
 }
 
-function renderGraphicResume(type, paramsRequest) {
+function renderGraphicResume(type, paramsRequest, data) {
+	console.log('renderGraphicResume')
+	console.log(data)
+
+	let result_c_producto = data['result_c_product']
+	let abr84 = result_c_producto[11620301]['abbreviation']; //84
+	let abr90 = result_c_producto[11620302]['abbreviation']; //90
+	let abr95 = result_c_producto[11620305]['abbreviation']; //95
+	let abr97 = result_c_producto[11620303]['abbreviation']; //97
+	let abrD2 = result_c_producto[11620304]['abbreviation']; //D2
+	let abrGLP = result_c_producto[11620307]['abbreviation']; //GLP
+	let abrGNV = result_c_producto[11620308]['abbreviation']; //GNV
+
 	$('.'+type).append('<canvas id="my-chart-'+type+'"></canvas><br><br><div class="btn-download-'+type+'"></div>');
 	var ctx = document.getElementById('my-chart-'+type).getContext('2d');
 
@@ -4738,7 +5049,7 @@ function renderGraphicResume(type, paramsRequest) {
 	var myChart = new Chart(ctx, {
 		type: 'bar',
 		data: {
-			labels: ['84', '90', '95', '97', 'D2', 'GLP', 'GNV'],
+			labels: [abr84, abr90, abr95, abr97, abrD2, abrGLP, abrGNV],
 			datasets: [
 				{
 					label: label,
@@ -4815,13 +5126,13 @@ function templateTableStatistics(data, pr, type) {
 	+'</tr>'
 	+'<tr class="bg-primary text-white">'
 	+'<th>Estación</th>'
-	+'<th style="text-align: right;">84</th>'
-	+'<th style="text-align: right;">90</th>'
-	+'<th style="text-align: right;">95</th>'
-	+'<th style="text-align: right;">97</th>'
-	+'<th style="text-align: right;">D2</th>'
-	+'<th style="text-align: right;">GLP</th>'
-	+'<th style="text-align: right;">GNV</th>'
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620301]['abbreviation'] +'</th>' //84
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620302]['abbreviation'] +'</th>' //90
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620305]['abbreviation'] +'</th>' //95
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620303]['abbreviation'] +'</th>' //97
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620304]['abbreviation'] +'</th>' //D2
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620307]['abbreviation'] +'</th>' //GLP
+	+'<th style="text-align: right;">'+ data['result_c_product'][11620308]['abbreviation'] +'</th>' //GNV
 	+'<th style="text-align: right;">Total</th>'
 	+'<th style="text-align: right;">Tienda</th>'
 	+'</tr>'

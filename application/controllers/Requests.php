@@ -480,6 +480,19 @@ class Requests extends CI_Controller {
 				error_log("Estaciones cargadas");
 				error_log(json_encode($dataStations));
 
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				$return['result_c_product'] = $arrayProductos;
+				/* Cerrar */
+
 				$mod = '';
 				if($return['typeStation'] == 3) {
 					$mod = 'TOTALS_SUMARY_SALE';
@@ -886,15 +899,15 @@ class Requests extends CI_Controller {
 		unset($dataStations);
 		unset($dataRemoteStations);
 		unset($data);
-	
+
 		$return['memory'][] = getMemory(array('unset function'));
 		error_log("return final");
 		error_log(json_encode($return));
-		echo json_encode($return);		
-		unset($return);	
+		echo json_encode($return);
+		unset($return);
 	}
 
-	public function getLiquidacionDiaria() //LIQ
+	public function getLiquidacionDiaria()
 	{		
 		$return = array();
 		$return['memory'][] = getMemory(array('start function'));
@@ -1000,10 +1013,10 @@ class Requests extends CI_Controller {
 		error_log("return final");
 		error_log(json_encode($return));
 		echo json_encode($return);
-		unset($return);		
+		unset($return);
 	}
 
-	public function getSaldoSocio() //SALDO SOCIO
+	public function getSaldoSocio()
 	{
 		ini_set('memory_limit','-1');
 
@@ -1144,6 +1157,134 @@ class Requests extends CI_Controller {
 		unset($return);
 	}
 
+	public function getSobrantesFaltantes()
+	{
+		$return = array();
+		$return['memory'][] = getMemory(array('start function'));
+		if(checkSession()) {
+			if($this->input->post('dateBegin') != null && $this->input->post('id') != null && $this->input->post('typeStation') != null) {
+				$return['status'] = 1;
+				$return['formatDateBegin'] = formatDateCentralizer($this->input->post('dateBegin'),1);
+				$return['formatDateEnd'] = formatDateCentralizer($this->input->post('dateEnd'),1);
+				$return['typeCost'] = $this->input->post('typeCost');
+
+				$return['dateBegin'] = $this->input->post('dateBegin');
+				$return['dateEnd'] = $this->input->post('dateEnd');
+				$return['typeStation'] = $this->input->post('typeStation');
+				$return['id'] = $this->input->post('id');
+
+				$return['productos'] = $this->input->post('productos');
+				$return['unidadmedida'] = $this->input->post('unidadmedida');
+				$return['checkResumido'] = $this->input->post('checkResumido');
+				$return['checkDetallado'] = $this->input->post('checkDetallado');
+
+				$typeStation = getDescriptionTypeStation($return['typeStation']);
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
+
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				if($this->input->post('id') != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndId($typeStation == 'MP' ? 'C' : $typeStation, $this->input->post('id'));
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStation == 'MP' ? 'C' : $typeStation);
+					}
+				}
+				error_log("Estaciones cargadas");
+				error_log(json_encode($dataStations));
+
+				/* Obtenemos Codigos de Productos */
+				if ($this->input->post('productos') == '*') {
+					$this->load->model('CProd_model');				
+					$codigos_productos = '';
+					$result_c_product = $this->CProd_model->getAllActiveCProd();
+					foreach ($result_c_product as $key => $cProd) {
+						$codigos_productos .= $cProd->value . '|';
+					}
+					$codigos_productos = rtrim($codigos_productos, '|');
+					error_log("Codigos de Productos");
+					error_log(json_encode($result_c_product));
+					error_log(json_encode($codigos_productos));
+				} else {
+					$codigos_productos = $this->input->post('productos');
+				}
+				/* Cerrar */
+
+				$mod = '';
+				if($return['typeStation'] == 9) {
+					$mod = 'TOTALS_SOBRANTES_FALTANTES';
+				} else {
+					$mod = 'ERR';
+				}
+				$return['mode'] = $mod;
+
+				/*echo json_encode(array('http' => $mod));
+				exit;*/
+
+				error_log("****** Recorremos estaciones cargadas ******");
+				foreach($dataStations as $key => $dataStation) {
+					if($isAllStations) {
+						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
+						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateBegin'].'&to='.$return['formatDateEnd'].'&warehouse_id='.$dataStation->almacen_id.'&desde='.$return['dateBegin'].'&hasta='.$return['dateEnd'].'&productos='.$codigos_productos.'&unidadmedida='.$return['unidadmedida'];
+						error_log("Url de la estacion cargada");
+						error_log($curl);
+						$dataRemoteStations = getUncompressData($curl);
+					}
+					error_log("Data de la estacion cargada");
+					error_log(json_encode($dataRemoteStations));
+
+					$return['curl'][] = $curl;
+
+					$data = array();
+					$dataRemoteStations = json_decode($dataRemoteStations[0], true);
+
+					if($dataRemoteStations != false) {
+						$return['status'] = 1;
+						$data = $dataRemoteStations;
+					}else{
+						$return['status'] = 4;
+					}
+
+					$return['stations'][] = array(
+						'name' => $dataStation->name,
+						'initials' => $dataStation->initials == null ? '<s/n>' : $dataStation->initials,
+						'group' => array('taxid' => $dataStation->taxid, 'name' => $dataStation->client_name),
+						'url' => $curl,
+						'id' => $dataStation->c_org_id,
+						'warehouse_id' => $dataStation->almacen_id,
+						'data' => $data,
+						// 'total_qty' => $total_cantidad,
+						// 'total_price' => $total_precio,
+						// 'total_cost' => $total_costo,
+						// 'margin' => $total_utilidad,
+						'isConnection' => $return['status'] == 4 ? false : true
+					);
+				}
+			} else {
+				$return['status'] = 100;
+				$return['message'] = 'Error al enviar datos.';
+			}
+		} else {
+			$return['status'] = 101;
+			$return['message'] = 'No existe sesión.';
+		}
+		$return['memory'][] = getMemory(array('end function'));
+		unset($curl);
+		unset($typeStation);
+		unset($dataStations);
+		unset($dataRemoteStations);
+		unset($data);
+
+		$return['memory'][] = getMemory(array('unset function'));
+		error_log("return final");
+		error_log(json_encode($return));
+		echo json_encode($return);
+		unset($return);
+	}
+
 	public function getStatisticsSale()
 	{
 		$return = array();
@@ -1176,6 +1317,19 @@ class Requests extends CI_Controller {
 						$dataStations = $this->COrg_model->getCOrgByType($typeStation == 'MP' ? 'C' : $typeStation);
 					}
 				}
+
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				$return['result_c_product'] = $arrayProductos;
+				/* Cerrar */
 
 				$mod = '';
 				if($return['typeStation'] == 4) {

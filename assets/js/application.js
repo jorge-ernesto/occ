@@ -70,6 +70,8 @@ $( document ).ready(function() {
 			searchLiquidacionDiaria($(this).attr('data-ismarket'));	
 		} else if ($('#typeStation').val() == 8) {			
 			searchSaldoSocio($(this).attr('data-ismarket'));	
+		} else if ($('#typeStation').val() == 9) {			
+			searchSobrantesFaltantes($(this).attr('data-ismarket'));	
 		} else {
 			searchSale($(this).attr('data-ismarket'));
 		}
@@ -152,6 +154,10 @@ $( document ).ready(function() {
 
 	$(document).on('click', '.download-saldo-socio', function() {
 		downloadSaldoSocio($(this));
+	});
+
+	$(document).on('click', '.download-sobrantes-faltantes', function() {
+		downloadSobrantesFaltantes($(this));
 	});
 
 	$(document).on('click', '.btn-money-include, .btn-money-exclude', function() {
@@ -298,4 +304,16 @@ $( document ).ready(function() {
 		   console.log('Socios: ', values);
 		}
 	});
+
+	// Validamos seleccion unica de checkbox
+	$('#checkDetallado').click(function() {
+		if ($(this).prop('checked')) {
+		  	$('#checkResumido').prop('checked', false);
+		}
+	});
+	$('#checkResumido').click(function() {
+		if ($(this).prop('checked')) {
+		  	$('#checkDetallado').prop('checked', false);
+		}
+	});	
 });

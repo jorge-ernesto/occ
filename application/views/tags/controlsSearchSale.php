@@ -16,6 +16,10 @@ if ($typeStation == 0) {
     $nameTStation = 'Ventas por Horas';
 } else if ($typeStation == 7) {
     $nameTStation = 'Liquidacion Diaria';
+} else if ($typeStation == 8) {
+    $nameTStation = 'Saldos Pendiente de Socio';
+} else if ($typeStation == 9) {
+    $nameTStation = 'Sobrantes y Faltantes';
 }
 ?>
 
@@ -26,7 +30,7 @@ if ($typeStation == 0) {
 
                     <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
                         <label>Consultar en:</label>
-                        <select name="select-station" id="select-station" class="form-control selectpicker" multiple title="Elige una de los siguientes opciones, por defecto todos." data-style="btn-primary"> <!-- data-style="btn-primary" -->
+                        <select name="select-station" id="select-station" class="form-control selectpicker" multiple title="Elige una de las siguientes opciones, por defecto todos." data-style="btn-primary"> <!-- data-style="btn-primary" -->
                             <?php
                             foreach ($result_c_org as $key => $cOrg) {
                                 echo '<option value="'.$cOrg->c_org_id.'">'.$cOrg->name.'</option>';
@@ -106,7 +110,7 @@ if ($typeStation == 0) {
                     </div>                                
                     <br>
 
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-bottom:10px!important">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons" style="margin-bottom:15px!important">
                         <label class="btn btn-sm btn-primary active">
                             <input type="radio" name="modo" id="modo_detallado" VALUE="DETALLADO" checked> DETALLADO
                         </label>                        
@@ -115,8 +119,8 @@ if ($typeStation == 0) {
                         </label>
                     </div>  
 
-                    <div id="productos" style="margin-bottom:10px!important">
-                        <label for="">Productos:</label>
+                    <div id="productos" class="form-group">
+                        <label>Productos:</label>
                         <select name="productos" class="form-control">
                             <option value="TODOS">TODOS LOS PRODUCTOS</option>
                             <option value="11620301">84</option>
@@ -129,8 +133,8 @@ if ($typeStation == 0) {
                         </select>                              
                     </div>
 
-                    <div id="unidadmedida" style="margin-bottom:10px!important">
-                        <label for="">Seleccionar Unidad de Medida:</label>
+                    <div id="unidadmedida" class="form-group">
+                        <label>Seleccionar Unidad de Medida (Solo para GLP):</label>
                         <select name="unidadmedida" class="form-control">
                             <option value="-">No convertir unidades</option>
                             <option value="Litros_a_Galones">Convertir de litros a galones</option>
@@ -181,6 +185,47 @@ if ($typeStation == 0) {
                             <option value="RES">Resumida</option>
                         </select>
                     </div>
+                <?php } ?>
+
+                <?php if($typeStation == 9) { ?>
+                    
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label>Productos:</label>
+                        <select name="productos" class="form-control">
+                            <option value="*">Todos los Productos</option>
+                            <?php
+                            foreach ($result_c_product as $key => $cProd) {
+                                echo '<option value="'.$cProd->value.'">'.$cProd->name.'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Seleccionar Unidad de Medida (Solo para GLP):</label>
+                        <select name="unidadmedida" class="form-control">
+                            <option value="-">No convertir unidades</option>
+                            <option value="Litros_a_Galones">Convertir de litros a galones</option>
+                            <option value="Galones_a_Litros">Convertir de galones a litros</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="checkDetallado" checked=true>
+                            <label class="form-check-label" for="checkDetallado">
+                                Detallado
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="checkResumido">
+                            <label class="form-check-label" for="checkResumido">
+                                Resumido
+                            </label>
+                        </div>
+                    </div>
+
                 <?php } ?>
 
                 <input type="hidden" id="qty_sale" value="kardex"><!--kardex y tickets-->

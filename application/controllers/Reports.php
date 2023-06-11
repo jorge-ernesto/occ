@@ -2219,6 +2219,379 @@ class Reports extends CI_Controller {
 		}
 	}
 
+	public function resumeSobrantesFaltantes()
+	{
+		$msg = getMemory(array(''));
+		if(checkSession()) {
+			$return = array();
+			// echo '3: '.$this->uri->segment(3).', 4: '.$this->uri->segment(4).', 5: '.$this->uri->segment(5).', 6: '.$this->uri->segment(6);
+			error_log(  json_encode( $this->uri ) );
+			// exit;
+    	    if($this->uri->segment(3) != null && $this->uri->segment(4) != null && $this->uri->segment(5) != null && $this->uri->segment(6) != null) {
+				$id = $this->uri->segment(3) == 'a' ? '*' : $this->uri->segment(3);
+				$typeStation = $this->uri->segment(6);
+				$productos = $this->uri->segment(7) == 'a' ? '*' : $this->uri->segment(7);
+				$unidadmedida = $this->uri->segment(8);
+				$checkDetallado = $this->uri->segment(9);
+				$checkResumido = $this->uri->segment(10);
+
+				$typeStationDesc = getDescriptionTypeStation($typeStation);
+
+				$mod = '';
+				$typeEst = '';
+				if($typeStation == 9) {
+					$mod = 'TOTALS_SOBRANTES_FALTANTES';
+					$typeEst = 'sobrantesFaltantes';
+					$titleDocument = 'Sobrantes y Faltantes';
+				} else {
+					$mod = 'ERR';
+				}
+				$return['mode'] = $mod;
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
+
+				$dateBegin = $this->uri->segment(4);
+				$dateEnd = $this->uri->segment(5);
+
+				/*Obtenemos fecha en formato correcto*/
+				$porcionesDateBegin = explode("-", $dateBegin);
+				$dateBegin_ = $porcionesDateBegin[0] . "/" . $porcionesDateBegin[1] . "/" . $porcionesDateBegin[2];
+				$porcionesDateEnd = explode("-", $dateEnd);
+				$dateEnd_ = $porcionesDateEnd[0] . "/" . $porcionesDateEnd[1] . "/" . $porcionesDateEnd[2];
+				/*Cerrar Obtenemos fecha en formato correcto*/
+
+				/* Obtenemos Codigos de Productos */
+				if ($productos == '*') {
+					$this->load->model('CProd_model');				
+					$codigos_productos = '';
+					$result_c_product = $this->CProd_model->getAllActiveCProd();
+					foreach ($result_c_product as $key => $cProd) {
+						$codigos_productos .= $cProd->value . '|';
+					}
+					$codigos_productos = rtrim($codigos_productos, '|');
+					error_log("Codigos de Productos");
+					error_log(json_encode($result_c_product));
+					error_log(json_encode($codigos_productos));
+				} else {
+					$codigos_productos = $productos;
+				}
+				/* Cerrar */
+
+				$formatDateBegin = formatDateCentralizer($dateBegin,2);
+				$formatDateEnd = formatDateCentralizer($dateEnd,2);
+
+				$qty_sale = 0;
+				$type_cost = 0;
+
+
+				$totalQty = 0;
+				$totalSale = 0;
+
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				if($id != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndId($typeStationDesc == 'MP' ? 'C' : $typeStationDesc,$id);
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStationDesc == 'MP' ? 'C' : $typeStationDesc);
+					}
+				}
+				error_log("Estaciones cargadas");
+				error_log(json_encode($dataStations));
+
+				//load our new PHPExcel library
+				$this->load->library('calc');
+
+				$this->calc->setActiveSheetIndex(0);
+				$this->calc->getActiveSheet()->setTitle($titleDocument);
+				$this->calc->getActiveSheet()->setCellValue('A1', appName());
+				$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
+				$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+				$this->calc->getActiveSheet()->mergeCells('A1:F1');
+				$this->calc->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->calc->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+	
+				$this->calc->getActiveSheet()->setCellValue('A3', 'Fechas');
+				$this->calc->getActiveSheet()->setCellValue('B3', $dateBegin);
+				$this->calc->getActiveSheet()->setCellValue('C3', $dateEnd);
+	
+				$this->calc->getActiveSheet()->setCellValue('A4', 'Empresa');
+	
+				//$this->calc->getActiveSheet()->setCellValue('B4', $msg['memory']);
+
+				$row = 7;
+
+				//Formatemos tamaño de columnas
+				$this->calc->getActiveSheet()->getColumnDimension('A')->setWidth('30'); 
+				$this->calc->getActiveSheet()->getColumnDimension('B')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('C')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('D')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('E')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('F')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('G')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('H')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('I')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('J')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('K')->setWidth('15'); //16
+				//Cerrar Formateamos tamaño de columnas
+
+				error_log("****** Recorremos estaciones cargadas ******");
+				foreach($dataStations as $key => $dataStation) {
+					if($isAllStations) {
+						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
+						$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation->almacen_id.'&desde='.$dateBegin.'&hasta='.$dateEnd.'&productos='.$codigos_productos.'&unidadmedida='.$unidadmedida;
+						error_log("Url de la estacion cargada");
+						error_log($curl);
+						$dataRemoteStations = getUncompressData($curl);
+					}
+					error_log("Data de la estacion cargada");
+					error_log(json_encode($dataRemoteStations));
+
+					$dataRemoteStations = json_decode($dataRemoteStations[0], true);
+
+					//DATOS PARA MOSTRAR EN EXCEL
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, $dataStation->client_name);
+					$this->calc->getActiveSheet()->getStyle('A'.$row)->getFont()->setBold(true);
+					$this->calc->getActiveSheet()->setCellValue('B'.$row, $dataStation->name);
+					$this->calc->getActiveSheet()->getStyle('B'.$row)->getFont()->setBold(true);
+					// $this->calc->getActiveSheet()->mergeCells('B'.$row.':C'.$row);
+					// $this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(20);
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':B'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '7952b3')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+
+					foreach ($dataRemoteStations as $key => $dataCombustibles) {
+						/**************************************************************** REPORTE SOBRANTES FALTANTES ****************************************************************/
+						//Inicio de cabecera (tabla)
+						$row++;
+						$this->calc->getActiveSheet()->setCellValue('A'.$row, $key);
+						$this->calc->getActiveSheet()->getStyle('A'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+						$this->calc->getActiveSheet()->getStyle('A'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => '337ab7')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+
+						$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+						$this->calc->getActiveSheet()->setCellValue('F'.$row, 'TRANSFERENCIAS');
+						$this->calc->getActiveSheet()->setCellValue('J'.$row, 'DIFERENCIA');
+						
+						$this->calc->getActiveSheet()->mergeCells('A'.$row.':E'.$row);
+						$this->calc->getActiveSheet()->mergeCells('F'.$row.':G'.$row);
+						$this->calc->getActiveSheet()->mergeCells('H'.$row.':I'.$row);
+						$this->calc->getActiveSheet()->mergeCells('J'.$row.':K'.$row);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':K'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+						$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(20);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':K'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => '337ab7')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);
+						$row++;
+
+						$this->calc->getActiveSheet()->setCellValue('A'.$row, 'FECHA');
+						$this->calc->getActiveSheet()->setCellValue('B'.$row, 'SALDO (+)');
+						$this->calc->getActiveSheet()->setCellValue('C'.$row, 'COMPRA (+)');
+						$this->calc->getActiveSheet()->setCellValue('D'.$row, 'AFERICION (+)');
+						$this->calc->getActiveSheet()->setCellValue('E'.$row, 'VENTA (-)');
+						$this->calc->getActiveSheet()->setCellValue('F'.$row, 'INGRESO (+)');
+						$this->calc->getActiveSheet()->setCellValue('G'.$row, 'SALIDA (-)');
+						$this->calc->getActiveSheet()->setCellValue('H'.$row, 'PARTE');
+						$this->calc->getActiveSheet()->setCellValue('I'.$row, 'VARILLA');
+						$this->calc->getActiveSheet()->setCellValue('J'.$row, 'DIARIA');
+						$this->calc->getActiveSheet()->setCellValue('K'.$row, 'ACUMULADA');
+						
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':K'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);				
+						
+						$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':K'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => '337ab7')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);				
+						$row++;								
+						//Fin de cabecera (tabla)
+
+						$TOT_SALDO 		= 0.00;
+						$TOT_COMPRA 	= 0.00;
+						$TOT_MEDICION 	= 0.00;
+						$TOT_VENTA 		= 0.00;
+						$TOT_INGRESO 	= 0.00;
+						$TOT_SALIDA 	= 0.00;
+						$TOT_PARTE 		= 0.00;
+						$TOT_VARILLA 	= 0.00;
+						$TOT_DIARIA 	= 0.00;
+						$TOT_ACUMULADA 	= 0.00;
+
+						//Inicio de cuerpo (tabla)
+						foreach ($dataCombustibles as $i => $REP) {
+							$REP[1] = floatval($REP[1]);
+							$REP[2] = floatval($REP[2]);
+							$REP[3] = floatval($REP[3]);
+							$REP[4] = floatval($REP[4]);
+							$REP[5] = floatval($REP[5]);
+							$REP[6] = floatval($REP[6]);
+							$REP[7] = floatval($REP[7]);
+							$REP[8] = floatval($REP[8]);
+							$REP[9] = floatval($REP[9]);
+							$REP[10] = floatval($REP[10]);
+
+							$TOT_SALDO 		= 	$TOT_SALDO + $REP[1];
+							$TOT_COMPRA 	= 	$TOT_COMPRA + $REP[2];
+							$TOT_MEDICION 	= 	$TOT_MEDICION + $REP[3];
+							$TOT_VENTA 		= 	$TOT_VENTA + $REP[4];
+							$TOT_INGRESO 	= 	$TOT_INGRESO + $REP[5];
+							$TOT_SALIDA 	= 	$TOT_SALIDA + $REP[6];
+							$TOT_PARTE 		= 	$TOT_PARTE + $REP[7];
+							$TOT_VARILLA 	= 	$TOT_VARILLA + $REP[8];
+							$TOT_DIARIA 	= 	$TOT_DIARIA + $REP[9];
+							$TOT_ACUMULADA 	= 	$TOT_ACUMULADA + $REP[10];
+
+							if ($checkDetallado == 'true') {
+								$this->calc->getActiveSheet()->setCellValue('A'.$row, $REP[0]);
+								$this->calc->getActiveSheet()->setCellValue('B'.$row, $REP[1]);
+								$this->calc->getActiveSheet()->setCellValue('C'.$row, $REP[2]);
+								$this->calc->getActiveSheet()->setCellValue('D'.$row, $REP[3]);
+								$this->calc->getActiveSheet()->setCellValue('E'.$row, $REP[4]);
+								$this->calc->getActiveSheet()->setCellValue('F'.$row, $REP[5]);
+								$this->calc->getActiveSheet()->setCellValue('G'.$row, $REP[6]);
+								$this->calc->getActiveSheet()->setCellValue('H'.$row, $REP[7]);
+								$this->calc->getActiveSheet()->setCellValue('I'.$row, $REP[8]);
+								$this->calc->getActiveSheet()->setCellValue('J'.$row, $REP[9]);
+								$this->calc->getActiveSheet()->setCellValue('K'.$row, $REP[10]);
+								$row++;	
+							}
+						}
+						//Fin de cuerpo (tabla)
+
+						//Inicio pie (tabla)
+						if ($checkDetallado == 'true') {
+							$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+							$this->calc->getActiveSheet()->setCellValue('B'.$row, 'TOTALES');
+							$this->calc->getActiveSheet()->setCellValue('C'.$row, $TOT_COMPRA);
+							$this->calc->getActiveSheet()->setCellValue('D'.$row, $TOT_MEDICION);
+							$this->calc->getActiveSheet()->setCellValue('E'.$row, $TOT_VENTA);
+							$this->calc->getActiveSheet()->setCellValue('F'.$row, $TOT_INGRESO);
+							$this->calc->getActiveSheet()->setCellValue('G'.$row, $TOT_SALIDA);
+							$this->calc->getActiveSheet()->setCellValue('H'.$row, $TOT_PARTE);
+							$this->calc->getActiveSheet()->setCellValue('I'.$row, $TOT_VARILLA);
+							$this->calc->getActiveSheet()->setCellValue('J'.$row, $TOT_DIARIA);
+							$this->calc->getActiveSheet()->setCellValue('K'.$row, $TOT_DIARIA);
+							$this->calc->getActiveSheet()->getStyle('B'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+						} else if ($checkResumido == 'true') {
+							// Informacion para vista resumida
+							$saldo_fecha_desde = $dataCombustibles[0][1];
+							$varilla_fecha_hasta = $dataCombustibles[(count($dataCombustibles) - 1)][8];
+							// PARTE: SALDO + COMPRA + AFERICION - VENTA + INGRESO - SALIDA
+							$parte_vista_resumido = $saldo_fecha_desde + $TOT_COMPRA + $TOT_MEDICION - $TOT_VENTA + $TOT_INGRESO - $TOT_SALIDA;
+
+							$this->calc->getActiveSheet()->setCellValue('A'.$row, '');
+							$this->calc->getActiveSheet()->setCellValue('B'.$row, $saldo_fecha_desde);
+							$this->calc->getActiveSheet()->setCellValue('C'.$row, $TOT_COMPRA);
+							$this->calc->getActiveSheet()->setCellValue('D'.$row, $TOT_MEDICION);
+							$this->calc->getActiveSheet()->setCellValue('E'.$row, $TOT_VENTA);
+							$this->calc->getActiveSheet()->setCellValue('F'.$row, $TOT_INGRESO);
+							$this->calc->getActiveSheet()->setCellValue('G'.$row, $TOT_SALIDA);
+							$this->calc->getActiveSheet()->setCellValue('H'.$row, $parte_vista_resumido);
+							$this->calc->getActiveSheet()->setCellValue('I'.$row, $varilla_fecha_hasta);
+							$this->calc->getActiveSheet()->setCellValue('J'.$row, $TOT_DIARIA);
+							$this->calc->getActiveSheet()->setCellValue('K'.$row, $TOT_DIARIA);
+						}
+
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':K'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => 'ff7f32')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);						
+						//Fin pie (tabla)
+	
+						$row++;	
+						$row++;	
+					}					
+
+					$row++;
+					$row++;					
+					//CERRAR DATOS PARA MOSTRAR EN EXCEL
+				}			
+				
+				//GENERACION EXCEL
+				//componer nombre: ocsmanager_TYPEMOD_TYPESTATION_YYYYMMMDD_HHMMSS.xls
+				$comp = date('Ymd_His');
+				$filename='ocsmanager_'.$typeEst.'_'.$comp.'.xls'; //save our workbook as this file name
+				header('Content-Type: application/vnd.ms-excel'); //mime type
+				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+				header('Cache-Control: max-age=0'); //no cache
+
+				//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+				//if you want to save it as .XLSX Excel 2007 format
+				$objWriter = PHPExcel_IOFactory::createWriter($this->calc, 'Excel5');  
+				//force user to download the Excel file without writing it to server's HD
+				$objWriter->save('php://output');
+				//CERRAR GENERACION EXCEL
+			} else {
+				echo 'No';
+				//parametros vacios
+				//error 404
+			}
+		} else {
+			//no session
+			//pagina de error 404
+		}
+	}
+
 	public function resumeStock()
 	{
 		if(checkSession()) {
@@ -2389,6 +2762,19 @@ class Reports extends CI_Controller {
 				$id = $this->uri->segment(3) == 'a' ? '*' : $this->uri->segment(3);
 				$typeStation = $this->uri->segment(6);
 				$include = $this->uri->segment(9);
+
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				/* Cerrar */
+
 				$mod = '';
 				$typeEst = '';
 				if($typeStation == 3) {
@@ -2459,13 +2845,13 @@ class Reports extends CI_Controller {
 				//Inicio de cabecera	(tabla)
 				$this->calc->getActiveSheet()->setCellValue('A9', 'Estación');
 				$this->calc->getActiveSheet()->getColumnDimension('A')->setWidth('25');
-				$this->calc->getActiveSheet()->setCellValue('B9', '84');
-				$this->calc->getActiveSheet()->setCellValue('C9', '90');
-				$this->calc->getActiveSheet()->setCellValue('D9', '95');
-				$this->calc->getActiveSheet()->setCellValue('E9', '97');
-				$this->calc->getActiveSheet()->setCellValue('F9', 'D2');
-				$this->calc->getActiveSheet()->setCellValue('G9', 'GLP');
-				$this->calc->getActiveSheet()->setCellValue('H9', 'GNV');
+				$this->calc->getActiveSheet()->setCellValue('B9', $arrayProductos[11620301]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('C9', $arrayProductos[11620302]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('D9', $arrayProductos[11620305]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('E9', $arrayProductos[11620303]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('F9', $arrayProductos[11620304]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('G9', $arrayProductos[11620307]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('H9', $arrayProductos[11620308]['abbreviation']);
 				$this->calc->getActiveSheet()->setCellValue('I9', 'Total');
 				$this->calc->getActiveSheet()->setCellValue('J9', 'Tienda');
 				$this->calc->getActiveSheet()->getRowDimension('9')->setRowHeight(20);
@@ -2796,6 +3182,19 @@ class Reports extends CI_Controller {
 				//var_dump($this->uri->segment(3));exit;
 				$typeStation = $this->uri->segment(8);
 				$include = $this->uri->segment(11);
+
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				/* Cerrar */
+
 				$mod = '';
 				$typeEst = '';
 				if($typeStation == 4) {
@@ -2862,13 +3261,13 @@ class Reports extends CI_Controller {
 				//Inicio de cabecera	(tabla)
 				$this->calc->getActiveSheet()->setCellValue('A9', 'Estación');
 				$this->calc->getActiveSheet()->getColumnDimension('A')->setWidth('25');
-				$this->calc->getActiveSheet()->setCellValue('B9', '84');
-				$this->calc->getActiveSheet()->setCellValue('C9', '90');
-				$this->calc->getActiveSheet()->setCellValue('D9', '95');
-				$this->calc->getActiveSheet()->setCellValue('E9', '97');
-				$this->calc->getActiveSheet()->setCellValue('F9', 'D2');
-				$this->calc->getActiveSheet()->setCellValue('G9', 'GLP');
-				$this->calc->getActiveSheet()->setCellValue('H9', 'GNV');
+				$this->calc->getActiveSheet()->setCellValue('B9', $arrayProductos[11620301]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('C9', $arrayProductos[11620302]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('D9', $arrayProductos[11620305]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('E9', $arrayProductos[11620303]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('F9', $arrayProductos[11620304]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('G9', $arrayProductos[11620307]['abbreviation']);
+				$this->calc->getActiveSheet()->setCellValue('H9', $arrayProductos[11620308]['abbreviation']);
 				$this->calc->getActiveSheet()->setCellValue('I9', 'Total');
 				$this->calc->getActiveSheet()->setCellValue('J9', 'Market');
 				$this->calc->getActiveSheet()->getRowDimension('9')->setRowHeight(20);
