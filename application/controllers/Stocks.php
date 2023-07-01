@@ -18,8 +18,8 @@ class Stocks extends CI_Controller {
 		if(!checkSession()) {
 			redirect('secure/login', 'location');
 		} else {
-			$data['title'] = 'Stocks > Diario';
-			$data['name'] = 'Stock Diario';
+			$data['title'] = 'Stocks > Proyección';
+			$data['name'] = 'Stock Proyección';
 			$data['actions'] = array(
 				'submit' => 'btn-search-stock'
 			);

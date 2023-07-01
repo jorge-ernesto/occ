@@ -316,4 +316,9 @@ $( document ).ready(function() {
 		  	$('#checkDetallado').prop('checked', false);
 		}
 	});	
+
+	// Funcionalidad para hacer aparecer y desaparecer el div de proyeccion en Stock Diario
+	$('#checkProyeccion').click(function() {
+		$('#divProyeccion').toggleClass('d-none');
+	});
 });

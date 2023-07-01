@@ -3090,6 +3090,7 @@ function templateStationsSearchSobrantesFaltantes(data,t,cm) {
 
 				tabla += `<tbody>`;
 				for (let i in REP) {
+					// Convertirmos datos a Float
 					REP[i][1] = parseFloat(REP[i][1]);
 					REP[i][2] = parseFloat(REP[i][2]);
 					REP[i][3] = parseFloat(REP[i][3]);
@@ -3990,7 +3991,38 @@ function setDataResultRequest2(element,data) {
 				.attr('data-productos', data.productos) /* Sobrantes y Faltantes */
 				.attr('data-unidadmedida', data.unidadmedida) /* Sobrantes y Faltantes */
 				.attr('data-checkDetallado', data.checkDetallado) /* Sobrantes y Faltantes */
-				.attr('data-checkResumido', data.checkResumido) /* Sobrantes y Faltantes */;
+				.attr('data-checkResumido', data.checkResumido) /* Sobrantes y Faltantes */
+				.attr('data-checkProyeccion', data.proyeccion?.checkProyeccion) /* Stock Diario - Proyeccion */
+				.attr('data-beginDateProyeccion', data.proyeccion?.beginDateProyeccion) /* Stock Diario - Proyeccion */
+				.attr('data-endDateProyeccion', data.proyeccion?.endDateProyeccion) /* Stock Diario - Proyeccion */
+				.attr('data-daysDiffProyeccion', data.proyeccion?.daysDiffProyeccion) /* Stock Diario - Proyeccion */
+				.attr('data-daysProyeccion', data.proyeccion?.daysProyeccion); /* Stock Diario - Proyeccion */
+}
+
+/**
+ * Eliminar atributos de elemetos que comienzan con "data-"
+ * @param string element
+ */
+function deleteDataResultRequest(element) {
+	$(element).each(function() {
+		var attributes = this.attributes;
+		var attributesToRemove = [];
+	
+		// Recorre todos los atributos
+		$.each(attributes, function(index, attribute) {
+		  	var attributeName = attribute.name;
+	
+		  	// Verifica si el atributo comienza con "data-"
+			if (attributeName.startsWith('data-')) {
+				attributesToRemove.push(attributeName);
+			}
+		});
+	
+		// Elimina los atributos del elemento
+		$.each(attributesToRemove, function(index, attributeName) {
+		  	$(element).removeAttr(attributeName);
+		});
+	});
 }
 
 /**
@@ -4143,15 +4175,43 @@ function searchStock() {
 	$('.container-ss-station').addClass('d-none');
 	$('.result-search').html(loading_bootstrap4());
 	var valStartDate = checkDate($('#start-date-request').val(),'/');
+	var valStartDateProyeccion = checkDate($('#start-date-request_proyeccion').val(),'/');
+	var valEndDateProyeccion = checkDate($('#end-date-request_proyeccion').val(),'/');
 
 	if(valStartDate == 0) {
 		//formato no valido
 		$('.result-search').html(_alert('warning', '<span class="glyphicon glyphicon-alert"></span> <b>Importante</b>, Error en formato de fecha.'));
 		$('.btn-search-stock').prop('disabled', false);
+		return false;
 	} else if(valStartDate == 2) {
 		//fechas futuras
 		$('.result-search').html(_alert('warning', '<span class="glyphicon glyphicon-alert"></span> <b>Importante</b>, No se puede consultar con esta fecha'));
 		$('.btn-search-stock').prop('disabled', false);
+		return false
+	}
+
+	if(valStartDateProyeccion == 0) {
+		//formato no valido
+		$('.result-search').html(_alert('warning', '<span class="glyphicon glyphicon-alert"></span> <b>Importante</b>, Error en formato de fecha.'));
+		$('.btn-search-stock').prop('disabled', false);
+		return false;
+	} else if(valStartDateProyeccion == 2) {
+		//fechas futuras
+		$('.result-search').html(_alert('warning', '<span class="glyphicon glyphicon-alert"></span> <b>Importante</b>, No se puede consultar con esta fecha'));
+		$('.btn-search-stock').prop('disabled', false);
+		return false;
+	}
+
+	if(valEndDateProyeccion == 0) {
+		//formato no valido
+		$('.result-search').html(_alert('warning', '<span class="glyphicon glyphicon-alert"></span> <b>Importante</b>, Error en formato de fecha.'));
+		$('.btn-search-stock').prop('disabled', false);
+		return false;
+	} else if(valEndDateProyeccion == 2) {
+		//fechas futuras
+		$('.result-search').html(_alert('warning', '<span class="glyphicon glyphicon-alert"></span> <b>Importante</b>, No se puede consultar con esta fecha'));
+		$('.btn-search-stock').prop('disabled', false);
+		return false;
 	}
 
 	paramsRequest = {
@@ -4163,18 +4223,27 @@ function searchStock() {
 		qty_sale: $('#qty_sale').val(),
 		type_cost: $('#type_cost').val(),
 		type_result: 1,
+		checkProyeccion: $('#checkProyeccion').prop('checked'),
+		dateBeginProyeccion: $('#start-date-request_proyeccion').val(),
+		dateEndProyeccion: $('#end-date-request_proyeccion').val(),
+		daysProyeccion: $('#days_proyeccion').val(),
 	}
 	console.log('start: '+paramsRequest.dateBegin);
+	console.log('paramsRequest: '+paramsRequest);
+	deleteDataResultRequest('.download-comb-stock');
 	$.post(url+'requests/getStocks', paramsRequest, function(data) {
 		checkSession(data);
 		$('.btn-search-stock').prop('disabled', false);
 		console.log('Dentro del callback');
 		console.log(data);
-		//$('.result-search').html(templateStationsSearch(data,data.typeStation,charMode));
-		$('.result-search').html(templateStock(data,data.typeStation,0));
-		templateTankSimulation(data);
+		if (paramsRequest.checkProyeccion == true) {
+			$('.result-search').html(templateStockProyeccion(data,data.typeStation,0));
+		} else {
+			$('.result-search').html(templateStock(data,data.typeStation,0));
+			templateTankSimulation(data);
 
-		setDataResultRequest('.download-comb-stock',data);
+			setDataResultRequest('.download-comb-stock',data);
+		}		
 	}, 'json');
 }
 
@@ -4184,10 +4253,16 @@ function searchStock() {
  * @return string return html
  */
 function templateStock(data,type,chart) {
+	console.log('data en templateStock:', data);
+
 	var html = '<br>';
 	var detail = data.stations;
+	if (typeof detail == "undefined") {
+		return '<div class="alert alert-info">No existe información</div>';
+	}
 	var count = detail.length;
 	var num = 1;
+
 	var color_id, taxid;
 	for(var i = 0; i<count; i++) {
 		color_id = getRandomColor();
@@ -4235,6 +4310,161 @@ function templateStock(data,type,chart) {
 					</div></div>`;
 		num++;
 	}
+	return html;
+}
+
+/**
+ * Platilla contenedores de Stock Proyeccion
+ * @param obj data, type(type de estacion), 
+ * @return string return html
+ */
+function templateStockProyeccion(data,type,chart) {
+	console.log('data en templateStockProyeccion:', data);
+
+	clearStations();
+	var html = '<br>';
+	var detail = data.stations;
+	if (typeof detail == "undefined") {
+		return '<div class="alert alert-info">No existe información</div>';
+	}
+	var count = detail.length;	
+	var num = 1;
+
+	var color_id, taxid;
+	for(var i = 0; i<count; i++) {
+		color_id = getRandomColor();
+		if(taxid != detail[i].group.taxid) {
+			html += (i != 0 ? '<hr>' : '');
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
+			taxid = detail[i].group.taxid;
+		}
+
+		var mostrar = true;
+		if(!detail[i].isConnection) { //Si no hay conexion
+			html += `<div class="">
+							<div class="card shadow mb-4">
+								<div class="card-header bg-danger text-white">
+									<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Sin conexión.</strong>
+								</div>`;
+
+			mostrar = false;
+		} else {			
+			verificar_data = detail[i].data;
+			
+			let todosNull = true;
+			for(let indice in verificar_data){
+				if(verificar_data[indice] !== null){
+					todosNull = false;
+					break; // si al menos un valor no es null, se sale del bucle
+				}
+			}
+			if(todosNull){ //Si hay conexion pero datos vacios
+				html += `<div class="">
+								<div class="card shadow mb-4">
+									<div class="card-header bg-danger text-white d-none"> <!-- Quitar d-none, si quieremos que se muestre -->
+										<span class="glyphicon glyphicon-exclamation-sign"></span> <strong>No hay informacion.</strong>
+									</div>`;
+
+				mostrar = false;
+			}else{ //Si hay conexion y hay datos
+				html += `<div class="">
+								<div class="card shadow mb-4">`;
+			}			
+		}
+
+		var tabla = "";
+		if(mostrar == true){
+			// REPORTE STOCK PROYECCION
+			REP = detail[i].data
+
+			tabla += `<br />`;
+			tabla += `<div class="table-responsive">
+							<table class="text-center table table-bordered table-hover table-striped table-sm">
+								<thead>
+									<tr class="bg-primary">
+										<th>Producto</th>
+										<th>Capacidad</th>
+										<th>Inventario</th>
+										<th>Promedio Venta día</th>
+										<th>Tiempo Vaciar</th>
+										<th>Cant. ult. Compra</th>
+										<th>Fecha ult. Compra</th>
+										<th title="Cantidad de Venta Proyectada por N días">Proyección</th>
+										<th title="(Proyeccion x Ultimo Precio de Venta) – (Proyecccion x Costo Promedio)">Utilidad</th>
+									</tr>
+								</thead>`;
+
+			tabla += `<tbody>`;
+			for (let i in REP) {
+				// Convertirmos datos a Float
+				REP[i]['nu_capacidad']            = parseFloat(REP[i]['nu_capacidad']);
+				REP[i]['nu_medicion']             = parseFloat(REP[i]['nu_medicion']);
+				REP[i]['nu_venta_promedio_dia']   = parseFloat(REP[i]['nu_venta_promedio_dia']);
+				REP[i]['tiempo_vaciar']           = parseFloat(REP[i]['tiempo_vaciar']);
+				REP[i]['cantidad_ultima_compra']  = parseFloat(REP[i]['cantidad_ultima_compra']);
+				REP[i]['nu_venta_proyeccion_dia'] = parseFloat(REP[i]['nu_venta_proyeccion_dia']);
+				REP[i]['costo_comb']              = parseFloat(REP[i]['costo_comb']);
+				REP[i]['precio_venta']            = parseFloat(REP[i]['precio_venta']);
+
+				let nu_capacidad            = parseInt(REP[i]['nu_capacidad'].toFixed(0)).toLocaleString();
+				let nu_medicion             = parseInt(REP[i]['nu_medicion'].toFixed(0)).toLocaleString();
+				let nu_venta_promedio_dia   = Math.round10(REP[i]['nu_venta_promedio_dia']);
+				let tiempo_vaciar           = parseInt(REP[i]['tiempo_vaciar'].toFixed(0)).toLocaleString();
+				let cantidad_ultima_compra  = parseInt(REP[i]['cantidad_ultima_compra'].toFixed(0)).toLocaleString();
+				let nu_venta_proyeccion_dia = parseInt(REP[i]['nu_venta_proyeccion_dia'].toFixed(0)).toLocaleString();
+				let costo_comb              = Math.round10(REP[i]['costo_comb'], -2);
+				let precio_venta            = Math.round10(REP[i]['precio_venta'], -2);
+
+				// Proyección
+				let ventaProyeccionDia       = Math.round10(nu_venta_promedio_dia * parseInt(data.proyeccion.daysProyeccion));
+				let ventaProyeccionDia_title = `${nu_venta_promedio_dia} * ${parseInt(data.proyeccion.daysProyeccion)}`;
+
+				// Utilidad
+				let utilidad       = Math.round10((ventaProyeccionDia * precio_venta) - (ventaProyeccionDia * costo_comb));
+				let utilidad_title = `(${ventaProyeccionDia} * ${precio_venta}) - (${ventaProyeccionDia} * ${costo_comb})`;
+
+				tabla += `<tr>
+							<td class="text-left">${REP[i]['desc_comb']}</td>
+							<td>${nu_capacidad}</td>
+							<td>${nu_medicion}</td>
+							<td>${nu_venta_promedio_dia.toLocaleString()}</td>
+							<td>${tiempo_vaciar}</td>
+							<td>${cantidad_ultima_compra}</td>
+							<td>${REP[i]['fecha_ultima_compra']}</td>
+							<td title="${ventaProyeccionDia_title}">${ventaProyeccionDia.toLocaleString()}</td>
+							<td title="${utilidad_title}">${utilidad.toLocaleString()}</td>
+						</tr>`;
+			}
+
+			tabla += `</tbody>
+				</table>
+			</div>`;
+		}
+
+		html += `<div class="card-header bg-primary text-white">
+						<span class="glyphicon glyphicon-stop" style="color: ${color_id}"></span> ${num}. ${detail[i].name} 
+					</div>
+		
+					<div class="card-body">
+						<!-- REPORTE STOCK PROYECCION -->
+						${tabla}
+						<!-- CERRAR -->
+					</div>
+				</div>
+			</div>`;
+		num++;
+	}	
+
+	storageStations();
+
+	$('.container-ss-station').removeClass('d-none');
+
+	setDataResultRequest2('.download-comb-stock',data);
+
 	return html;
 }
 
@@ -4444,16 +4674,35 @@ function downloadCombStock(t) {
 
 	console.log('dateB: '+dateB);
 
+	var dateBP = undefined;
+	var dateEP = undefined;
+
+	if (t.attr('data-checkproyeccion') == 'true') {
+		dateBP = t.attr('data-begindateproyeccion')?.split("/");
+		dateBP = dateBP[0] + '-' + dateBP[1] + '-' + dateBP[2];
+
+		dateEP = t.attr('data-enddateproyeccion')?.split("/");
+		dateEP = dateEP[0] + '-' + dateEP[1] + '-' + dateEP[2];
+
+		console.log('dateBP: '+dateBP+', dateEP: '+dateEP);
+	}
+
 	//validaciones
 	var params = {
 		id: t.attr('data-station') == '*' ? 'a' : t.attr('data-station'),
 		dateBegin: dateB,
 		typeStation: t.attr('data-typestation'),
 		type_result: 1,
+		checkProyeccion: t.attr('data-checkproyeccion'),
+		beginDateProyeccion: dateBP,
+		endDateProyeccion: dateEP,
+		daysDiffProyeccion: t.attr('data-daysdiffproyeccion'),
+		daysProyeccion: t.attr('data-daysproyeccion'),
 	};
 	console.log('params.dateBegin: '+params.dateBegin);
+	console.log('paramsRequest: '+paramsRequest);
 
-	var url_ = url+'reports/resumeStock/'+params.id+'/'+params.dateBegin+'/'+params.typeStation;
+	var url_ = url+'reports/resumeStock/'+params.id+'/'+params.dateBegin+'/'+params.typeStation+'/'+params.checkProyeccion+'/'+params.beginDateProyeccion+'/'+params.endDateProyeccion+'/'+params.daysDiffProyeccion+'/'+params.daysProyeccion;
 	console.log('url_: '+url_);
 	window.location = url_;
 }

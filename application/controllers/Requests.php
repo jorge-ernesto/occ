@@ -1799,7 +1799,6 @@ class Requests extends CI_Controller {
 			if($this->input->post('dateBegin') != null && $this->input->post('daysProm') != null && $this->input->post('id') != null && $this->input->post('typeStation') != null) {
 				$return['status'] = 1;
 				$return['beginDate'] = $this->input->post('dateBegin');
-
 				$return['endDate'] = date('d/m/Y', strtotime(formatDateCentralizer($return['beginDate'],3). ' - 7 days'));
 
 				$return['formatDateBegin'] = formatDateCentralizer($return['beginDate'],1);
@@ -1808,7 +1807,18 @@ class Requests extends CI_Controller {
 				$return['typeStation'] = $this->input->post('typeStation');
 				$return['id'] = $this->input->post('id');
 
+				$return['proyeccion']['checkProyeccion'] = $this->input->post('checkProyeccion');
+				$return['proyeccion']['beginDateProyeccion'] = $this->input->post('dateBeginProyeccion');
+				$return['proyeccion']['endDateProyeccion'] = $this->input->post('dateEndProyeccion');				
+				$fecha1 = DateTime::createFromFormat('d/m/Y', $return['proyeccion']['beginDateProyeccion']);
+				$fecha2 = DateTime::createFromFormat('d/m/Y', $return['proyeccion']['endDateProyeccion']);
+				$diferencia = $fecha1->diff($fecha2);
+				$return['proyeccion']['daysDiffProyeccion'] = $diferencia->days;
+				$return['proyeccion']['daysProyeccion'] = is_numeric($this->input->post('daysProyeccion')) ? $this->input->post('daysProyeccion') : "0";
+
 				$typeStation = getDescriptionTypeStation($return['typeStation']);
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
 
 				$this->load->model('COrg_model');
 				$isAllStations = true;
@@ -1832,7 +1842,7 @@ class Requests extends CI_Controller {
 				foreach($dataStations as $key => $dataStation) {
 					if($isAllStations) {
 						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php';
-						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateEnd'].'&to='.$return['formatDateBegin'].'&warehouse_id='.$dataStation->almacen_id.'&days='.$return['daysProm'].'&isvaliddiffmonths=si';
+						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateEnd'].'&to='.$return['formatDateBegin'].'&warehouse_id='.$dataStation->almacen_id.'&days='.$return['daysProm'].'&isvaliddiffmonths=si'.'&checkProyeccion='.$return['proyeccion']['checkProyeccion'].'&desdeProyeccion='.$return['proyeccion']['beginDateProyeccion'].'&hastaProyeccion='.$return['proyeccion']['endDateProyeccion'].'&diasDiferenciaProyeccion='.$return['proyeccion']['daysDiffProyeccion'].'&diasProyeccion='.$return['proyeccion']['daysProyeccion'];
 						error_log($curl);
 						$dataRemoteStations = getUncompressData($curl);
 						error_log(json_encode($dataRemoteStations));
@@ -1852,16 +1862,19 @@ class Requests extends CI_Controller {
 										'cod_comb' => $d[0],
 										'desc_comb' => $d[1],
 										'nu_capacidad' => $d[2],
-										'nu_venta_promedio_dia' => $d[3],
+										'nu_venta_promedio_dia' => $d[3], // Promedio diario vendido en galones
 										'ch_tanque' => $d[4],
 										'nu_medicion' => $d[5],
 										'porcentaje_existente' => $d[6],
 										'tiempo_vaciar' => $d[7],
 										'suma_ventas_dias' => $d[8],
-										'promedio_consumo_dia' => $d[9],
+										'promedio_consumo_dia' => $d[9], // Dias a proyectar
 										'cantidad_ultima_compra' => $d[10],
 										'fecha_ultima_compra' => date("d/m/Y", strtotime($d[11])),
 										'fecha_ultima_compra_o' => $d[11],
+										'nu_venta_proyeccion_dia' => $d[14], // Proyeccion: Promedio diario vendido en galones * Dias a proyectar
+										'costo_comb' => $d[15], // Costo Promedio
+										'precio_venta' => $d[16], // Ultimo Precio de Venta
 									);
 								}
 							}

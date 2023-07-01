@@ -26,7 +26,7 @@
                <a class="collapse-item" href="<?php echo base_url() ?>index.php/ventas/sobrantes_faltantes">Sobrantes y Faltantes</a>
                <div class="collapse-divider"></div>
                <h6 class="collapse-header">Stock:</h6>
-               <a class="collapse-item" href="<?php echo base_url() ?>index.php/stocks/diario">Diario</a>
+               <a class="collapse-item" href="<?php echo base_url() ?>index.php/stocks/diario">Proyección</a>
             </div>
          </div>
       </li>

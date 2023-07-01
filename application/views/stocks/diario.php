@@ -50,6 +50,16 @@
                 maxDate: '0',
                 dateFormat: 'dd/mm/yy',
             });
+            $("#start-date-request_proyeccion").datepicker({
+                firstDay: 1,
+                maxDate: '0',
+                dateFormat: 'dd/mm/yy',
+            });
+            $("#end-date-request_proyeccion").datepicker({
+                firstDay: 1,
+                maxDate: '0',
+                dateFormat: 'dd/mm/yy',
+            });
         });
     </script>
 

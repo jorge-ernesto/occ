@@ -35,7 +35,7 @@ class Reports extends CI_Controller {
 					$titleDocument = 'Venta en Market';
 				}
 				error_log("Parametros en variable return y typeStation");
-         	error_log(json_encode(array($return, $typeStation)));
+         		error_log(json_encode(array($return, $typeStation)));
 
 				$dateBegin = $this->uri->segment(4);
 				$dateEnd = $this->uri->segment(5);
@@ -2596,6 +2596,9 @@ class Reports extends CI_Controller {
 	{
 		if(checkSession()) {
 			$return = array();
+			// echo '3: '.$this->uri->segment(3).', 4: '.$this->uri->segment(4).', 5: '.$this->uri->segment(5).', 6: '.$this->uri->segment(6);
+			error_log(  json_encode( $this->uri ) );
+			// exit;
 			if($this->uri->segment(3) != null && $this->uri->segment(4) != null && $this->uri->segment(5) != null) {
 				$id = $this->uri->segment(3) == 'a' ? '*' : $this->uri->segment(3);
 				$typeStation = $this->uri->segment(5);
@@ -2616,6 +2619,20 @@ class Reports extends CI_Controller {
 
 				$formatDateBegin = formatDateCentralizer($this->uri->segment(4),2);
 				$formatDateEnd = formatDateCentralizer($return['dateEnd'],1);
+
+				$return['proyeccion']['checkProyeccion'] = $this->uri->segment(6);
+				$return['proyeccion']['beginDateProyeccion'] = $this->uri->segment(7);
+				$return['proyeccion']['endDateProyeccion'] = $this->uri->segment(8);
+				$return['proyeccion']['daysDiffProyeccion'] = $this->uri->segment(9);
+				$return['proyeccion']['daysProyeccion'] = is_numeric($this->uri->segment(10)) ? $this->uri->segment(10) : "0";
+
+				/*Obtenemos fecha en formato correcto*/
+				$return['proyeccion']['beginDateProyeccion'] = str_replace('-', '/', $return['proyeccion']['beginDateProyeccion']);
+				$return['proyeccion']['endDateProyeccion'] = str_replace('-', '/', $return['proyeccion']['endDateProyeccion']);				
+				/*Cerrar Obtenemos fecha en formato correcto*/
+
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
 
 				$this->load->model('COrg_model');
 				$isAllStations = true;
@@ -2641,8 +2658,14 @@ class Reports extends CI_Controller {
 				$this->calc->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->calc->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
 
-				$this->calc->getActiveSheet()->setCellValue('A3', 'Fecha');
-				$this->calc->getActiveSheet()->setCellValue('B3', $this->uri->segment(4));
+				if ($return['proyeccion']['checkProyeccion'] == 'true') {
+					$this->calc->getActiveSheet()->setCellValue('A3', 'Fechas');
+					$this->calc->getActiveSheet()->setCellValue('B3', $this->uri->segment(7));
+					$this->calc->getActiveSheet()->setCellValue('C3', $this->uri->segment(8));
+				} else {
+					$this->calc->getActiveSheet()->setCellValue('A3', 'Fecha');
+					$this->calc->getActiveSheet()->setCellValue('B3', $this->uri->segment(4));
+				}
 
 				$this->calc->getActiveSheet()->setCellValue('A4', 'Empresa');
 
@@ -2655,8 +2678,14 @@ class Reports extends CI_Controller {
 				$this->calc->getActiveSheet()->setCellValue('E7', 'Tiempo Vaciar');
 				$this->calc->getActiveSheet()->setCellValue('F7', 'Cant. ult. Compra');
 				$this->calc->getActiveSheet()->setCellValue('G7', 'Fecha ult. Compra');
+				$columnas_excel = "A7:G7";
+				if ($return['proyeccion']['checkProyeccion'] == 'true') {
+					$this->calc->getActiveSheet()->setCellValue('H7', 'Proyección');
+					$this->calc->getActiveSheet()->setCellValue('I7', 'Utilidad');
+					$columnas_excel = "A7:I7";
+				}
 				$this->calc->getActiveSheet()->getRowDimension('7')->setRowHeight(20);
-				$this->calc->getActiveSheet()->getStyle('A7:G7')->applyFromArray(
+				$this->calc->getActiveSheet()->getStyle($columnas_excel)->applyFromArray(
 					array(
 						'fill' => array(
 							'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -2685,11 +2714,18 @@ class Reports extends CI_Controller {
 				$this->calc->getActiveSheet()->getColumnDimension('F')->setWidth('22');
 				$this->calc->getActiveSheet()->getStyle('F7:F256')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
 				$this->calc->getActiveSheet()->getColumnDimension('G')->setWidth('20');
+				if ($return['proyeccion']['checkProyeccion'] == 'true') {
+					$this->calc->getActiveSheet()->getColumnDimension('H')->setWidth('14');
+					$this->calc->getActiveSheet()->getStyle('H7:H256')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+					$this->calc->getActiveSheet()->getColumnDimension('I')->setWidth('14');
+					$this->calc->getActiveSheet()->getStyle('I7:I256')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+				}
 				foreach($dataStations as $key => $dataStation) {
 					if($isAllStations) {
 						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php';
-						$curl = $curl . '?mod='.$mod.'&from='.$formatDateEnd.'&to='.$formatDateBegin.'&warehouse_id='.$dataStation->almacen_id.'&days=7&isvaliddiffmonths=si';
+						$curl = $curl . '?mod='.$mod.'&from='.$formatDateEnd.'&to='.$formatDateBegin.'&warehouse_id='.$dataStation->almacen_id.'&days=7&isvaliddiffmonths=si'.'&checkProyeccion='.$return['proyeccion']['checkProyeccion'].'&desdeProyeccion='.$return['proyeccion']['beginDateProyeccion'].'&hastaProyeccion='.$return['proyeccion']['endDateProyeccion'].'&diasDiferenciaProyeccion='.$return['proyeccion']['daysDiffProyeccion'].'&diasProyeccion='.$return['proyeccion']['daysProyeccion'];
 						$dataRemoteStations = getUncompressData($curl);
+						error_log('curl: '.$curl);
 					}
 					$this->calc->getActiveSheet()->setCellValue('A'.$row, $dataStation->client_name);
 					$this->calc->getActiveSheet()->getStyle('A'.$row)->getFont()->setBold(true);
@@ -2705,17 +2741,33 @@ class Reports extends CI_Controller {
 
 							foreach($dataRemoteStations as $key => $data) {
 								$this->calc->getActiveSheet()->setCellValue('A'.$row, $data['desc_comb']);
-								$this->calc->getActiveSheet()->setCellValue('B'.$row, number_format((float)$data['nu_capacidad'], 2, '.', ','));
-								$this->calc->getActiveSheet()->getStyle('B'.$row)->getNumberFormat()->setFormatCode('0.00');
-								$this->calc->getActiveSheet()->setCellValue('C'.$row, number_format((float)$data['nu_medicion'], 2, '.', ','));
-								$this->calc->getActiveSheet()->getStyle('C'.$row)->getNumberFormat()->setFormatCode('0.00');
-								$this->calc->getActiveSheet()->setCellValue('D'.$row, number_format((float)$data['nu_venta'], 2, '.', ','));
-								$this->calc->getActiveSheet()->getStyle('D'.$row)->getNumberFormat()->setFormatCode('0.00');
-								$this->calc->getActiveSheet()->setCellValue('E'.$row, round((float)$data['tiempo']));
-								$this->calc->getActiveSheet()->getStyle('E'.$row)->getNumberFormat()->setFormatCode('0.00');
-								$this->calc->getActiveSheet()->setCellValue('F'.$row, number_format((float)$data['cantidad_ultima_compra'], 2, '.', ','));
-								$this->calc->getActiveSheet()->getStyle('F'.$row)->getNumberFormat()->setFormatCode('0.00');
+								$this->calc->getActiveSheet()->setCellValue('B'.$row, number_format((float)$data['nu_capacidad'], 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('B'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('C'.$row, number_format((float)$data['nu_medicion'], 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('C'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('D'.$row, number_format((float)$data['nu_venta'], 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('D'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('E'.$row,  number_format((float)$data['tiempo'], 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('E'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('F'.$row, number_format((float)$data['cantidad_ultima_compra'], 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('F'.$row)->getNumberFormat()->setFormatCode('0');
 								$this->calc->getActiveSheet()->setCellValue('G'.$row, date("d/m/Y", strtotime($data['fecha_ultima_compra'])));
+								if ($return['proyeccion']['checkProyeccion'] == 'true') {
+									// Proyección
+									$promedio_venta_dia   = round((float)$data['nu_venta']);
+									$dias_proyeccion      = (int)$return['proyeccion']['daysProyeccion'];
+									$proyeccion_venta_dia = $promedio_venta_dia * $dias_proyeccion;
+
+									$this->calc->getActiveSheet()->setCellValue('H'.$row, number_format($proyeccion_venta_dia, 0, '.', ','));
+									$this->calc->getActiveSheet()->getStyle('H'.$row)->getNumberFormat()->setFormatCode('0');
+
+									// Utilidad
+									$costo_comb = round((float)$data['costo_comb'], 2);
+									$precio_venta = round((float)$data['precio_venta'], 2);
+									$utilidad = (round($proyeccion_venta_dia) * $precio_venta) - (round($proyeccion_venta_dia) * $costo_comb);
+									$this->calc->getActiveSheet()->setCellValue('I'.$row, number_format($utilidad, 0, '.', ','));
+									$this->calc->getActiveSheet()->getStyle('I'.$row)->getNumberFormat()->setFormatCode('0');
+								}
 								$row++;
 							}
 

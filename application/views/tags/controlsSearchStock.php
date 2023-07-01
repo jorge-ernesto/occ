@@ -23,6 +23,33 @@
                 </div>
                 <input type="hidden" class="form-control" id="days-prom" placeholder="Días para promediar venta" value="7">
 
+                <?php if($typeStation == 0) { ?>
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="checkProyeccion">
+                            <label class="form-check-label" for="checkProyeccion">
+                                Proyección
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-none" id="divProyeccion">
+                        <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                            <label>Desde:</label>
+                            <input type="text" class="form-control" required id="start-date-request_proyeccion" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                        </div>
+                        <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                            <label>Hasta:</label>
+                            <input type="text" class="form-control" required id="end-date-request_proyeccion" value="<?php echo $default_start_date; ?>" style="background-color: #eaecf4; opacity: 1;" /> <!-- readonly -->
+                        </div>
+                        <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                            <label>Dias Proyección:</label>
+                            <input type="number" class="form-control" required id="days_proyeccion" value="1">
+                        </div>
+                    </div>
+
+                <?php } ?>
+
                 <input type="hidden" id="qty_sale" value="kardex"><!--y tickets-->
                 <input type="hidden" id="type_cost" value="last"><!--y prom-->
                 <!--<select id="chart-mode" class="form-control">
