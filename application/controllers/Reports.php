@@ -2341,7 +2341,7 @@ class Reports extends CI_Controller {
 				foreach($dataStations as $key => $dataStation) {
 					if($isAllStations) {
 						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
-						$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation->almacen_id.'&desde='.$dateBegin.'&hasta='.$dateEnd.'&productos='.$codigos_productos.'&unidadmedida='.$unidadmedida;
+						$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation->almacen_id.'&desde='.$dateBegin_.'&hasta='.$dateEnd_.'&productos='.$codigos_productos.'&unidadmedida='.$unidadmedida.'&isvaliddiffmonths=si';
 						error_log("Url de la estacion cargada");
 						error_log($curl);
 						$dataRemoteStations = getUncompressData($curl);
@@ -2592,6 +2592,452 @@ class Reports extends CI_Controller {
 		}
 	}
 
+	public function resumeMargenCliente()
+	{
+		$msg = getMemory(array(''));
+		if(checkSession()) {
+			$return = array();
+			// echo '3: '.$this->uri->segment(3).', 4: '.$this->uri->segment(4).', 5: '.$this->uri->segment(5).', 6: '.$this->uri->segment(6);
+			error_log(  json_encode( $this->uri ) );
+			// exit;
+			if($this->uri->segment(3) != null && $this->uri->segment(4) != null && $this->uri->segment(5) != null && $this->uri->segment(6) != null) {
+				$id = $this->uri->segment(3) == 'a' ? '*' : $this->uri->segment(3);
+				$typeStation = $this->uri->segment(6);
+				$clientes = $this->uri->segment(7);
+
+				$typeStationDesc = getDescriptionTypeStation($typeStation);
+
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				$return['result_c_product'] = $arrayProductos;
+				/* Cerrar */
+
+				$mod = '';
+				$typeEst = '';
+				if($typeStation == 10) {
+					$mod = 'TOTALS_MARGEN_CLIENTE';
+					$typeEst = 'margenCliente';
+					$titleDocument = 'Margen por Cliente';
+				} else {
+					$mod = 'ERR';
+				}
+				$return['mode'] = $mod;
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
+
+				$dateBegin = $this->uri->segment(4);
+				$dateEnd = $this->uri->segment(5);
+
+				/*Obtenemos fecha en formato correcto*/
+				$porcionesDateBegin = explode("-", $dateBegin);
+				$dateBegin_ = $porcionesDateBegin[0] . "/" . $porcionesDateBegin[1] . "/" . $porcionesDateBegin[2];
+				$porcionesDateEnd = explode("-", $dateEnd);
+				$dateEnd_ = $porcionesDateEnd[0] . "/" . $porcionesDateEnd[1] . "/" . $porcionesDateEnd[2];
+				/*Cerrar Obtenemos fecha en formato correcto*/
+
+				$formatDateBegin = formatDateCentralizer($dateBegin,2);
+				$formatDateEnd = formatDateCentralizer($dateEnd,2);
+
+				$qty_sale = 0;
+				$type_cost = 0;
+
+
+				$totalQty = 0;
+				$totalSale = 0;
+
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				if($id != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndId($typeStationDesc == 'MP' ? 'C' : $typeStationDesc,$id);
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStationDesc == 'MP' ? 'C' : $typeStationDesc);
+					}
+				}
+				error_log("Estaciones cargadas");
+				error_log(json_encode($dataStations));
+
+				//load our new PHPExcel library
+				$this->load->library('calc');
+
+				$this->calc->setActiveSheetIndex(0);
+				$this->calc->getActiveSheet()->setTitle($titleDocument);
+				$this->calc->getActiveSheet()->setCellValue('A1', appName());
+				$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
+				$this->calc->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+				$this->calc->getActiveSheet()->mergeCells('A1:F1');
+				$this->calc->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->calc->getActiveSheet()->getRowDimension('1')->setRowHeight(30);
+	
+				$this->calc->getActiveSheet()->setCellValue('A3', 'Fechas');
+				$this->calc->getActiveSheet()->setCellValue('B3', $dateBegin);
+				$this->calc->getActiveSheet()->setCellValue('C3', $dateEnd);
+	
+				$this->calc->getActiveSheet()->setCellValue('A4', 'Empresa');
+	
+				//$this->calc->getActiveSheet()->setCellValue('B4', $msg['memory']);
+
+				$row = 7;
+
+				//Formatemos tamaño de columnas
+				$this->calc->getActiveSheet()->getColumnDimension('A')->setWidth('60'); //30
+				$this->calc->getActiveSheet()->getColumnDimension('B')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('C')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('D')->setWidth('15'); //16
+				$this->calc->getActiveSheet()->getColumnDimension('E')->setWidth('15'); //16
+				//Cerrar Formateamos tamaño de columnas
+
+				error_log("****** Recorremos estaciones cargadas ******");
+				foreach($dataStations as $key => $dataStation) {
+					if($isAllStations) {
+						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
+						$curl = $curl . '?mod='.$mod.'&from='.$formatDateBegin.'&to='.$formatDateEnd.'&warehouse_id='.$dataStation->almacen_id.'&desde='.$dateBegin_.'&hasta='.$dateEnd_.'&clientes='.$clientes.'&isvaliddiffmonths=si';
+						error_log("Url de la estacion cargada");
+						error_log($curl);
+						$dataRemoteStations = getUncompressData($curl);
+					}
+					error_log("Data de la estacion cargada");
+					error_log(json_encode($dataRemoteStations));
+
+					$return['curl'][] = $curl;
+
+					$data = array();
+					$dataRemoteStations = json_decode($dataRemoteStations[0], true);
+
+					if($dataRemoteStations != false) {
+						$return['status'] = 1;
+						$data = $dataRemoteStations;
+					}else{
+						$return['status'] = 4;
+					}
+
+					$return['stations'][] = array(
+						'name' => $dataStation->name,
+						'initials' => $dataStation->initials == null ? '<s/n>' : $dataStation->initials,
+						'group' => array('taxid' => $dataStation->taxid, 'name' => $dataStation->client_name),
+						'url' => $curl,
+						'id' => $dataStation->c_org_id,
+						'warehouse_id' => $dataStation->almacen_id,
+						'data' => $data,
+						// 'total_qty' => $total_cantidad,
+						// 'total_price' => $total_precio,
+						// 'total_cost' => $total_costo,
+						// 'margin' => $total_utilidad,
+						'isConnection' => $return['status'] == 4 ? false : true
+					);
+				}
+
+				error_log("****** Recorremos empresas cargadas ******");
+				$return['companies'] = $this->aguparMargenClientePorEmpresa($return['stations'], $return['result_c_product']);
+
+				// echo "<pre>";
+				// echo json_encode($return);
+				// echo "</pre>";
+				// die();
+								
+				foreach ($return['companies'] as $key => $companies) {		
+					$TOTAL_EMPRESA_CANTIDAD = 0;
+					$TOTAL_EMPRESA_IMPORTE_NETO = 0;
+					$TOTAL_EMPRESA_COSTO = 0;
+					$TOTAL_EMPRESA_MARGEN = 0;
+					
+					//DATOS PARA MOSTRAR EN EXCEL
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, $key);
+					$this->calc->getActiveSheet()->getStyle('A'.$row)->getFont()->setBold(true);
+					// $this->calc->getActiveSheet()->setCellValue('B'.$row, $key);
+					// $this->calc->getActiveSheet()->getStyle('B'.$row)->getFont()->setBold(true);
+					// $this->calc->getActiveSheet()->mergeCells('B'.$row.':C'.$row);
+					// $this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(20);
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':A'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '7952b3')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+
+					/**************************************************************** REPORTE SOBRANTES FALTANTES ****************************************************************/
+					//Inicio de cabecera (tabla)
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, 'Cliente');
+
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(20);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '337ab7')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, 'Producto');
+					$this->calc->getActiveSheet()->setCellValue('B'.$row, 'Cantidad');
+					$this->calc->getActiveSheet()->setCellValue('C'.$row, 'Valor Venta');
+					$this->calc->getActiveSheet()->setCellValue('D'.$row, 'Costo');
+					$this->calc->getActiveSheet()->setCellValue('E'.$row, 'Margen');
+					
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);				
+
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => '337ab7')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+					$row++;
+					$row++;
+					//Fin de cabecera (tabla)			
+
+					foreach ($companies['data'] as $key => $rucs) {
+						$TOTAL_CANTIDAD = 0;
+						$TOTAL_IMPORTE_NETO = 0;
+						$TOTAL_COSTO = 0;
+						$TOTAL_MARGEN = 0;
+
+						$this->calc->getActiveSheet()->setCellValue('A'.$row, $key);
+						
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);				
+					
+						$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+						$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(
+							array(
+								'fill' => array(
+									'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									'color' => array('rgb' => '337ab7')
+								),
+								'font' => array(
+									'bold'  => true,
+									'color' => array('rgb' => 'FFFFFF'),
+									'size'  => 12,
+									//'name'  => 'Verdana'
+								)
+							)
+						);				
+						$row++;
+
+						foreach ($rucs as $key => $articulos) {
+							$articulos['cantidad']     = floatval($articulos['cantidad']);
+							$articulos['importe_neto'] = floatval($articulos['importe_neto']);
+							$articulos['costo']        = floatval($articulos['costo']);
+
+							$cantidad     = round($articulos['cantidad']);
+							$importe_neto = round($articulos['importe_neto']);
+							$costo        = round($articulos['costo']);
+							$margen       = round($importe_neto - $costo);
+
+							if ($key != 'TOTALES') {
+								$TOTAL_CANTIDAD     += $cantidad;
+								$TOTAL_IMPORTE_NETO += $importe_neto;
+								$TOTAL_COSTO        += $costo;
+								$TOTAL_MARGEN       += $margen;
+
+								$TOTAL_EMPRESA_CANTIDAD     += $cantidad;
+								$TOTAL_EMPRESA_IMPORTE_NETO += $importe_neto;
+								$TOTAL_EMPRESA_COSTO        += $costo;
+								$TOTAL_EMPRESA_MARGEN       += $margen;
+
+								$this->calc->getActiveSheet()->setCellValue('A'.$row, $articulos['codigo'].' - '.$articulos['descripcion']);
+								$this->calc->getActiveSheet()->setCellValue('B'.$row, number_format((float)$cantidad, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('B'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('C'.$row, number_format((float)$importe_neto, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('C'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('D'.$row, number_format((float)$costo, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('D'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('E'.$row, number_format((float)$margen, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('E'.$row)->getNumberFormat()->setFormatCode('0');
+								
+								$this->calc->getActiveSheet()->getStyle('B'.$row.':E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);
+								
+								$row++;	
+							}
+						}
+
+						foreach ($rucs as $key => $articulos) {
+							if ($key == 'TOTALES') {
+								$this->calc->getActiveSheet()->setCellValue('A'.$row, 'TOTAL CLIENTE');
+								$this->calc->getActiveSheet()->setCellValue('B'.$row, number_format((float)$TOTAL_CANTIDAD, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('B'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('C'.$row, number_format((float)$TOTAL_IMPORTE_NETO, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('C'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('D'.$row, number_format((float)$TOTAL_COSTO, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('D'.$row)->getNumberFormat()->setFormatCode('0');
+								$this->calc->getActiveSheet()->setCellValue('E'.$row, number_format((float)$TOTAL_MARGEN, 0, '.', ','));
+								$this->calc->getActiveSheet()->getStyle('E'.$row)->getNumberFormat()->setFormatCode('0');
+
+								$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);				
+
+								$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+								$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(
+									array(
+										'fill' => array(
+											'type' => PHPExcel_Style_Fill::FILL_SOLID,
+											'color' => array('rgb' => 'FF7F32')
+										),
+										'font' => array(
+											'bold'  => true,
+											'color' => array('rgb' => 'FFFFFF'),
+											'size'  => 12,
+											//'name'  => 'Verdana'
+										)
+									)
+								);
+
+								$row++;
+								$row++;
+							}
+						}
+					}
+
+					$this->calc->getActiveSheet()->setCellValue('A'.$row, 'TOTAL EMPRESA');
+					$this->calc->getActiveSheet()->setCellValue('B'.$row, number_format((float)$TOTAL_EMPRESA_CANTIDAD, 0, '.', ','));
+					$this->calc->getActiveSheet()->getStyle('B'.$row)->getNumberFormat()->setFormatCode('0');
+					$this->calc->getActiveSheet()->setCellValue('C'.$row, number_format((float)$TOTAL_EMPRESA_IMPORTE_NETO, 0, '.', ','));
+					$this->calc->getActiveSheet()->getStyle('C'.$row)->getNumberFormat()->setFormatCode('0');
+					$this->calc->getActiveSheet()->setCellValue('D'.$row, number_format((float)$TOTAL_EMPRESA_COSTO, 0, '.', ','));
+					$this->calc->getActiveSheet()->getStyle('D'.$row)->getNumberFormat()->setFormatCode('0');
+					$this->calc->getActiveSheet()->setCellValue('E'.$row, number_format((float)$TOTAL_EMPRESA_MARGEN, 0, '.', ','));
+					$this->calc->getActiveSheet()->getStyle('E'.$row)->getNumberFormat()->setFormatCode('0');
+
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_RIGHT);				
+
+					$this->calc->getActiveSheet()->getRowDimension($row)->setRowHeight(16);
+					$this->calc->getActiveSheet()->getStyle('A'.$row.':E'.$row)->applyFromArray(
+						array(
+							'fill' => array(
+								'type' => PHPExcel_Style_Fill::FILL_SOLID,
+								'color' => array('rgb' => 'FF7F32')
+							),
+							'font' => array(
+								'bold'  => true,
+								'color' => array('rgb' => 'FFFFFF'),
+								'size'  => 12,
+								//'name'  => 'Verdana'
+							)
+						)
+					);
+
+					$row++;
+					$row++;
+					$row++;
+					//CERRAR DATOS PARA MOSTRAR EN EXCEL	
+				}				
+
+				//GENERACION EXCEL
+				//componer nombre: ocsmanager_TYPEMOD_TYPESTATION_YYYYMMMDD_HHMMSS.xls
+				$comp = date('Ymd_His');
+				$filename='ocsmanager_'.$typeEst.'_'.$comp.'.xls'; //save our workbook as this file name
+				header('Content-Type: application/vnd.ms-excel'); //mime type
+				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+				header('Cache-Control: max-age=0'); //no cache
+
+				//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+				//if you want to save it as .XLSX Excel 2007 format
+				$objWriter = PHPExcel_IOFactory::createWriter($this->calc, 'Excel5');  
+				//force user to download the Excel file without writing it to server's HD
+				$objWriter->save('php://output');
+				//CERRAR GENERACION EXCEL
+			} else {
+				echo 'No';
+				//parametros vacios
+				//error 404
+			}
+		} else {
+			//no session
+			//pagina de error 404
+		}
+	}
+
+	public function aguparMargenClientePorEmpresa($stations, $result_c_product)
+	{
+		// return $stations;
+
+		$companies = array();
+		foreach ($stations as $key => $station) {
+			$taxIdCompany      = $station['group']['taxid'];
+			$nameCompany       = $station['group']['name'];
+			$dataMargenCliente = $station['data']['data_margen_cliente'];
+
+			foreach ($dataMargenCliente as $key => $margenCliente) {
+				$ruc          = TRIM($margenCliente['ruc']);
+				$razon_social = TRIM($margenCliente['razon_social']);
+				$cliente      = $ruc." - ".$razon_social;
+				$codigo       = TRIM($margenCliente['codigo']);
+
+				$companies[$nameCompany]['group']['name']  = $nameCompany;
+				$companies[$nameCompany]['group']['taxid'] = $taxIdCompany;
+
+				// AGRUPADO POR CLIENTE Y ARTICULO
+				$companies[$nameCompany]['data'][$cliente][$codigo]['ruc']          = $ruc;
+				$companies[$nameCompany]['data'][$cliente][$codigo]['razon_social'] = $razon_social;
+				$companies[$nameCompany]['data'][$cliente][$codigo]['codigo']       = $codigo;
+				$companies[$nameCompany]['data'][$cliente][$codigo]['descripcion']  = $result_c_product[$codigo]['name'];
+				if ($margenCliente['tipo_documento'] == '20') { // Nota de Credito
+					$companies[$nameCompany]['data'][$cliente][$codigo]['cantidad']     -= $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['importe_neto'] -= $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['costo']        -= ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				} else {
+					$companies[$nameCompany]['data'][$cliente][$codigo]['cantidad']     += $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['importe_neto'] += $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['costo']        += ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				}
+
+				// AGRUPADO POR CLIENTE
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['ruc']          = $ruc;
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['razon_social'] = $razon_social;
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['codigo']       = $codigo;
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['descripcion']  = $result_c_product[$codigo]['name'];
+				if ($margenCliente['tipo_documento'] == '20') { // Nota de Credito
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['cantidad']     -= $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['importe_neto'] -= $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['costo']        -= ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				} else {
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['cantidad']     += $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['importe_neto'] += $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['costo']        += ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				}
+			}
+		}
+
+		return $companies;
+	}
+
 	public function resumeStock()
 	{
 		if(checkSession()) {
@@ -2615,7 +3061,7 @@ class Reports extends CI_Controller {
 					$titleDocument = 'Stock de Market';
 				}
 
-				$return['dateEnd'] = date('d/m/Y', strtotime(formatDateCentralizer($this->uri->segment(4),3). ' - 7 days'));
+				$return['dateEnd'] = date('d/m/Y', strtotime(formatDateCentralizer($this->uri->segment(4),3). ' - 6 days'));
 
 				$formatDateBegin = formatDateCentralizer($this->uri->segment(4),2);
 				$formatDateEnd = formatDateCentralizer($return['dateEnd'],1);

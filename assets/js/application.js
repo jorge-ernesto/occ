@@ -72,6 +72,8 @@ $( document ).ready(function() {
 			searchSaldoSocio($(this).attr('data-ismarket'));	
 		} else if ($('#typeStation').val() == 9) {			
 			searchSobrantesFaltantes($(this).attr('data-ismarket'));	
+		} else if ($('#typeStation').val() == 10) {
+			searchMargenCliente($(this).attr('data-ismarket'));
 		} else {
 			searchSale($(this).attr('data-ismarket'));
 		}
@@ -158,6 +160,10 @@ $( document ).ready(function() {
 
 	$(document).on('click', '.download-sobrantes-faltantes', function() {
 		downloadSobrantesFaltantes($(this));
+	});
+
+	$(document).on('click', '.download-margen-cliente', function() {
+		downloadMargenCliente($(this));
 	});
 
 	$(document).on('click', '.btn-money-include, .btn-money-exclude', function() {

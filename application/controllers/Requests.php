@@ -466,6 +466,19 @@ class Requests extends CI_Controller {
 				error_log("Parametros en variable return y typeStation");
 				error_log(json_encode(array($return, $typeStation)));
 
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				$return['result_c_product'] = $arrayProductos;
+				/* Cerrar */
+
 				$this->load->model('COrg_model');
 				$isAllStations = true;
 				if($this->input->post('id') != '*') {
@@ -479,19 +492,6 @@ class Requests extends CI_Controller {
 				}
 				error_log("Estaciones cargadas");
 				error_log(json_encode($dataStations));
-
-				/* Obtenemos Codigos de Productos */
-				$this->load->model('CProd_model');
-				$dataProductos = $this->CProd_model->getAllCProd();
-				$arrayProductos = array();
-				foreach ($dataProductos as $key => $producto) {
-					$arrayProductos[$producto->value] = array(
-						'name' => $producto->name,
-						'abbreviation' => $producto->abbreviation
-					);
-				}
-				$return['result_c_product'] = $arrayProductos;
-				/* Cerrar */
 
 				$mod = '';
 				if($return['typeStation'] == 3) {
@@ -1228,7 +1228,7 @@ class Requests extends CI_Controller {
 				foreach($dataStations as $key => $dataStation) {
 					if($isAllStations) {
 						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
-						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateBegin'].'&to='.$return['formatDateEnd'].'&warehouse_id='.$dataStation->almacen_id.'&desde='.$return['dateBegin'].'&hasta='.$return['dateEnd'].'&productos='.$codigos_productos.'&unidadmedida='.$return['unidadmedida'];
+						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateBegin'].'&to='.$return['formatDateEnd'].'&warehouse_id='.$dataStation->almacen_id.'&desde='.$return['dateBegin'].'&hasta='.$return['dateEnd'].'&productos='.$codigos_productos.'&unidadmedida='.$return['unidadmedida'].'&isvaliddiffmonths=si';
 						error_log("Url de la estacion cargada");
 						error_log($curl);
 						$dataRemoteStations = getUncompressData($curl);
@@ -1285,6 +1285,181 @@ class Requests extends CI_Controller {
 		unset($return);
 	}
 
+	public function getMargenCliente()
+	{
+		$return = array();
+		$return['memory'][] = getMemory(array('start function'));
+		if(checkSession()) {
+			if($this->input->post('dateBegin') != null && $this->input->post('id') != null && $this->input->post('typeStation') != null) {
+				$return['status'] = 1;
+				$return['formatDateBegin'] = formatDateCentralizer($this->input->post('dateBegin'),1);
+				$return['formatDateEnd'] = formatDateCentralizer($this->input->post('dateEnd'),1);
+				$return['typeCost'] = $this->input->post('typeCost');
+
+				$return['dateBegin'] = $this->input->post('dateBegin');
+				$return['dateEnd'] = $this->input->post('dateEnd');
+				$return['typeStation'] = $this->input->post('typeStation');
+				$return['id'] = $this->input->post('id');
+
+				$return['clientes'] = TRIM($this->input->post('clientes'));
+
+				$typeStation = getDescriptionTypeStation($return['typeStation']);
+				error_log("Parametros en variable return y typeStation");
+				error_log(json_encode(array($return, $typeStation)));
+
+				/* Obtenemos Codigos de Productos */
+				$this->load->model('CProd_model');
+				$dataProductos = $this->CProd_model->getAllCProd();
+				$arrayProductos = array();
+				foreach ($dataProductos as $key => $producto) {
+					$arrayProductos[$producto->value] = array(
+						'name' => $producto->name,
+						'abbreviation' => $producto->abbreviation
+					);
+				}
+				$return['result_c_product'] = $arrayProductos;
+				/* Cerrar */
+
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				if($this->input->post('id') != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndId($typeStation == 'MP' ? 'C' : $typeStation,$this->input->post('id'));
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStation == 'MP' ? 'C' : $typeStation);
+					}
+				}
+				error_log("Estaciones cargadas");
+				error_log(json_encode($dataStations));
+
+				$mod = '';
+				if($return['typeStation'] == 10) {
+					$mod = 'TOTALS_MARGEN_CLIENTE';
+				} else {
+					$mod = 'ERR';
+				}
+				$return['mode'] = $mod;
+
+				/*echo json_encode(array('http' => $mod));
+				exit;*/
+
+				error_log("****** Recorremos estaciones cargadas ******");
+				foreach($dataStations as $key => $dataStation) {
+					if($isAllStations) {
+						$curl = 'http://'.$dataStation->ip.'/sistemaweb/centralizer_.php'; //CAMBIAR URL PARA PRUEBAS
+						$curl = $curl . '?mod='.$mod.'&from='.$return['formatDateBegin'].'&to='.$return['formatDateEnd'].'&warehouse_id='.$dataStation->almacen_id.'&desde='.$return['dateBegin'].'&hasta='.$return['dateEnd'].'&clientes='.$return['clientes'].'&isvaliddiffmonths=si';
+						error_log("Url de la estacion cargada");
+						error_log($curl);
+						$dataRemoteStations = getUncompressData($curl);
+					}
+					error_log("Data de la estacion cargada");
+					error_log(json_encode($dataRemoteStations));
+
+					$return['curl'][] = $curl;
+
+					$data = array();
+					$dataRemoteStations = json_decode($dataRemoteStations[0], true);
+
+					if($dataRemoteStations != false) {
+						$return['status'] = 1;
+						$data = $dataRemoteStations;
+					}else{
+						$return['status'] = 4;
+					}
+
+					$return['stations'][] = array(
+						'name' => $dataStation->name,
+						'initials' => $dataStation->initials == null ? '<s/n>' : $dataStation->initials,
+						'group' => array('taxid' => $dataStation->taxid, 'name' => $dataStation->client_name),
+						'url' => $curl,
+						'id' => $dataStation->c_org_id,
+						'warehouse_id' => $dataStation->almacen_id,
+						'data' => $data,
+						// 'total_qty' => $total_cantidad,
+						// 'total_price' => $total_precio,
+						// 'total_cost' => $total_costo,
+						// 'margin' => $total_utilidad,
+						'isConnection' => $return['status'] == 4 ? false : true
+					);
+				}
+
+				error_log("****** Recorremos empresas cargadas ******");
+				$return['companies'] = $this->aguparMargenClientePorEmpresa($return['stations'], $return['result_c_product']);
+			}			
+		} else {
+			$return['status'] = 101;
+			$return['message'] = 'No existe sesión.';
+		}
+		$return['memory'][] = getMemory(array('end function'));
+		unset($curl);
+		unset($typeStation);
+		unset($dataStations);
+		unset($dataRemoteStations);
+		unset($data);
+	
+		$return['memory'][] = getMemory(array('unset function'));
+		error_log("return final");
+		error_log(json_encode($return));
+		echo json_encode($return);
+		unset($return);
+	}
+
+	public function aguparMargenClientePorEmpresa($stations, $result_c_product)
+	{
+		// return $stations;
+
+		$companies = array();
+		foreach ($stations as $key => $station) {
+			$taxIdCompany      = $station['group']['taxid'];
+			$nameCompany       = $station['group']['name'];
+			$dataMargenCliente = $station['data']['data_margen_cliente'];
+
+			foreach ($dataMargenCliente as $key => $margenCliente) {
+				$ruc          = TRIM($margenCliente['ruc']);
+				$razon_social = TRIM($margenCliente['razon_social']);
+				$cliente      = $ruc." - ".$razon_social;
+				$codigo       = TRIM($margenCliente['codigo']);
+
+				$companies[$nameCompany]['group']['name']  = $nameCompany;
+				$companies[$nameCompany]['group']['taxid'] = $taxIdCompany;
+
+				// AGRUPADO POR CLIENTE Y ARTICULO
+				$companies[$nameCompany]['data'][$cliente][$codigo]['ruc']          = $ruc;
+				$companies[$nameCompany]['data'][$cliente][$codigo]['razon_social'] = $razon_social;
+				$companies[$nameCompany]['data'][$cliente][$codigo]['codigo']       = $codigo;
+				$companies[$nameCompany]['data'][$cliente][$codigo]['descripcion']  = $result_c_product[$codigo]['name'];
+				if ($margenCliente['tipo_documento'] == '20') { // Nota de Credito
+					$companies[$nameCompany]['data'][$cliente][$codigo]['cantidad']     -= $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['importe_neto'] -= $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['costo']        -= ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				} else {
+					$companies[$nameCompany]['data'][$cliente][$codigo]['cantidad']     += $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['importe_neto'] += $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente][$codigo]['costo']        += ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				}
+
+				// AGRUPADO POR CLIENTE
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['ruc']          = $ruc;
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['razon_social'] = $razon_social;
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['codigo']       = $codigo;
+				$companies[$nameCompany]['data'][$cliente]['TOTALES']['descripcion']  = $result_c_product[$codigo]['name'];
+				if ($margenCliente['tipo_documento'] == '20') { // Nota de Credito
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['cantidad']     -= $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['importe_neto'] -= $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['costo']        -= ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				} else {
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['cantidad']     += $margenCliente['cantidad'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['importe_neto'] += $margenCliente['importe_neto'];
+					$companies[$nameCompany]['data'][$cliente]['TOTALES']['costo']        += ($margenCliente['cantidad'] * $margenCliente['costo_art']);
+				}
+			}
+		}
+
+		return $companies;
+	}
+
 	public function getStatisticsSale()
 	{
 		$return = array();
@@ -1306,18 +1481,6 @@ class Requests extends CI_Controller {
 
 				$typeStation = getDescriptionTypeStation($return['typeStation']);
 
-				$this->load->model('COrg_model');
-				$isAllStations = true;
-				if($this->input->post('id') != '*') {
-					if($isAllStations) {
-						$dataStations = $this->COrg_model->getOrgByTypeAndId($typeStation == 'MP' ? 'C' : $typeStation,$this->input->post('id'));
-					}
-				} else {
-					if($isAllStations) {
-						$dataStations = $this->COrg_model->getCOrgByType($typeStation == 'MP' ? 'C' : $typeStation);
-					}
-				}
-
 				/* Obtenemos Codigos de Productos */
 				$this->load->model('CProd_model');
 				$dataProductos = $this->CProd_model->getAllCProd();
@@ -1330,6 +1493,18 @@ class Requests extends CI_Controller {
 				}
 				$return['result_c_product'] = $arrayProductos;
 				/* Cerrar */
+
+				$this->load->model('COrg_model');
+				$isAllStations = true;
+				if($this->input->post('id') != '*') {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getOrgByTypeAndId($typeStation == 'MP' ? 'C' : $typeStation,$this->input->post('id'));
+					}
+				} else {
+					if($isAllStations) {
+						$dataStations = $this->COrg_model->getCOrgByType($typeStation == 'MP' ? 'C' : $typeStation);
+					}
+				}
 
 				$mod = '';
 				if($return['typeStation'] == 4) {
@@ -1799,7 +1974,7 @@ class Requests extends CI_Controller {
 			if($this->input->post('dateBegin') != null && $this->input->post('daysProm') != null && $this->input->post('id') != null && $this->input->post('typeStation') != null) {
 				$return['status'] = 1;
 				$return['beginDate'] = $this->input->post('dateBegin');
-				$return['endDate'] = date('d/m/Y', strtotime(formatDateCentralizer($return['beginDate'],3). ' - 7 days'));
+				$return['endDate'] = date('d/m/Y', strtotime(formatDateCentralizer($return['beginDate'],3). ' - 6 days'));
 
 				$return['formatDateBegin'] = formatDateCentralizer($return['beginDate'],1);
 				$return['formatDateEnd'] = formatDateCentralizer($return['endDate'],1);
@@ -1813,7 +1988,7 @@ class Requests extends CI_Controller {
 				$fecha1 = DateTime::createFromFormat('d/m/Y', $return['proyeccion']['beginDateProyeccion']);
 				$fecha2 = DateTime::createFromFormat('d/m/Y', $return['proyeccion']['endDateProyeccion']);
 				$diferencia = $fecha1->diff($fecha2);
-				$return['proyeccion']['daysDiffProyeccion'] = $diferencia->days;
+				$return['proyeccion']['daysDiffProyeccion'] = $diferencia->days + 1;
 				$return['proyeccion']['daysProyeccion'] = is_numeric($this->input->post('daysProyeccion')) ? $this->input->post('daysProyeccion') : "0";
 
 				$typeStation = getDescriptionTypeStation($return['typeStation']);

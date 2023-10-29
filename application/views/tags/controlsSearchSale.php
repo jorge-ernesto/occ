@@ -188,7 +188,6 @@ if ($typeStation == 0) {
                 <?php } ?>
 
                 <?php if($typeStation == 9) { ?>
-                    
                     <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
                         <label>Productos:</label>
                         <select name="productos" class="form-control">
@@ -225,7 +224,13 @@ if ($typeStation == 0) {
                             </label>
                         </div>
                     </div>
+                <?php } ?>
 
+                <?php if($typeStation == 10) { ?>
+                    <div class="form-group"> <!-- <div class="col-lg-12 form-group"> -->
+                        <label for="">Cliente:</label>
+                        <input type="text" name="cliente" value="" id="cliente" class="form-control">
+                    </div>
                 <?php } ?>
 
                 <input type="hidden" id="qty_sale" value="kardex"><!--kardex y tickets-->

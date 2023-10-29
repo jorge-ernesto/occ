@@ -327,7 +327,7 @@ function templateStationsSearch(data,t,cm) {
  * @param obj data, int t(typo estacion), int cm(chart mode)
  * @return string html
  */
-function templateStationsSearchSalesForHours(data,t,cm) { //POR EDITAR
+function templateStationsSearchSalesForHours(data,t,cm) {
 	console.log('data en templateStationsSearchSalesForHours:', data);
 
 	clearStations();
@@ -1795,7 +1795,7 @@ function crear_documentos_venta_manual(detail, manuales_html, total_manuales_){
  * @param obj data, int t(typo estacion), int cm(chart mode)
  * @return string html
  */
-function templateStationsSearchLiquidacionDiaria(data,t,cm) { //ACA
+function templateStationsSearchLiquidacionDiaria(data,t,cm) {
 	console.log('data en templateStationsSearchLiquidacionDiaria:', data);
 
 	// $('.result-search').addClass('container');
@@ -3195,6 +3195,168 @@ function templateStationsSearchSobrantesFaltantes(data,t,cm) {
 }
 
 /**
+ * Plantilla de estaciones buscadas para Ventas - Margen por Cliente
+ * @param obj data, int t(typo estacion), int cm(chart mode)
+ * @return string html
+ */
+function templateStationsSearchMargenCliente(data,t,cm) {
+	console.log('data en templateStationsSearchMargenCliente:', data);
+
+	clearStations();
+	var html = '<br>';
+	var detail = data.companies;
+	if (typeof detail == "undefined") {
+		return '<div class="alert alert-info">No existe información</div>';
+	}
+	var count = detail.length;
+	gran_total = 0.0;
+	gran_qty = 0.0;
+	gran_util = 0.0;
+	gran_cost = 0.0;
+	var num = 1;
+	var unit = t == 0 ? 'Gln' : '';
+
+	var color_id, taxid;
+	// for(var i = 0; i<count; i++) {
+	for (var i in detail) {	
+		let TOTAL_EMPRESA_CANTIDAD = 0;
+		let TOTAL_EMPRESA_IMPORTE_NETO = 0;
+		let TOTAL_EMPRESA_COSTO = 0;
+		let TOTAL_EMPRESA_MARGEN = 0;
+
+		color_id = getRandomColor();
+		if(taxid != detail[i].group.taxid) {
+			html += (i != 0 ? '<hr>' : '');
+			html += `<div class="card shadow">
+							<div class="card-header bg-primary text-white">
+								<h5 class="m-0" title="RUC: ${detail[i].group.taxid}">${detail[i].group.name}</h5>
+							</div>
+						</div>`;
+			taxid = detail[i].group.taxid;
+		}
+
+		var mostrar = true;
+		html += `<div class="">
+					<div class="card shadow mb-4">`;
+
+		var tabla = "";
+		if(mostrar == true){
+			// REPORTE MARGEN POR CLIENTE
+			let DATA_RUC = detail[i].data
+
+			tabla += `<br />`;
+			tabla += `<div class="table-responsive">
+						<table class="text-center table table-bordered table-hover table-sm">
+							<thead>
+								<tr class="bg-primary">
+									<th colspan="1">Cliente</td>
+									<th colspan="4">&nbsp;</td>
+								</tr>
+								<tr class="bg-primary">
+									<th>Producto</td>
+									<th>Cantidad</td>
+									<th>Valor Venta</td>
+									<th>Costo</td>
+									<th>Margen</td>
+								</tr>
+							</thead>`;
+
+			tabla += `<tbody>`;
+			for (let key in DATA_RUC) {
+				let TOTAL_CANTIDAD = 0;
+				let TOTAL_IMPORTE_NETO = 0;
+				let TOTAL_COSTO = 0;
+				let TOTAL_MARGEN = 0;
+
+				DATA_ARTICULOS = DATA_RUC[key];
+				tabla += `<tr>
+							<td colspan="5">&nbsp;</td>
+						</tr>`;
+				tabla += `<tr>
+							<th class="bg-primary text-white" colspan="1">${key}</th>
+							<th colspan="4">&nbsp;</th>
+						</tr>`;
+
+				for (let key in DATA_ARTICULOS) {
+					DATA_ARTICULOS[key]['cantidad']     = parseFloat(DATA_ARTICULOS[key]['cantidad']);
+					DATA_ARTICULOS[key]['importe_neto'] = parseFloat(DATA_ARTICULOS[key]['importe_neto']);
+					DATA_ARTICULOS[key]['costo']        = parseFloat(DATA_ARTICULOS[key]['costo']);
+
+					let cantidad     = Math.round10(DATA_ARTICULOS[key]['cantidad']);
+					let importe_neto = Math.round10(DATA_ARTICULOS[key]['importe_neto']);
+					let costo        = Math.round10(DATA_ARTICULOS[key]['costo']);
+					let margen       = Math.round10(importe_neto - costo);
+
+					if (key != 'TOTALES') {
+						TOTAL_CANTIDAD     += cantidad;
+						TOTAL_IMPORTE_NETO += importe_neto;
+						TOTAL_COSTO        += costo;
+						TOTAL_MARGEN       += margen;
+
+						TOTAL_EMPRESA_CANTIDAD     += cantidad;
+						TOTAL_EMPRESA_IMPORTE_NETO += importe_neto;
+						TOTAL_EMPRESA_COSTO        += costo;
+						TOTAL_EMPRESA_MARGEN       += margen;
+
+						tabla += `<tr>
+									<td colspan="1">${DATA_ARTICULOS[key]['codigo']} - ${DATA_ARTICULOS[key]['descripcion']}</td>
+									<td colspan="1">${cantidad.toLocaleString()}</td>
+									<td colspan="1">${importe_neto.toLocaleString()}</tg>
+									<td colspan="1">${costo.toLocaleString()}</td>
+									<td colspan="1">${margen.toLocaleString()}</td>
+								</tr>`;
+					}
+				}
+
+				for (let key in DATA_ARTICULOS) {
+					if (key == 'TOTALES') {
+						tabla += `<tr class="bg-secondary">
+									<th colspan="1">TOTAL CLIENTE</td>
+									<th colspan="1">${TOTAL_CANTIDAD.toLocaleString()}</td>
+									<th colspan="1">${TOTAL_IMPORTE_NETO.toLocaleString()}</td>
+									<th colspan="1">${TOTAL_COSTO.toLocaleString()}</td>
+									<th colspan="1">${TOTAL_MARGEN.toLocaleString()}</td>
+								</tr>`;
+					}
+				}
+			}
+
+			tabla += `<tr>
+						<td colspan="5">&nbsp;</td>
+					</tr>`;
+			tabla += `<tr class="bg-secondary">
+						<th colspan="1">TOTAL EMPRESA</td>
+						<th colspan="1">${TOTAL_EMPRESA_CANTIDAD.toLocaleString()}</td>
+						<th colspan="1">${TOTAL_EMPRESA_IMPORTE_NETO.toLocaleString()}</td>
+						<th colspan="1">${TOTAL_EMPRESA_COSTO.toLocaleString()}</td>
+						<th colspan="1">${TOTAL_EMPRESA_MARGEN.toLocaleString()}</td>
+					</tr>`;
+
+			tabla += `</tbody>
+					</table>
+				</div>`;
+		}
+		
+		html += `<div class="card-body">
+					<!-- REPORTE MARGEN POR CLIENTE -->
+					${tabla}
+					<!-- CERRAR -->
+				</div>
+			</div>
+		</div>`;
+		num++;
+	}	
+
+	storageStations();
+
+	$('.container-ss-station').removeClass('d-none');
+
+	setDataResultRequest2('.download-margen-cliente',data);
+
+	return html;
+}
+
+/**
  * Visualizar información estación en Modal
  * @param obj - element t
  * data-typestation: 1 - ventas/market
@@ -3949,6 +4111,31 @@ function downloadSobrantesFaltantes(t){
 	window.location = url_;
 }
 
+function downloadMargenCliente(t){
+	console.log(t);
+
+	var dateB = t.attr('data-begindate').split("/");
+	dateB = dateB[0] + '-' + dateB[1] + '-' + dateB[2];
+
+	var dateE = t.attr('data-enddate').split("/");
+	dateE = dateE[0] + '-' + dateE[1] + '-' + dateE[2];
+
+	console.log('dateB: '+dateB+', dateE: '+dateE);
+
+	//validaciones
+	var params = {
+		id: t.attr('data-station') == '*' ? 'a' : t.attr('data-station'),
+		beginDate: dateB,
+		endDate: dateE,
+		typeStation: t.attr('data-typestation'),
+		clientes: t.attr('data-clientes')		
+	};
+	console.log('params.beginDate: '+params.beginDate+', params.endDate: '+params.endDate);
+	var url_ = url+'reports/resumeMargenCliente/'+params.id+'/'+params.beginDate+'/'+params.endDate+'/'+params.typeStation+'/'+params.clientes;
+	console.log('url__: '+url_);
+	window.location = url_;
+}
+
 /**
  * Otorgar data obtenida en atributos de solicitud
  * @param string element, obj dfata
@@ -3996,7 +4183,8 @@ function setDataResultRequest2(element,data) {
 				.attr('data-beginDateProyeccion', data.proyeccion?.beginDateProyeccion) /* Stock Diario - Proyeccion */
 				.attr('data-endDateProyeccion', data.proyeccion?.endDateProyeccion) /* Stock Diario - Proyeccion */
 				.attr('data-daysDiffProyeccion', data.proyeccion?.daysDiffProyeccion) /* Stock Diario - Proyeccion */
-				.attr('data-daysProyeccion', data.proyeccion?.daysProyeccion); /* Stock Diario - Proyeccion */
+				.attr('data-daysProyeccion', data.proyeccion?.daysProyeccion) /* Stock Diario - Proyeccion */
+				.attr('data-clientes', data.clientes); /* Sobrantes y Faltantes */
 }
 
 /**
@@ -4830,7 +5018,7 @@ function searchSalesForHours(t) {
 	}, 'json');
 }
 
-function searchLiquidacionDiaria(t){ //ACA
+function searchLiquidacionDiaria(t){
 	$('.container-chart-station').addClass('d-none');
 	$('.container-ss-station').addClass('d-none');
 	$('.result-search').html(loading_bootstrap4());
@@ -4963,6 +5151,48 @@ function searchSobrantesFaltantes(t){
 		console.log('Dentro del callback');
 		console.log(data);
 		$('.result-search').html(templateStationsSearchSobrantesFaltantes(data, data.typeStation, charMode));
+	}, 'json');
+}
+
+function searchMargenCliente(t){
+	$('.container-chart-station').addClass('d-none');
+	$('.container-ss-station').addClass('d-none');
+	$('.result-search').html(loading_bootstrap4());
+	var paramsRequest = {
+		id: $('#select-station').val(),
+		dateBegin: $('#start-date-request').val(),
+		dateEnd: $('#end-date-request').val(),
+		typeStation: $('#typeStation').val(),
+		
+		/*No sirve en este reporte*/
+		isMarket: $('#data-ismarket').val(),
+		qtySale: $('#qty_sale').val(),
+		typeCost: $('#type_cost').val(),
+		typeResult: 1,
+		/*Cerrar no sirve en este reporte*/  
+
+		clientes: $('#cliente').val(),
+	}
+	console.log(paramsRequest);
+
+	/*setContendModal('#normal-modal', '.modal-title', 'Cargando...', true);
+	setContendModal('#normal-modal', '.modal-body', loading_bootstrap4(), true);
+	setContendModal('#normal-modal', '.modal-footer', '<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>', true);
+	$('#normal-modal').modal();*/
+
+	var charMode = $('#chart-mode').val();
+
+	console.log('start: '+paramsRequest.dateBegin+', end: '+paramsRequest.dateEnd);
+	$.post(url+'requests/getMargenCliente', paramsRequest, function(data) {
+		// console.log('data:', data); //ELIMINAR
+		console.log('data:', JSON.stringify(data)); //ELIMINAR
+		// return; //ELIMINAR
+
+		checkSession(data);
+		$('.btn-search-sale').prop('disabled', false);
+		console.log('Dentro del callback');
+		console.log(data);
+		$('.result-search').html(templateStationsSearchMargenCliente(data, data.typeStation, charMode));
 	}, 'json');
 }
 

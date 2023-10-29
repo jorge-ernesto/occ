@@ -200,6 +200,31 @@ class Ventas extends CI_Controller {
 		}
 	}
 
+	public function margen_cliente()
+	{
+		error_log("Margen por Cliente de Crédito");		
+
+		if (!checkSession()) {
+			redirect('secure/login', 'location');
+		} else {
+			$privilege = ($_SESSION['Superuser'] || $_SESSION['Admin'] || $_SESSION['OrgReports']) ? 1 : 0;
+			if(!$privilege) {
+				$this->error_404();
+			}else{
+				$data['title'] = 'Ventas > Margen por Cliente de Crédito';
+				$data['result_c_org'] = $this->COrg_model->getAllCOrg('C');
+
+				$this->load->helper('functions');
+				$data['default_start_date'] = getDateDefault('d/m/Y');			
+
+				$data['typeStation'] = 10;
+
+				error_log(json_encode($data));
+				$this->load->view('ventas/margen_cliente',$data);
+			}
+		}
+	}
+
 	public function estadistica()
 	{
 		if (!checkSession()) {
